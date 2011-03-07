@@ -1,0 +1,17 @@
+# Check routing status and render correspondingly
+# hint: configure avialability of routing service via application.yml (value of routing_status)
+head = render(:partial => 'content_all.js')
+head = '<script type="text/javascript">' + head + '</script>'
+if(defined?(ROUTING_STATUS))
+  case ROUTING_STATUS
+    when "enabled"
+      content = render(:partial => 'content_enabled')
+    when "maintenance"
+      content = render(:partial => 'content_maintenance')
+    else
+      content = render(:partial => 'content_config_info')
+  end
+else
+  content = render(:partial => 'content_config_info')
+end
+page.replace_html :sidebar_content, head+content

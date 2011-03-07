@@ -41,10 +41,6 @@ defaults: &defaults
   # Quova authentication details
   #quova_username: ""
   #quova_password: ""
-  # Users to show as being nearby
-  nearby_users: 30
-  # Max radius, in km, for nearby users
-  nearby_radius: 50
   # Spam threshold
   spam_threshold: 50
   # Default legale (jurisdiction location) for contributor terms
@@ -65,6 +61,13 @@ defaults: &defaults
   oauth_10_support: true
   # URL of Nominatim instance to use for geocoding
   nominatim_url: "http://nominatim.openstreetmap.org/"
+  # URL to Yours routing service for routing tab
+  yours_url: "http://www.yournavigation.org/api/1.0/gosmore.php"
+  # URL to OSRM-Routing Server for routing tab
+  # DEVELOPMENT: Local portforward. Replace with correct server in production mode
+  osrm_url: "http://routingdemo.geofabrik.de:5000/route"
+  # Operational status of routing service. Possible values: enabled, maintenance
+  routing_status: "enabled"
   # Default editor
   default_editor: "potlatch2"
   # OAuth consumer key for Potlatch 2

@@ -133,6 +133,15 @@ module ApplicationHelper
     end
   end
 
+  # Get fully qualified image name
+  def image_url(source)
+    abs_path = image_path(source)
+    unless abs_path =~ /^http/
+      abs_path = "#{request.protocol}#{request.host_with_port}#{abs_path}"
+    end
+   abs_path
+  end
+
 private
 
   def javascript_strings_for_key(key)

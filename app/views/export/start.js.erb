@@ -42,7 +42,7 @@ function startExport() {
 
   $("#mapnik_scale").change(mapnikSizeChanged);
 
-  openSidebar({ onclose: stopExport });
+  openSidebar({ width: "250px", onclose: stopExport });
 
   if (map.baseLayer.name == "Mapnik") {
     $("#format_mapnik").prop("checked", true);

@@ -32,12 +32,14 @@
         editclass = 'geolink llz object minzoom13 disabled'
         historyclass = 'geolink bbox minzoom11'
         exportclass = 'geolink llz layers'
+        routingclass   = ''
         traceclass = ''
         diaryclass = ''
         viewclass += ' active' if params['controller'] == 'site' and params['action'] == 'index' 
         editclass += ' active' if params['controller'] == 'site' and params['action'] == 'edit' 
         historyclass += ' active' if params['controller'] == 'changeset' and params['action'] == 'list' 
         exportclass += ' active' if params['controller'] == 'site' and params['action'] == 'export'
+        routingclass = 'active' if params['controller'] == 'site' and params['action'] == 'routing'
         traceclass += ' active' if params['controller'] == 'trace'
         diaryclass += ' active' if params['controller'] == 'diary_entry'
         %>
@@ -45,6 +47,7 @@
         <li><%= link_to h(t('layouts.edit')) + '&nbsp;&#x25be;'.html_safe, {:controller => 'site', :action => 'edit'}, {:id => 'editanchor', :title => t('javascripts.site.edit_tooltip'), :class => editclass} %></li>
         <li><%= link_to t('layouts.history'), {:controller => 'changeset', :action => 'list' }, {:id => 'historyanchor', :title => t('javascripts.site.history_tooltip'), :class => historyclass} %></li>
         <li><%= link_to t('layouts.export'), {:controller => 'site', :action => 'export'}, {:id => 'exportanchor', :title => t('layouts.export_tooltip'), :class => exportclass} %></li>
+        <li><%= link_to t('layouts.routing'), {:controller => 'site', :action => 'routing'}, {:id => 'routinganchor', :title => t('layouts.routing_tooltip'), :class => routingclass} %></li>
         <li><%= link_to t('layouts.gps_traces'), {:controller => 'trace', :action => 'list', :display_name => nil, :tag => nil, :page => nil}, {:id => 'traceanchor', :title => t('layouts.gps_traces_tooltip'), :class => traceclass} %></li>
         <li><%= link_to t('layouts.user_diaries'), {:controller => 'diary_entry', :action => 'list', :display_name => nil}, {:id => 'diaryanchor', :title => t('layouts.user_diaries_tooltip'), :class => diaryclass} %></li>
       </ul>

@@ -1,0 +1,93 @@
+<div id="script_inject"></div>
+<script type="text/javascript"><%= render('content_enabled.js') %></script>
+<% form_remote_tag(
+      :url      => { :action => :find_route },
+      :html     => {
+                     :method => "get",
+                     :action => url_for(:controller => "routing", :action => "finish")
+                   }
+   ) do
+%> 
+
+   <p class="routing_heading"><%= t'routing.basic.waypointlist' %></p>
+
+   <table class="routing_waypointlist" cellspacing="0" cellpadding="0" border="0">
+      <tr>
+           <td class="routing_waypoint_element routing_waypoint_marker" valign="center">
+              <a href="#" id="wp1"><%= image_tag("routing/departure.png", :border => 0, :width => 20) %></a>
+           </td>
+           <td class="routing_waypoint_element routing_waypoint_input" valign="center">
+              <%= text_field_tag('wp1_display', nil, :size => 17, :style => "width: 100%") %>
+           </td>
+           <%= hidden_field_tag('wp1_lat') %>
+           <%= hidden_field_tag('wp1_lon') %>
+           <td class="routing_waypoint_element routing_delete_button" valign="center">
+              <a href="#" id="wp1_delete">&times;</a>
+           </td>
+      </tr>
+      <tr class="routing_waypoint">
+         <td class="routing_waypoint_element_last routing_waypoint_marker" valign="center">
+            <a href="#" id="wp2"><%= image_tag("routing/destination.png", :border => 0, :width => 20) %></a>
+         </td>
+         <td class="routing_waypoint_element_last routing_waypoint_input" valign="center">
+            <%= text_field_tag('wp2_display', nil, :size => 17, :style => "width: 100%") %>
+         </td>
+         <%= hidden_field_tag('wp2_lat') %>
+         <%= hidden_field_tag('wp2_lon') %>
+         <td class="routing_waypoint_element_last routing_delete_button" valign="center">
+            <a href="#" id="wp2_delete">&times;</a>
+         </td>
+      </tr>
+   </table>
+   <p class="routing_error_heading" id="error_type"></p> 
+   <p class="routing_error_hint"    id="error_message"></p>
+   <p class="routing_details" id="debug"></p>
+
+   <p class="routing_heading"><%= t'routing.basic.means.heading' %></p>
+
+   <p class="routing_details">
+      <%= radio_button_tag("means", "car", true) %> <%= t'routing.basic.means.car'     %> <br/>
+      <%= radio_button_tag("means", "bicycle") %>   <%= t'routing.basic.means.bicycle' %> <br/>
+      <%= radio_button_tag("means", "truck") %>     <%= t'routing.basic.means.truck'   %> <br/>
+      <%= radio_button_tag("means", "feet") %>      <%= t'routing.basic.means.feet'    %>
+   </p>
+  
+   <p class="routing_heading"><%= t'routing.basic.routing_mode.heading' %></p>
+
+   <p class="routing_details">
+      <br/>
+      <%= radio_button_tag("mode", "fastest", true) %>  <%= t'routing.basic.routing_mode.fastest'  %> <br/>
+      <%= radio_button_tag("mode", "shortest") %>       <%= t'routing.basic.routing_mode.shortest' %> 
+   </p>
+
+   <div class="routing_buttons">
+      <p>
+         <%= submit_tag t('routing.basic.routing_commit'),
+                        :id => "export_commit",
+                        :onclick => "// Remove old route from map
+                                     var layer = map.getLayer('route_outline');
+                                     if(layer !== null){
+                                        layer.destroy();
+                                     }
+                                     // Clear error display
+                                     $('error_type').style.display    = 'none';
+                                     $('error_message').style.display = 'none';
+                                     $('error_type').innerHTML    = '';
+                                     $('error_message').innerHTML = '';
+                                     // Show busy indicator
+                                     $('busy_indicator').style.display = 'block';
+                                     // Hide routing engine info
+                                     $('engine').style.display = 'none';"
+         %>
+      </p>
+   </div>
+   <p class="routing_details" id="engine" style="display: none;"></p>
+   <div class="routing_details" id="busy_indicator" style="display: none;">
+      <table align="center">
+         <tr>
+            <td valign="top"><%= image_tag("routing/searching.gif") %></td>
+            <td valign="center"><%= t'routing.basic.calc_route' %></td>
+         </tr>
+      </table>
+   </div>
+<% end %>

@@ -98,6 +98,7 @@ OpenStreetMap::Application.routes.draw do
   match '/history' => 'changeset#list'
   match '/history/feed' => 'changeset#feed', :format => :atom
   match '/export' => 'site#export'
+  match '/routing' => 'site#routing'
   match '/login' => 'user#login'
   match '/logout' => 'user#logout'
   match '/offline' => 'site#offline'
@@ -198,6 +199,11 @@ OpenStreetMap::Application.routes.draw do
   # export
   match '/export/start' => 'export#start'
   match '/export/finish' => 'export#finish'
+
+  # routing
+  match '/routing/start' => 'routing#start'
+  match '/routing/finish' => 'routing#finish'
+  match '/routing/find_route' => 'routing#find_route'
 
   # messages
   match '/user/:display_name/inbox' => 'message#inbox'

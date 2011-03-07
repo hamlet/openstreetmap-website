@@ -9,6 +9,10 @@ class SiteController < ApplicationController
     render :action => 'index'
   end
 
+  def routing
+    render :action => 'index'
+  end
+
   def permalink
     lon, lat, zoom = ShortLink::decode(params[:code])
     new_params = params.clone

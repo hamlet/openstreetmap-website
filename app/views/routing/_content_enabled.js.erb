@@ -1,0 +1,234 @@
+var map = window.parent.map;
+var markers = [];   // Contains a marker for each waypoint
+var icon_path;
+var markerLayer;
+var markerControl;
+var activeWaypoint; // Current waypoint to set marker to. First marker = 1
+<% waypointCount = 2 %>
+var waypointCount = <%= waypointCount %>;
+
+
+// Monitor which waypoint is processed 
+function setActiveWaypoint(num) {
+    activeWaypoint = parseInt(num, 10);
+}
+
+
+/* Clear a special Marker from the map view
+ * clears all markers if no parameter present or parameter == "all"
+ * first marker has num = 1
+ */
+function clearMarker(num) {
+    if (num === undefined || num === "all"){
+       // Remove every marker present
+       // Remove marker layer if present
+       if (markerLayer) {
+           markerLayer.destroy();
+           markerLayer = null;
+           markerControl.destroy();
+           markerControl = null;
+       }
+    }else{  // Remove single waypoint
+       var waypoint_number = parseInt(num, 10);
+       markerLayer.removeFeatures(markers[waypoint_number-1]);
+       markers[waypoint_number-1] = undefined;
+    }
+}
+
+
+/* Resets all waypoint labels and coordinates and removes marker from map
+ * First waypoint is 1
+ */
+function clearWaypoint(num){
+   if(!(num === undefined)){
+      //TODO: parseInt(num, 10) try und catchen
+      clearMarker(parseInt(num, 10));
+     
+      $("wp" + activeWaypoint + "_lat").value = "";
+      $("wp" + activeWaypoint + "_lon").value = "";
+      $("wp" + activeWaypoint + "_display").value = "";
+   }
+}
+
+
+// Clears the currently processed waypoint
+function clearActiveWaypoint(){
+   clearWaypoint(activeWaypoint);
+}
+
+
+// Remove route outline from map
+function clearRoute(){
+   var layer = map.getLayer("route_outline");
+   if(layer !== null){
+      layer.destroy();
+   }
+}  
+
+
+/* Display an error message below the waypointlist
+ * show general error message, if no params passed
+ */
+function showError(heading, message){
+      var head = $("error_type");
+      var err  = $("error_type");
+      
+   if(heading === undefined && message === undefined){
+      head.innerHTML     = '<%= t'routing.basic.error.general_error.title' %>';
+      head.style.display = "block";
+
+      err.innerHTML     = '<%= t'routing.basic.error.general_error.title' %>';
+      err.style.display = "block";
+   }else{
+      head.innerHTML     = heading;
+      head.style.display = "block";
+
+      hint.innerHTML     = message;
+      hint.style.display = "block";
+   }
+}
+
+function hideError(){
+      var head = $("error_type");
+      head.style.display = "none";
+      head.innerHTML     = "";
+
+      var hint = $("error_message");
+      hint.style.display = "none";
+      hint.innerHTML     = "clear";
+}
+
+
+/* Keep track of permalink and displayed browser address
+ * bookmarking and direct access should be possible
+ * back function of browser will work, too
+ */
+function htmlUrlChanged() {
+   // TODO: Update displayed page url corresponding to actual content of page
+}
+
+
+// Set means of transportation to bicycle if the user sets baselayer to cycle map
+function baseLayerChanged(){
+   if(map.baseLayer.name === "Cycle Map"){
+      // Eventually preserve means of transport
+      $("means_bicycle").checked = true;
+   }else{
+      // Eventually restore means of transport
+      $("means_car").checked = true;
+   }
+}
+
+
+// Tidy up when leaving routing tab 
+function stopRouting() {
+    leaveRoutingTab();
+    hideError();
+    // Remove routing layer from map
+    if(map.getLayer("route_outline")){
+       map.getLayer("route_outline").destroy();
+    }
+    clearMarker();
+    map.events.unregister("changebaselayer", map, baseLayerChanged);
+}
+
+
+// Initialize routing tab 
+function initRouting() {
+    enterRoutingTab();
+    map.events.register("changebaselayer", map, baseLayerChanged);
+}
+
+
+function endMarker(event) {
+    markerControl.deactivate();
+    markerLayer.events.un({
+        "featureadded": endMarker
+    });
+
+    // Set icon symbol
+    var waypoint_marker = event.feature;
+    var symbolizer = markerLayer.styleMap.createSymbolizer(waypoint_marker);
+    waypoint_marker.style = symbolizer;
+    waypoint_marker.style.externalGraphic = icon_path;
+    waypoint_marker.style.graphicXOffset  = -10.5;
+    waypoint_marker.style.graphicYOffset  = -25;
+    waypoint_marker.style.graphicWidth    =  21;
+    waypoint_marker.style.graphicHeight   =  25;
+    waypoint_marker.style.graphicOpacity  =   1;
+    waypoint_marker.style.graphicZIndex   =   1;
+    
+    markers[activeWaypoint-1] = waypoint_marker;
+    markerLayer.addFeatures(waypoint_marker);
+
+    // Transform projections
+    var proj_map = new OpenLayers.Projection("EPSG:4326");
+    var proj_screen = new OpenLayers.Projection("EPSG:900913");
+    var geom = waypoint_marker.geometry.clone().transform(proj_screen, proj_map);
+
+    // Set hidden and displayed text fields
+    $("wp" + activeWaypoint + "_lat").value = geom.y;
+    $("wp" + activeWaypoint + "_lon").value = geom.x;
+    $("wp" + activeWaypoint + "_display").value = geom.y.toFixed(5) + " " + geom.x.toFixed(5);
+}
+
+
+// Draw a marker icon on top of the map
+function setMarker(wp_number) {
+    setActiveWaypoint(wp_number);
+  
+    hideError();
+    clearRoute();
+    
+    // Set path to iconfile 
+    icon_path = "/images/routing/";
+    switch(activeWaypoint){
+        case 1:             icon_path += "departure.png";      break;
+        case waypointCount: icon_path += "destination.png";    break;
+        default:            icon_path += "via_0" + (activeWaypoint - 1) + ".png";
+    }
+
+    // Create new layer for markers if not present
+    if (!markerLayer) {
+        markerLayer = new OpenLayers.Layer.Vector('<%= t'routing.map.routing_points' %>', {
+            //displayInLayerSwitcher: false,
+            style: { 
+                externalGraphic: icon_path,
+                graphicXOffset: -10.5,
+                graphicYOffset: -25, 
+                graphicWidth: 21,
+                graphicHeight: 25
+            }
+        });
+        
+        map.addLayer(markerLayer);
+
+        markerControl = new OpenLayers.Control.DrawFeature(markerLayer, OpenLayers.Handler.Point);
+        map.addControl(markerControl);
+
+    }
+
+    // Listen for the marker to be added to the map
+    markerLayer.events.on({
+        "featureadded": endMarker
+    });
+
+    // If there was already a waypoint chosen: Remove it from map and clear fields of form
+    if(!(markers[activeWaypoint-1] === undefined)){
+       clearActiveWaypoint();
+    }
+
+    markerControl.activate();
+
+    return false;
+}
+
+$("wp1").onclick = function () {
+    setMarker("1");
+};
+$("wp2").onclick = function () {
+    setMarker("2");
+};
+
+
+initRouting();

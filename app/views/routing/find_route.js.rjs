@@ -1,0 +1,105 @@
+# Add KML-Response from controller as outline to map
+
+# Hide busy indicator
+page.replace_html 'script_inject', 
+"<script type=\"text/javascript\">
+   $('busy_indicator').style.display = 'none';
+</script>"
+
+
+# Display error message
+def showError(page, heading, message)
+  page.replace_html 'error_type', heading
+  page.replace_html 'error_message', message
+ 
+  page.replace_html 'script_inject', 
+  "<script type=\"text/javascript\">
+     $('error_type').style.display    = 'block';
+     $('error_message').style.display = 'block';
+  </script>"
+end
+
+
+# Display info which routing engine was used to calculate route
+def showEngine(page, engine)
+   if(engine)
+     engine_info = t('routing.basic.engine.leading_string').strip + " "
+     case engine
+        when "osrm"
+           engine_info += t('routing.basic.engine.osrm')
+        when "yours"
+           engine_info += t('routing.basic.engine.yours')
+        else
+           
+     end
+     page.replace_html 'engine', engine_info
+     
+     page.replace_html 'script_inject', 
+     "<script type=\"text/javascript\">
+        $('engine').style.display    = 'block';
+     </script>"
+   end
+end
+
+
+if(!@response)
+  # Got no response from controller
+  showError(page, t('routing.basic.error.no_response.title'),
+                  t('routing.basic.error.no_response.info_text'))
+elsif(@response.match("error:no_route_found"))
+  # No waypoints given with the controller response
+  showError(page, t('routing.basic.error.no_route.title'),
+                  t('routing.basic.error.no_route.info_text'))
+elsif(@response.match("error:insufficient_waypoints"))
+  # Not enough waypoints present to calculate a route
+  showError(page, t('routing.basic.error.insufficient_waypoints.title'),
+                  t('routing.basic.error.insufficient_waypoints.info_text'))
+elsif(@response.match("error:yours_busy"))
+  # Not enough waypoints present to calculate a route
+  showError(page, t('routing.basic.error.yours_busy.title'),
+                  t('routing.basic.error.yours_busy.info_text')) 
+elsif(@response.match("error:maintenance"))
+  # Not enough waypoints present to calculate a route
+  # Maintenance mode has own erb. This Block is just in case something goes wrong.
+  showError(page, t('routing.error_page.maintenance.title'),
+                  t('routing.error_page.maintenance.info_text'))
+elsif(@response.match("error:configuration_improperly_formatted"))
+  # Not enough waypoints present to calculate a route
+  # Configuration failure mode has own erb. This Block is just in case something goes wrong.
+  showError(page, t('routing.basic.error_page.config_error.title'),
+                  t('routing.basic.error.yours_busy.info_text'))
+else  # Route present within @response
+   # Process KML response from controller
+   page.replace_html 'script_inject', 
+   "<script type=\"text/javascript\">
+      // Projections
+      var unprojected = new OpenLayers.Projection('EPSG:4326');
+      var mercator    = new OpenLayers.Projection('EPSG:900913');
+   
+      // KML Route calculated by route controller
+      var kmlRoute = '#{@response}';
+   
+      // Style of the displayed route
+      var styles = new OpenLayers.StyleMap({
+                       strokeColor: '#000000',
+                       strokeOpacity: 0.65,
+                       strokeWidth: 4
+                   });
+   
+      var kml = new OpenLayers.Format.KML({
+                   externalProjection: unprojected,
+                   internalProjection: mercator
+                });
+   
+      var routeFeatures = kml.read(kmlRoute);
+   
+      var routingLayer = new OpenLayers.Layer.Vector('"+t('routing.map.routing_layer')+"', { styleMap: styles } );
+      routingLayer.id = 'route_outline';
+      routingLayer.addFeatures(routeFeatures);
+      map.addLayer(routingLayer);
+   </script>"
+   showEngine(page, @engine)
+end
+
+#DEBUG: Visualize response from controller
+#page.replace_html 'debug', "Controller response: '#{@response}'"

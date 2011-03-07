@@ -420,6 +420,52 @@ en:
       change_marker: "Change marker position"
       add_marker: "Add a marker to the map"
       view_larger_map: "View Larger Map"
+  routing:
+    map:
+      routing_points: "Routing Points"
+      routing_layer:  "Route"
+    basic:
+      waypointlist: "Waypoints"
+      means:        
+        heading: "Means of transportation"
+        feet:    "Feet"
+        bicycle: "Bicycle"
+        car:     "Car"
+        truck:   "Truck"
+      mode: "Mode"
+      routing_mode:
+        heading:  "Mode"
+        fastest:  "fastest"
+        shortest: "shortest"
+      routing_commit: "Find Route"
+      calc_route: "Calculating route ..."
+      engine:
+        leading_string: "Route was calculated by"
+        osrm:  "Opensource Routing Machine"
+        yours: "YOURS routing service"
+      error:
+        no_response:
+          title:     "No response received"
+          info_text: "The routing controller sent no response. Please contact an administrator."
+        no_route:
+          title:     "No route found"
+          info_text: "No route could be found for your request. Probably there is no street near one of your waypoints. Try a different departure or destination point."
+        insufficient_waypoints:
+          title:     "Insufficient waypoints"
+          info_text: "In order to calculate a route you have to specify a minimum of two waypoints."
+        yours_busy:
+          title:     "Remote routing engine busy"
+          info_text: "In order to calculate a route, OpenStreetMap uses the Yours routing service. However Yours is not operational due to overload at the moment. Please try again later or consider calculating a route for car in fastest mode to use a different routing engine"
+        general_error:
+          title:     "Error"
+          info_text: "An unknown error occurred"
+    error_page:
+      maintenance:
+        title: "Maintenance"
+        info_text: "The routing service is undergoing maintenance work right now. Stay tuned."
+      config_error:
+        title: "Configuration Error"
+        info_text: "The routing server is not configured correctly. Please contact an administrator."
   geocoder:
     search:
       title:
@@ -928,6 +974,8 @@ en:
     history: History
     export: Export
     export_tooltip: Export map data
+    routing: "Routing"
+    routing_tooltip: Route Planning
     gps_traces: GPS Traces
     gps_traces_tooltip: Manage GPS traces
     user_diaries: User Diaries

@@ -1,0 +1,39 @@
+// Resets all active tabs 
+function clearTabs(){
+   var tabnav = document.getElementById('tabnav').getElementsByTagName('*');
+   var i;
+   for(i=tabnav.length; i>0; i--){
+      if(tabnav[i-1].id){
+         tabnav[i-1].removeClassName('active');
+      } 
+   }
+}
+
+
+// Jump to a tab specified by tabId
+function setTab(tabID){
+   clearTabs();
+   document.getElementById(tabID).addClassName('active');
+}
+
+
+// Tidy up when jumping to another tab
+function leaveRoutingTab(){
+   tidyUp(); // Function from loaded content file
+   setTab('viewanchor');
+}
+
+
+// initialize routing tab
+function enterRoutingTab(){
+   setTab('routinganchor');
+
+   openSidebar({
+       title:   '<%= t'layouts.routing' %>',
+       width:   "275px",
+       onclose: leaveRoutingTab
+   });
+}
+
+
+enterRoutingTab();

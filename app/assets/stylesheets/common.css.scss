@@ -528,6 +528,96 @@ hr {
   text-align: center;
 }
 
+/* Rules for routing information which appears in the popout sidebar */
+
+.routing_heading {
+  margin: 0px;
+  padding: 3px 6px;
+  border: 1px solid #ccc;
+  background: #ddd;
+}
+
+.routing_waypointlist {
+/*  border: 1px solid blue;*/
+  width: 100%;
+  padding: 0px 12px;
+  padding-top: 12px;
+}
+
+.routing_waypoint_element {
+/*  border:  1px solid gray;*/
+  padding-bottom: 17px;
+}
+
+.routing_waypoint_element_last {
+/*  border:  1px solid red;*/
+  padding-bottom: 0px;
+}
+
+.routing_waypoint_marker {
+/*  border:  1px solid black;*/
+  padding-left:  0px;
+  padding-right: 0px;
+  width: 3px;
+}
+
+.routing_waypoint_input {
+  padding-left: 9px;
+  padding-right: 12px;
+}
+
+.routing_delete_button {
+  color: maroon;
+  font-weight: bold;
+  font-size: 175%;
+  width: 3px;
+}
+.routing_delete_button A:link {
+  text-decoration: none;
+  color: maroon;
+}
+.routing_delete_button A:visited {
+  text-decoration: none;
+  color: maroon;
+}
+.routing_delete_button A:active {
+  text-decoration: none;
+  color: maroon;
+}
+.routing_delete_button A:hover {
+  text-decoration: none;
+  color: maroon;
+}
+
+.routing_details {
+  padding: 2px 6px;
+}
+
+.routing_error_heading {
+  color:       maroon;
+  text-align:  center;
+  font-weight: bold;
+  font-size:   110%;
+  display:     none;
+}
+
+.routing_error_hint {
+  padding: 2px 6px;
+  color:   maroon;
+  display: none;
+}
+
+.routing_buttons {
+  width: 100%;
+  text-align: center;
+}
+
+.routing_warning_message {
+  padding-top:   7px;
+  padding-right: 7px;
+  padding-left:  4px;
+}
+
 /* Rules for the main content area */
 
 #content {
