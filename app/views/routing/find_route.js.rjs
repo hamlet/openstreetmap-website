@@ -77,7 +77,7 @@ else  # Route present within @response
       var mercator    = new OpenLayers.Projection('EPSG:900913');
    
       // KML Route calculated by route controller
-      var kmlRoute = '#{@response}';
+      var kmlRoute = '#{escape_javascript(@response)}';
    
       // Style of the displayed route
       var styles = new OpenLayers.StyleMap({
