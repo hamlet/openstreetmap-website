@@ -29,6 +29,8 @@ def showEngine(page, engine)
            engine_info += t('routing.basic.engine.osrm')
         when "yours"
            engine_info += t('routing.basic.engine.yours')
+		when "mapquest"
+           engine_info += t('routing.basic.engine.mapquest')
         else
            
      end

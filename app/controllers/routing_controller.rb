@@ -1,6 +1,7 @@
 class RoutingController < ApplicationController
   require 'net/http'
   require 'uri'
+  require 'xml/libxml'
 
 
   # Render start action
@@ -103,10 +104,14 @@ class RoutingController < ApplicationController
     if(params[:means] === "car" && params[:mode] === "fastest")
       @engine = "osrm"
       return osrmRoute(waypoints)
-    else
-      @engine = "yours"
+	else
+	  @engine = "yours"
       return yoursRoute(waypoints)
-    end
+	end
+#    else
+#      @engine = "mapquest"
+#      return mapquestRoute(waypoints)
+#    end
   end
 
 
@@ -142,6 +147,65 @@ class RoutingController < ApplicationController
     end
 
     return response.gsub(/\s+/, " ")
+  end
+
+   # Get a route calculated via open MapQuest directory service
+  def mapquestRoute(waypoints)
+    querystring = "http://open.mapquestapi.com/directions/v0/route"
+
+    # Static values
+    querystring += "?format=xml"
+    querystring += "&from=" + waypoints[0][:lat]
+    querystring += "," + waypoints[0][:lon]
+    querystring += "&to=" + waypoints[1][:lat]
+    querystring += "," + waypoints[1][:lon]
+
+    # Dynamic values
+    if(params[:means] === "bicycle")
+       querystring += "&routeType=bicycle"
+    elsif(params[:means] === "feet")
+	  querystring += "&routeType=pedestrian"
+	elsif(params[:means] == "car")
+	  if(params[:mode] === "fastest")
+		querystring += "&routeType=fastest"
+	  elsif(params[:mode] === "shortest")
+		querystring += "&routeType=shortest"
+	  end
+    end
+	querystring += "&generalize=0&shapeFormat=raw"
+
+#	logger.debug(querystring)
+
+    server_response_s = fetch_text(querystring)
+
+	#Reformat from mapquest specific XML to a kml output
+
+	parser = XML::Parser.string(server_response_s)
+	server_response = parser.parse
+
+	response = XML::Document.new
+	response.encoding = XML::Encoding::UTF_8
+    kml = XML::Node.new 'kml'
+    response.root = kml
+    kml['xmlns'] = "http://www.opengis.net/kml/2.2"
+    doc = XML::Node.new 'Document'
+    kml << doc
+    placemark = XML::Node.new 'Placemark'
+    doc << placemark
+    geom = XML::Node.new 'GeometryCollection'
+    placemark << geom
+	line = XML::Node.new 'LineString'
+    geom << line
+	coordinates = XML::Node.new 'coordinates'
+	coord = ""
+	server_response.find('/response/route/shape/shapePoints/latLng').each do |latLng|
+	  nodes = latLng.children
+	  coord = coord + nodes[1].content + "," + nodes[0].content + " "
+	end
+	coordinates << coord
+	line << coordinates
+
+    return response.to_s
   end
 
 

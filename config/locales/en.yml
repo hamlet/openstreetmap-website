@@ -443,6 +443,7 @@ en:
         leading_string: "Route was calculated by"
         osrm:  "Opensource Routing Machine"
         yours: "YOURS routing service"
+        mapquest: "MapQuest open directory service"
       error:
         no_response:
           title:     "No response received"
