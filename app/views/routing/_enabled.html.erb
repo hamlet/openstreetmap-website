@@ -1,14 +1,4 @@
-<div id="script_inject"></div>
-<script type="text/javascript"><%= render('content_enabled.js') %></script>
-<% form_remote_tag(
-      :url      => { :action => :find_route },
-      :html     => {
-                     :method => "get",
-                     :action => url_for(:controller => "routing", :action => "finish")
-                   }
-   ) do
-%> 
-
+<%= form_tag({ :action => :find_route }, { :method => "get", :remote => true }) do %>
    <p class="routing_heading"><%= t'routing.basic.waypointlist' %></p>
 
    <table class="routing_waypointlist" cellspacing="0" cellpadding="0" border="0">
@@ -62,23 +52,7 @@
 
    <div class="routing_buttons">
       <p>
-         <%= submit_tag t('routing.basic.routing_commit'),
-                        :id => "export_commit",
-                        :onclick => "// Remove old route from map
-                                     var layer = map.getLayer('route_outline');
-                                     if(layer !== null){
-                                        layer.destroy();
-                                     }
-                                     // Clear error display
-                                     $('error_type').style.display    = 'none';
-                                     $('error_message').style.display = 'none';
-                                     $('error_type').innerHTML    = '';
-                                     $('error_message').innerHTML = '';
-                                     // Show busy indicator
-                                     $('busy_indicator').style.display = 'block';
-                                     // Hide routing engine info
-                                     $('engine').style.display = 'none';"
-         %>
+         <%= submit_tag t('routing.basic.routing_commit'), :id => "routing_commit" %>
       </p>
    </div>
    <p class="routing_details" id="engine" style="display: none;"></p>

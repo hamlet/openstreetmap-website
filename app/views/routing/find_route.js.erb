@@ -1,0 +1,73 @@
+// Add KML-Response from controller as outline to map
+
+// Hide busy indicator
+$("#busy_indicator").hide();
+
+// Display error message
+function showError(heading, message) {
+    $("#error_type").html(heading).show();
+    $("#error_message").html(message).show();
+}
+
+<% if not @response -%>
+// Got no response from controller
+showError("<%=j t('routing.basic.error.no_response.title') %>",
+          "<%=j t('routing.basic.error.no_response.info_text') %>");
+<% elsif @response.match("error:no_route_found") -%>
+// No waypoints given with the controller response
+showError("<%=j t('routing.basic.error.no_route.title') %>",
+          "<%=j t('routing.basic.error.no_route.info_text') %>");
+<% elsif @response.match("error:insufficient_waypoints") -%>
+// Not enough waypoints present to calculate a route
+showError("<%=j t('routing.basic.error.insufficient_waypoints.title') %>",
+          "<%=j t('routing.basic.error.insufficient_waypoints.info_text') %>");
+<% elsif @response.match("error:yours_busy") -%>
+// Not enough waypoints present to calculate a route
+showError("<%=j t('routing.basic.error.yours_busy.title') %>",
+          "<%=j t('routing.basic.error.yours_busy.info_text') %>");
+<% elsif @response.match("error:maintenance") -%>
+// Not enough waypoints present to calculate a route
+// Maintenance mode has own erb. This Block is just in case something goes wrong.
+showError("<%=j t('routing.error_page.maintenance.title') %>",
+          "<%=j t('routing.error_page.maintenance.info_text') %>");
+<% elsif @response.match("error:configuration_improperly_formatted") -%>
+// Not enough waypoints present to calculate a route
+// Configuration failure mode has own erb. This Block is just in case something goes wrong.
+showError("<%=j t('routing.basic.error_page.config_error.title') %>",
+          "<%=j t('routing.basic.error.yours_busy.info_text') %>");
+<% else -%>
+// Route present within @response
+// Process KML response from controller
+
+// Projections
+var unprojected = new OpenLayers.Projection('EPSG:4326');
+var mercator = new OpenLayers.Projection('EPSG:900913');
+   
+// KML Route calculated by route controller
+var kmlRoute = "<%=j raw @response %>";
+   
+// Style of the displayed route
+var styles = new OpenLayers.StyleMap({
+    strokeColor: "#000000",
+    strokeOpacity: 0.65,
+    strokeWidth: 4
+});
+
+var kml = new OpenLayers.Format.KML({
+    externalProjection: unprojected,
+    internalProjection: mercator
+});
+
+var routingLayer = new OpenLayers.Layer.Vector("<%=j t('routing.map.routing_layer') %>", { 
+    styleMap: styles
+});
+routingLayer.id = "route_outline";
+routingLayer.addFeatures(kml.read(kmlRoute));
+map.addLayer(routingLayer);
+
+$("#engine").html("<%=j t("routing.basic.engine.leading_string") %> <%=j t("routing.basic.engine.#{@engine}") %>");
+$("#engine").show();
+<% end -%>
+
+// DEBUG: Visualize response from controller
+// $("#debug").html("Controller response: '" + kmlRoute + "'");

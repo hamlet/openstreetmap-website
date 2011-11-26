@@ -1,3 +1,27 @@
+// Jump to a tab specified by tabId
+function setTab(tabID){
+    $("#tabnav a").removeClass("active");
+    $("#" + tabID).addClass("active");
+}
+
+// Tidy up when jumping to another tab
+function leaveRoutingTab(){
+    tidyUp(); // Function from loaded content file
+    setTab('viewanchor');
+}
+
+// initialize routing tab
+function enterRoutingTab(){
+    setTab('routinganchor');
+
+    openSidebar({
+        title:   '<%= t'layouts.routing' %>',
+        width:   "275px",
+        onclose: leaveRoutingTab
+    });
+}
+
+<% if ROUTING_STATUS == "enabled" -%>
 var map = window.parent.map;
 var markers = [];   // Contains a marker for each waypoint
 var icon_path;
@@ -20,18 +44,18 @@ function setActiveWaypoint(num) {
  */
 function clearMarker(num) {
     if (num === undefined || num === "all"){
-       // Remove every marker present
-       // Remove marker layer if present
-       if (markerLayer) {
-           markerLayer.destroy();
-           markerLayer = null;
-           markerControl.destroy();
-           markerControl = null;
-       }
-    }else{  // Remove single waypoint
-       var waypoint_number = parseInt(num, 10);
-       markerLayer.removeFeatures(markers[waypoint_number-1]);
-       markers[waypoint_number-1] = undefined;
+        // Remove every marker present
+        // Remove marker layer if present
+        if (markerLayer) {
+            markerLayer.destroy();
+            markerLayer = null;
+            markerControl.destroy();
+            markerControl = null;
+        }
+    } else {  // Remove single waypoint
+        var waypoint_number = parseInt(num, 10);
+        markerLayer.removeFeatures(markers[waypoint_number-1]);
+        markers[waypoint_number-1] = undefined;
     }
 }
 
@@ -39,63 +63,52 @@ function clearMarker(num) {
 /* Resets all waypoint labels and coordinates and removes marker from map
  * First waypoint is 1
  */
-function clearWaypoint(num){
-   if(!(num === undefined)){
+function clearWaypoint(num) {
+   if (!(num === undefined)) {
       //TODO: parseInt(num, 10) try und catchen
       clearMarker(parseInt(num, 10));
      
-      $("wp" + activeWaypoint + "_lat").value = "";
-      $("wp" + activeWaypoint + "_lon").value = "";
-      $("wp" + activeWaypoint + "_display").value = "";
+      $("#wp" + activeWaypoint + "_lat").val("");
+      $("#wp" + activeWaypoint + "_lon").val("");
+      $("#wp" + activeWaypoint + "_display").val("");
    }
 }
 
 
 // Clears the currently processed waypoint
 function clearActiveWaypoint(){
-   clearWaypoint(activeWaypoint);
+    clearWaypoint(activeWaypoint);
 }
 
 
 // Remove route outline from map
 function clearRoute(){
-   var layer = map.getLayer("route_outline");
-   if(layer !== null){
-      layer.destroy();
-   }
-}  
+    var layer = map.getLayer("route_outline");
+    if (layer !== null){
+        layer.destroy();
+    }
+}
 
 
 /* Display an error message below the waypointlist
  * show general error message, if no params passed
  */
 function showError(heading, message){
-      var head = $("error_type");
-      var err  = $("error_type");
+    var head = $("#error_type");
+    var err = $("#error_type");
       
-   if(heading === undefined && message === undefined){
-      head.innerHTML     = '<%= t'routing.basic.error.general_error.title' %>';
-      head.style.display = "block";
-
-      err.innerHTML     = '<%= t'routing.basic.error.general_error.title' %>';
-      err.style.display = "block";
-   }else{
-      head.innerHTML     = heading;
-      head.style.display = "block";
-
-      hint.innerHTML     = message;
-      hint.style.display = "block";
-   }
+    if (heading === undefined && message === undefined){
+        head.html("<%=j t'routing.basic.error.general_error.title' %>").show();
+        err.html("<%=j t'routing.basic.error.general_error.title' %>").show();
+    } else {
+        head.html(heading).show();
+        hint.html(message).show();
+    }
 }
 
 function hideError(){
-      var head = $("error_type");
-      head.style.display = "none";
-      head.innerHTML     = "";
-
-      var hint = $("error_message");
-      hint.style.display = "none";
-      hint.innerHTML     = "clear";
+    $("#error_type").hide().html("");
+    $("#error_message").hide().html("");
 }
 
 
@@ -104,7 +117,7 @@ function hideError(){
  * back function of browser will work, too
  */
 function htmlUrlChanged() {
-   // TODO: Update displayed page url corresponding to actual content of page
+    // TODO: Update displayed page url corresponding to actual content of page
 }
 
 
@@ -112,10 +125,10 @@ function htmlUrlChanged() {
 function baseLayerChanged(){
    if(map.baseLayer.name === "Cycle Map"){
       // Eventually preserve means of transport
-      $("means_bicycle").checked = true;
+      $("#means_bicycle").prop("checked", true);
    }else{
       // Eventually restore means of transport
-      $("means_car").checked = true;
+      $("#means_car").prop("checked", true);
    }
 }
 
@@ -167,9 +180,9 @@ function endMarker(event) {
     var geom = waypoint_marker.geometry.clone().transform(proj_screen, proj_map);
 
     // Set hidden and displayed text fields
-    $("wp" + activeWaypoint + "_lat").value = geom.y;
-    $("wp" + activeWaypoint + "_lon").value = geom.x;
-    $("wp" + activeWaypoint + "_display").value = geom.y.toFixed(5) + " " + geom.x.toFixed(5);
+    $("#wp" + activeWaypoint + "_lat").val(geom.y);
+    $("#wp" + activeWaypoint + "_lon").val(geom.x);
+    $("#wp" + activeWaypoint + "_display").val(geom.y.toFixed(5) + " " + geom.x.toFixed(5));
 }
 
 
@@ -181,11 +194,12 @@ function setMarker(wp_number) {
     clearRoute();
     
     // Set path to iconfile 
-    icon_path = "/images/routing/";
-    switch(activeWaypoint){
-        case 1:             icon_path += "departure.png";      break;
-        case waypointCount: icon_path += "destination.png";    break;
-        default:            icon_path += "via_0" + (activeWaypoint - 1) + ".png";
+    switch (activeWaypoint) {
+    case 1: icon_path = "<%= asset_path("routing/departure.png") %>"; break;
+    <% 1.upto(waypointCount - 2) do |n| -%>
+    case <%= n %>: icon_path = "<%= asset_path("routing/via_#{"%02d" % n}.png") %>"; break;
+    <% end -%>
+    case waypointCount: icon_path = "<%= asset_path("routing/destination.png") %>"; break;
     }
 
     // Create new layer for markers if not present
@@ -223,12 +237,33 @@ function setMarker(wp_number) {
     return false;
 }
 
-$("wp1").onclick = function () {
-    setMarker("1");
-};
-$("wp2").onclick = function () {
-    setMarker("2");
-};
-
-
 initRouting();
+
+$("#sidebar_content").html("<%=j render :partial => "enabled" %>");
+
+$("#wp1").click(function () { setMarker("1"); });
+$("#wp2").click(function () { setMarker("2"); });
+
+$("#routing_commit").click(function () {
+    var layer = map.getLayer('route_outline');
+    if (layer !== null) {
+        layer.destroy();
+    }
+
+    // Clear error display
+    $("#error_type").hide().html("");
+    $("#error_message").hide().html("");
+
+    // Show busy indicator
+    $("#busy_indicator").show();
+
+    // Hide routing engine info
+    $("#engine").hide();
+});
+<% elsif ROUTING_STATUS == "maintenance" -%>
+$("#sidebar_content").html("<%=j render :partial => "maintenance" %>");
+<% else -%>
+$("#sidebar_content").html("<%=j render :partial => "config_info" %>");
+<% end -%>
+
+enterRoutingTab();
