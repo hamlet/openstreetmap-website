@@ -29,7 +29,8 @@ class RelationController < ApplicationController
     relation = Relation.find(params[:id])
     response.last_modified = relation.timestamp
     if relation.visible
-      render :text => relation.to_xml.to_s, :content_type => "text/xml"
+      render_relation relation
+
     else
       render :text => "", :status => :gone
     end
@@ -133,13 +134,8 @@ class RelationController < ApplicationController
     ids = params['relations'].split(',').collect { |w| w.to_i }
 
     if ids.length > 0
-      doc = OSM::API.new.get_xml_doc
+      render_relations(Relation.find(ids))
 
-      Relation.find(ids).each do |relation|
-        doc.root << relation.to_xml_node
-      end
-
-      render :text => doc.to_s, :content_type => "text/xml"
     else
       render :text => "You need to supply a comma separated list of ids.", :status => :bad_request
     end
@@ -159,13 +155,28 @@ class RelationController < ApplicationController
 
   def relations_for_object(objtype)
     relationids = RelationMember.where(:member_type => objtype, :member_id => params[:id]).collect { |ws| ws.relation_id }.uniq
+    render_relations(Relation.find(relationids).select {|r| r.visible})
+  end
 
-    doc = OSM::API.new.get_xml_doc
+private
 
-    Relation.find(relationids).each do |relation|
-      doc.root << relation.to_xml_node if relation.visible
+  def render_relation(relation)
+    format = request.negotiate_mime([Mime::JSON]) or Mime::XML
+    render :text => relation.to_format(format).to_s, :content_type => format
+  end
+
+  def render_relations(relations)
+    if request.negotiate_mime([Mime::JSON]) == Mime::JSON
+      doc = OSM::API.new.get_json_doc
+      doc['relations'] = relations.map {|relation| relation.to_osmjson_node}
+      render :text => doc.to_json, :content_type => Mime::JSON
+
+    else
+      doc = OSM::API.new.get_xml_doc
+      relations.each do |relation|
+        doc.root << relation.to_xml_node
+      end
+      render :text => doc.to_s, :content_type => "text/xml"
     end
-
-    render :text => doc.to_s, :content_type => "text/xml"
   end
 end
