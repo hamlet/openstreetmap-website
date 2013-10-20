@@ -42,7 +42,10 @@ module OSM::Format
       user_id = (@changeset_cache[obj.changeset_id] ||= obj.changeset.user_id)
       display_name = (@user_display_name_cache[user_id] ||= obj_display_name(obj))
       
-      unless display_name.nil?
+      if display_name.nil?
+        self['user'] = nil
+        self['uid'] = nil
+      else
         self['user'] = display_name
         self['uid'] = user_id
       end
@@ -58,7 +61,7 @@ module OSM::Format
     end
 
     def []=(k, v)
-      @xml[k.to_s] = v.to_s
+      @xml[k.to_s] = v.to_s unless v.nil?
     end
 
     def tags=(hash_tags)

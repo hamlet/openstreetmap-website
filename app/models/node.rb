@@ -249,7 +249,7 @@ class Node < ActiveRecord::Base
 
   def to_osmjson
     doc = OSM::API.new.get_json_doc
-    doc['nodes'] = to_osmjson_node()
+    doc['nodes'] = [to_osmjson_node()]
     return doc.to_json
   end
 

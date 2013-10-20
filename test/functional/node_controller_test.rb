@@ -662,6 +662,25 @@ class NodeControllerTest < ActionController::TestCase
     assert apinode.tags.include?('#{@user.inspect}')
   end
 
+  def test_data_public_json
+    @request.headers["Accept"] = "application/json"
+    get :read, :id => current_nodes(:visible_node).id
+
+    assert_response :success
+    data = JSON.parse(@response.body)
+    
+    ['nodes','ways','relations'].each do |type|
+      assert data.has_key?(type), "The #{type} array should be present in response."
+    end
+    assert_equal data['nodes'].class, Array, "Nodes should be an array, but is a #{data['nodes'].class}"
+    assert_equal data['nodes'].length, 1, "Should have got a single node from API, but got #{data['nodes'].inspect}"
+    node = data['nodes'][0]
+    ['uid','user'].each do |k|
+      assert node.has_key?(k), "Node should have #{k.inspect} key always."
+      assert_nil node[k], "Node #{k.inspect} value should be null for non-public data."
+    end
+  end
+
   #### utility methods ####
 
   def basic_authorization(user, pass)

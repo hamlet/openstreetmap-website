@@ -267,34 +267,87 @@ class NodeTest < ActiveSupport::TestCase
 
     data = JSON.parse(node.to_format(Mime::JSON))
 
-    assert_equal(node.id, data['nodes']['id'])
-    assert_equal(node.version, data['nodes']['version'])
-    assert_equal(node.changeset.id, data['nodes']['changeset'])
-    assert_equal(node.lat, data['nodes']['lat'])
-    assert_equal(node.lon, data['nodes']['lon'])
-    assert_equal(node.changeset.user.id, data['nodes']['uid'])
-    assert_equal(node.changeset.user.display_name, data['nodes']['user'])
-    assert_equal(node.visible, data['nodes']['visible'])
-    assert_equal(node.timestamp, Time.parse(data['nodes']['timestamp']))
-    assert_equal(node.tags, data['nodes']['tags'])
+    assert_equal(Array, data['nodes'].class)
+    assert_equal(1, data['nodes'].length)
+    jnode = data['nodes'][0]
+    assert_equal(node.id, jnode['id'])
+    assert_equal(node.version, jnode['version'])
+    assert_equal(node.changeset.id, jnode['changeset'])
+    assert_equal(node.lat, jnode['lat'])
+    assert_equal(node.lon, jnode['lon'])
+    assert_equal(node.visible, jnode['visible'])
+    assert_equal(node.timestamp, Time.parse(jnode['timestamp']))
+    assert_equal(node.tags, jnode['tags'])
+    assert_equal(node.changeset.user.id, jnode['uid'])
+    assert_equal(node.changeset.user.display_name, jnode['user'])
   end
 
   def test_to_json_respects_private_data
-    # visible_node is by a non-public user, so shouldn't show user ID or name
+    # visible_node is by a non-public user, so shouldn't show user ID or name. in JSON
+    # these should be set to null, which is different behaviour from XML. in XML they
+    # are just not present.
     node = current_nodes(:visible_node)
 
     data = JSON.parse(node.to_format(Mime::JSON))
 
-    assert_equal(node.id, data['nodes']['id'])
-    assert_equal(node.version, data['nodes']['version'])
-    assert_equal(node.changeset.id, data['nodes']['changeset'])
-    assert_equal(node.lat, data['nodes']['lat'])
-    assert_equal(node.lon, data['nodes']['lon'])
-    assert_equal(node.visible, data['nodes']['visible'])
-    assert_equal(node.timestamp, Time.parse(data['nodes']['timestamp']))
-    assert_equal(node.tags, data['nodes']['tags'])
-    assert_equal(false, data['nodes'].has_key?('uid'))
-    assert_equal(false, data['nodes'].has_key?('user'))
+    assert_equal(Array, data['nodes'].class)
+    assert_equal(1, data['nodes'].length)
+    jnode = data['nodes'][0]
+    assert_equal(node.id, jnode['id'])
+    assert_equal(node.version, jnode['version'])
+    assert_equal(node.changeset.id, jnode['changeset'])
+    assert_equal(node.lat, jnode['lat'])
+    assert_equal(node.lon, jnode['lon'])
+    assert_equal(node.visible, jnode['visible'])
+    assert_equal(node.timestamp, Time.parse(jnode['timestamp']))
+    assert_equal(node.tags, jnode['tags'])
+    assert_equal(true, jnode.has_key?('uid'))
+    assert_equal(nil, jnode['uid'])
+    assert_equal(true, jnode.has_key?('user'))
+    assert_equal(nil, jnode['user'])
+  end
+
+  def test_to_xml
+    node = current_nodes(:used_node_1)
+
+    data = XML::Parser.string(node.to_format(Mime::XML).to_s).parse
+
+    nodes = data.root.children.select {|n| n.element?}
+    assert_equal(1, nodes.length)
+    xnode = nodes[0]
+    assert_equal(node.id, xnode['id'].to_i)
+    assert_equal(node.version, xnode['version'].to_i)
+    assert_equal(node.changeset.id, xnode['changeset'].to_i)
+    assert_equal(node.lat, xnode['lat'].to_f)
+    assert_equal(node.lon, xnode['lon'].to_f)
+    assert_equal(node.visible, xnode['visible'] == 'true')
+    assert_equal(node.timestamp, Time.parse(xnode['timestamp']))
+    xtags = Hash[xnode.children.select {|n| n.element?}.map {|n| [n['k'], n['v']]}]
+    assert_equal(node.tags, xtags)
+    assert_equal(node.changeset.user.id, xnode['uid'].to_i)
+    assert_equal(node.changeset.user.display_name, xnode['user'])
+  end
+
+  def test_to_xml_respects_private_data
+    # visible_node is by a non-public user, so shouldn't show user ID or name
+    node = current_nodes(:visible_node)
+
+    data = XML::Parser.string(node.to_format(Mime::XML).to_s).parse
+
+    nodes = data.root.children.select {|n| n.element?}
+    assert_equal(1, nodes.length)
+    xnode = nodes[0]
+    assert_equal(node.id, xnode['id'].to_i)
+    assert_equal(node.version, xnode['version'].to_i)
+    assert_equal(node.changeset.id, xnode['changeset'].to_i)
+    assert_equal(node.lat, xnode['lat'].to_f)
+    assert_equal(node.lon, xnode['lon'].to_f)
+    assert_equal(node.visible, xnode['visible'] == 'true')
+    assert_equal(node.timestamp, Time.parse(xnode['timestamp']))
+    xtags = Hash[xnode.children.select {|n| n.element?}.map {|n| [n['k'], n['v']]}]
+    assert_equal(node.tags, xtags)
+    assert_equal(nil, xnode['uid'])
+    assert_equal(nil, xnode['user'])
   end
 
   ## NOTE: the "double attribute" errors which we raise in XML mode don't apply here

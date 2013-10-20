@@ -30,7 +30,7 @@ class NodeController < ApplicationController
     response.last_modified = node.timestamp
 
     if node.visible
-      render_node node
+      render_nodes [node]
     else
       render :text => "", :status => :gone
     end
@@ -78,11 +78,6 @@ class NodeController < ApplicationController
   end
 
 private
-
-  def render_node(node)
-    format = request.negotiate_mime([Mime::JSON]) or Mime::XML
-    render :text => node.to_format(format).to_s, :content_type => format
-  end
 
   def render_nodes(nodes)
     if request.negotiate_mime([Mime::JSON]) == Mime::JSON
