@@ -55,7 +55,7 @@ class ChangesetController < ApplicationController
     changeset.set_closed_time_now
 
     changeset.save!
-    render :nothing => true
+    render :text => ""
   end
 
   ##
@@ -204,7 +204,7 @@ class ChangesetController < ApplicationController
 
     # create the conditions that the user asked for. some or all of
     # these may be nil.
-    changesets = Changeset.scoped
+    changesets = Changeset.all
     changesets = conditions_bbox(changesets, bbox)
     changesets = conditions_user(changesets, params['user'], params['display_name'])
     changesets = conditions_time(changesets, params['time'])
@@ -243,7 +243,7 @@ class ChangesetController < ApplicationController
       render :text => changeset.to_xml, :mime_type => "text/xml"
     else
 
-      render :nothing => true, :status => :bad_request
+      render :text => "", :status => :bad_request
     end
   end
 
@@ -253,7 +253,7 @@ class ChangesetController < ApplicationController
     if request.format == :atom and params[:page]
       redirect_to params.merge({ :page => nil }), :status => :moved_permanently
     else
-      changesets = conditions_nonempty(Changeset.scoped)
+      changesets = conditions_nonempty(Changeset.all)
 
       if params[:display_name]
         user = User.find_by_display_name(params[:display_name])

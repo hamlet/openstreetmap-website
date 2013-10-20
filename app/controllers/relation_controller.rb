@@ -46,7 +46,7 @@ class RelationController < ApplicationController
       relation.update_from new_relation, @user
       render :text => relation.version.to_s, :content_type => "text/plain"
     else
-      render :nothing => true, :status => :bad_request
+      render :text => "", :status => :bad_request
     end
   end
 
@@ -57,7 +57,7 @@ class RelationController < ApplicationController
       relation.delete_with_history!(new_relation, @user)
       render :text => relation.version.to_s, :content_type => "text/plain"
     else
-      render :nothing => true, :status => :bad_request
+      render :text => "", :status => :bad_request
     end
   end
 
@@ -126,19 +126,22 @@ class RelationController < ApplicationController
       render :text => doc.to_s, :content_type => "text/xml"
       
     else
-      render :nothing => true, :status => :gone
+      render :text => "", :status => :gone
     end
   end
 
   def relations
+    if not params['relations']
+      raise OSM::APIBadUserInput.new("The parameter relations is required, and must be of the form relations=id[,id[,id...]]")
+    end
+
     ids = params['relations'].split(',').collect { |w| w.to_i }
 
-    if ids.length > 0
-      render_relations(Relation.find(ids))
-
-    else
-      render :text => "You need to supply a comma separated list of ids.", :status => :bad_request
+    if ids.length == 0
+      raise OSM::APIBadUserInput.new("No relations were given to search for")
     end
+
+    render_relations(Relation.find(ids))
   end
 
   def relations_for_way

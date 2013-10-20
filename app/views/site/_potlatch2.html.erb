@@ -10,7 +10,7 @@
 <script type="text/javascript">alert("<%= t 'site.edit.potlatch2_not_configured' %>")</script>
 <% end %>
 
-<% locale = select_locale(Potlatch2::LOCALES.keys) %>
+<% locale = select_locale(Potlatch2::LOCALES.keys).to_s %>
 
 <script type="text/javascript" defer="defer">
   var changesaved=true;
@@ -32,6 +32,8 @@
     flashvars.font_library = "<%= asset_path "potlatch2/FontLibrary.swf" %>";
     flashvars.locale = "<%= Potlatch2::LOCALES[locale] %>";
     flashvars.locale_paths = "<%= Potlatch2::LOCALES[locale] %>=<%= asset_path("potlatch2/locales/#{Potlatch2::LOCALES[locale]}.swf") %>";
+    flashvars.intro_image = "<%= asset_path "help/introduction.jpg" %>";
+    flashvars.intro_video = "<%= asset_path "help/introduction.mp4" %>";
     <% if params['gpx'] %>
     flashvars.gpx = '<%= h(params['gpx']) %>';
     <% end %>
@@ -64,7 +66,7 @@
     // 700,600 for fixed size, 100%,100% for resizable
 
     if (lat && lon) {
-      updatelinks(lon, lat, zoom);
+      updatelinks({ lon: lon, lat: lat }, zoom);
     }
   }
 
@@ -85,7 +87,12 @@
     });
   });
 
-  function mapMoved(lon, lat, zoom, minlon, minlat, maxlon, maxlat) {
-    updatelinks(lon, lat, zoom, null, minlon, minlat, maxlon, maxlat);
-  }
+  var mapMoved = $.throttle(250, function(lon, lat, zoom, minlon, minlat, maxlon, maxlat) {
+    updatelinks({ lon: lon, lat: lat }, zoom, null, [[minlat, minlon], [maxlat, maxlon]]);
+
+    var hash = OSM.formatHash({ lon: lon, lat: lat, zoom: zoom });
+    if (hash !== location.hash) {
+      location.replace(hash);
+    }
+  });
 </script>

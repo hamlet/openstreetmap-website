@@ -1,110 +1,84 @@
 $(document).ready(function () {
-  function remoteEditHandler(bbox, select) {
-    var left = bbox.getWestLng() - 0.0001;
-    var top = bbox.getNorthLat() + 0.0001;
-    var right = bbox.getEastLng() + 0.0001;
-    var bottom = bbox.getSouthLat() - 0.0001;
-    var loaded = false;
 
-    $("#linkloader").load(function () { loaded = true; });
+  var map = L.map("small_map", {
+    attributionControl: false,
+    zoomControl: false
+  }).addLayer(new L.OSM.Mapnik());
 
-    if (select) {
-      $("#linkloader").attr("src", "http://127.0.0.1:8111/load_and_zoom?left=" + left + "&top=" + top + "&right=" + right + "&bottom=" + bottom + "&select=" + select);
-    } else {
-      $("#linkloader").attr("src", "http://127.0.0.1:8111/load_and_zoom?left=" + left + "&top=" + top + "&right=" + right + "&bottom=" + bottom);
-    }
-
-    setTimeout(function () {
-      if (!loaded) alert(I18n.t('site.index.remote_failed'));
-    }, 1000);
-
-    return false;
-  }
-
-  var map = createMap("small_map", {
-    layerControl: false,
-    panZoomControl: false,
-    attributionControl: false
-  });
+  L.OSM.zoom()
+    .addTo(map);
 
   var params = $("#small_map").data();
+  var object, bbox;
   if (params.type == "changeset") {
-    var bbox = L.latLngBounds([params.minlat, params.minlon],
-                              [params.maxlat, params.maxlon]);
+    bbox = L.latLngBounds([params.minlat, params.minlon],
+        [params.maxlat, params.maxlon]);
 
     map.fitBounds(bbox);
-    addBoxToMap(bbox);
+
+    L.rectangle(bbox, {
+      weight: 2,
+      color: '#e90',
+      fillOpacity: 0
+    }).addTo(map);
 
     $("#loading").hide();
-    $("#browse_map .geolink").show();
+    $("#browse_map .secondary-actions").show();
 
     $("a[data-editor=remote]").click(function () {
       return remoteEditHandler(bbox);
     });
 
-    var centre = bbox.getCenter();
-    updatelinks(centre.lng, centre.lat, 16, null, params.minlon, params.minlat, params.maxlon, params.maxlat);
+    updatelinks(map.getCenter(), 16, null, [[params.minlat, params.minlon],
+        [params.maxlat, params.maxlon]]);
   } else if (params.type == "note") {
-    var object = {type: params.type, id: params.id};
+    object = {type: params.type, id: params.id};
 
     map.setView([params.lat, params.lon], 16);
 
     L.marker([params.lat, params.lon], { icon: getUserIcon() }).addTo(map);
 
-    var bbox = map.getBounds();
+    bbox = map.getBounds();
 
     $("#loading").hide();
-    $("#browse_map .geolink").show();
+    $("#browse_map .secondary-actions").show();
 
     $("a[data-editor=remote]").click(function () {
       return remoteEditHandler(bbox);
     });
 
-    updatelinks(params.lon, params.lat, 16, null, 
-                bbox.getWestLng(), bbox.getSouthLat(),
-                bbox.getEastLng(), bbox.getNorthLat(),
-                object);
+    updatelinks(params, 16, null, bbox, object);
   } else {
-    $("#object_larger_map").hide();
-    $("#object_edit").hide();
+    $("#object_larger_map, #object_edit").hide();
 
-    var object = {type: params.type, id: params.id};
+    object = {type: params.type, id: params.id};
 
     if (!params.visible) {
       object.version = params.version - 1;
     }
 
-    addObjectToMap(object, true, function(extent) {
-      $("#loading").hide();
-      $("#browse_map .geolink").show();
+    map.addObject(object, {
+      zoom: true,
+      callback: function(extent) {
+        $("#loading").hide();
 
-      if (extent) {
-        $("a.bbox[data-editor=remote]").click(function () {
-          return remoteEditHandler(extent);
-        });
+        if (extent && extent.isValid()) {
+          $("#browse_map .secondary-actions").show();
 
-        $("a.object[data-editor=remote]").click(function () {
-          return remoteEditHandler(extent, params.type + params.id);
-        });
+          $("a.bbox[data-editor=remote]").click(function () {
+            return remoteEditHandler(extent);
+          });
 
-        $("#object_larger_map").show();
-        $("#object_edit").show();
+          $("a.object[data-editor=remote]").click(function () {
+            return remoteEditHandler(extent, params.type + params.id);
+          });
 
-        var centre = extent.getCenter();
-        updatelinks(centre.lng,
-                    centre.lat,
-                    16, null,
-                    extent.getWestLng(),
-                    extent.getSouthLat(),
-                    extent.getEastLng(),
-                    extent.getNorthLat(),
-                    object);
-      } else {
-        $("#small_map").hide();
+          $("#object_larger_map").show();
+          $("#object_edit").show();
+
+          updatelinks(map.getCenter(), 16, null, extent, object);
+        }
       }
     });
   }
-
-  createMenu("area_edit", "area_edit_menu", "right");
-  createMenu("object_edit", "object_edit_menu", "right");
 });

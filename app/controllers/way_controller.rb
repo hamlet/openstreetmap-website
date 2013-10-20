@@ -19,7 +19,7 @@ class WayController < ApplicationController
       way.create_with_history @user
       render :text => way.id.to_s, :content_type => "text/plain"
     else
-      render :nothing => true, :status => :bad_request
+      render :text => "", :status => :bad_request
     end
   end
 
@@ -43,7 +43,7 @@ class WayController < ApplicationController
       way.update_from(new_way, @user)
       render :text => way.version.to_s, :content_type => "text/plain"
     else
-      render :nothing => true, :status => :bad_request
+      render :text => "", :status => :bad_request
     end
   end
 
@@ -56,7 +56,7 @@ class WayController < ApplicationController
       way.delete_with_history!(new_way, @user)
       render :text => way.version.to_s, :content_type => "text/plain"
     else
-      render :nothing => true, :status => :bad_request
+      render :text => "", :status => :bad_request
     end
   end
 
@@ -84,18 +84,19 @@ class WayController < ApplicationController
   end
 
   def ways
-    begin
-      ids = params['ways'].split(',').collect { |w| w.to_i }
-    rescue
-      ids = []
+    if not params['ways']
+      raise OSM::APIBadUserInput.new("The parameter ways is required, and must be of the form ways=id[,id[,id...]]")
     end
 
-    if ids.length > 0
-      render_ways Way.find(ids)
+    ids = params['ways'].split(',').collect { |w| w.to_i }
 
-    else
-      render :nothing => true, :status => :bad_request
+    if ids.length == 0
+      raise OSM::APIBadUserInput.new("No ways were given to search for")
     end
+
+    doc = OSM::API.new.get_xml_doc
+
+    render_ways Way.find(ids)
   end
 
   ##

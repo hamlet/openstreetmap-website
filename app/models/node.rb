@@ -9,7 +9,7 @@ class Node < ActiveRecord::Base
 
   belongs_to :changeset
 
-  has_many :old_nodes, :order => :version
+  has_many :old_nodes, -> { order(:version) }
 
   has_many :way_nodes
   has_many :ways, :through => :way_nodes
@@ -31,36 +31,12 @@ class Node < ActiveRecord::Base
   validate :validate_position
   validates_associated :changeset
 
-  scope :visible, where(:visible => true)
-  scope :invisible, where(:visible => false)
+  scope :visible, -> { where(:visible => true) }
+  scope :invisible, -> { where(:visible => false) }
 
   # Sanity check the latitude and longitude and add an error if it's broken
   def validate_position
     errors.add(:base, "Node is not in the world") unless in_world?
-  end
-
-  #
-  # Search for nodes matching tags within bounding_box
-  #
-  # Also adheres to limitations such as within max_number_of_nodes
-  #
-  def self.search(bounding_box, tags = {})
-    # @fixme a bit of a hack to search for only visible nodes
-    # couldn't think of another to add to tags condition
-    #conditions_hash = tags.merge({ 'visible' => 1 })
-  
-    # using named placeholders http://www.robbyonrails.com/articles/2005/10/21/using-named-placeholders-in-ruby
-    #keys = []
-    #values = {}
-
-    #conditions_hash.each do |key,value|
-    #  keys <<  "#{key} = :#{key}"
-    #  values[key.to_sym] = value
-    #end 
-    #conditions = keys.join(' AND ')
- 
-    find_by_area(bounding_box, :conditions => {:visible => true},
-                       :limit => MAX_NUMBER_OF_NODES+1)
   end
 
   # parse a node from some string data and a format
@@ -120,8 +96,8 @@ class Node < ActiveRecord::Base
     
     error.call("node", pt, "lat missing") if pt['lat'].nil?
     error.call("node", pt, "lon missing") if pt['lon'].nil?
-    node.lat = pt['lat'].to_f
-    node.lon = pt['lon'].to_f
+    node.lat = OSM.parse_float(pt['lat'], error, "node", pt, "lat not a number")
+    node.lon = OSM.parse_float(pt['lon'], error, "node", pt, "lon not a number")
     error.call("node", pt, "Changeset id is missing") if pt['changeset'].nil?
     node.changeset_id = pt['changeset'].to_i
 

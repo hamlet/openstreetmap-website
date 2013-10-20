@@ -9,16 +9,11 @@ class DiaryEntryController < ApplicationController
   before_filter :check_database_writable, :only => [:new, :edit]
   before_filter :require_administrator, :only => [:hide, :hidecomment]
 
-#  caches_action :list, :layout => false, :unless => :user_specific_list?
-  caches_action :rss, :layout => true
-#  caches_action :view, :layout => false
-  cache_sweeper :diary_sweeper, :only => [:new, :edit, :comment, :hide, :hidecomment]
-
   def new
     @title = t 'diary_entry.new.title'
 
     if params[:diary_entry]
-      @diary_entry = DiaryEntry.new(params[:diary_entry])
+      @diary_entry = DiaryEntry.new(entry_params)
       @diary_entry.user = @user
 
       if @diary_entry.save
@@ -48,7 +43,7 @@ class DiaryEntryController < ApplicationController
 
     if @user != @diary_entry.user
       redirect_to :controller => 'diary_entry', :action => 'view', :id => params[:id]
-    elsif params[:diary_entry] and @diary_entry.update_attributes(params[:diary_entry])
+    elsif params[:diary_entry] and @diary_entry.update_attributes(entry_params)
       redirect_to :controller => 'diary_entry', :action => 'view', :id => params[:id]
     end
 
@@ -59,7 +54,7 @@ class DiaryEntryController < ApplicationController
 
   def comment
     @entry = DiaryEntry.find(params[:id])
-    @diary_comment = @entry.comments.build(params[:diary_comment])
+    @diary_comment = @entry.comments.build(comment_params)
     @diary_comment.user = @user
     if @diary_comment.save
       if @diary_comment.user != @entry.user
@@ -132,7 +127,7 @@ class DiaryEntryController < ApplicationController
         @description = I18n.t('diary_entry.feed.user.description', :user => user.display_name)
         @link = "http://#{SERVER_URL}/user/#{user.display_name}/diary"
       else
-        render :nothing => true, :status => :not_found
+        render :text => "", :status => :not_found
         return
       end
     else
@@ -165,13 +160,13 @@ class DiaryEntryController < ApplicationController
 
   def hide
     entry = DiaryEntry.find(params[:id])
-    entry.update_attributes({:visible => false}, :without_protection => true)
+    entry.update_attributes(:visible => false)
     redirect_to :action => "list", :display_name => entry.user.display_name
   end
 
   def hidecomment
     comment = DiaryComment.find(params[:comment])
-    comment.update_attributes({:visible => false}, :without_protection => true)
+    comment.update_attributes(:visible => false)
     redirect_to :action => "view", :display_name => comment.diary_entry.user.display_name, :id => comment.diary_entry.id
   end
 
@@ -187,12 +182,24 @@ class DiaryEntryController < ApplicationController
   end
 private
   ##
+  # return permitted diary entry parameters
+  def entry_params
+    params.require(:diary_entry).permit(:title, :body, :language_code, :latitude, :longitude)
+  end
+
+  ##
+  # return permitted diary comment parameters
+  def comment_params
+    params.require(:diary_comment).permit(:body)
+  end
+
+  ##
   # require that the user is a administrator, or fill out a helpful error message
   # and return them to the user page.
   def require_administrator
     unless @user.administrator?
       flash[:error] = t('user.filter.not_an_administrator')
-      redirect_to :controller => 'diary_entry', :action => 'view', :display_name => params[:id]
+      redirect_to :controller => 'diary_entry', :action => 'view'
     end
   end
 

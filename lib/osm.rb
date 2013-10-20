@@ -5,7 +5,6 @@ module OSM
   require 'rexml/parsers/sax2parser'
   require 'rexml/text'
   require 'xml/libxml'
-  require 'digest/md5'
 
   if defined?(SystemTimer)
     Timer = SystemTimer
@@ -316,6 +315,23 @@ module OSM
     end
   end
 
+  # Raised when the note provided is already open
+  class APINoteAlreadyOpenError < APIError
+    def initialize(note)
+      @note = note
+    end
+
+    attr_reader :note
+
+    def status
+      :conflict
+    end
+
+    def to_s
+      "The note #{@note.id} is already open"
+    end
+  end
+
   # raised when a two preferences have a duplicate key string.
   class APIDuplicatePreferenceError < APIError
     def initialize(key)
@@ -419,92 +435,6 @@ module OSM
     end
   end
 
-  class GeoRSS
-    def initialize(feed_title='OpenStreetMap GPS Traces', feed_description='OpenStreetMap GPS Traces', feed_url='http://www.openstreetmap.org/traces/')
-      @doc = XML::Document.new
-      @doc.encoding = XML::Encoding::UTF_8
-
-      rss = XML::Node.new 'rss'
-      @doc.root = rss
-      rss['version'] = "2.0"
-      rss['xmlns:geo'] = "http://www.w3.org/2003/01/geo/wgs84_pos#"
-      @channel = XML::Node.new 'channel'
-      rss << @channel
-      title = XML::Node.new 'title'
-      title <<  feed_title
-      @channel << title
-      description_el = XML::Node.new 'description'
-      @channel << description_el
-
-      description_el << feed_description
-      link = XML::Node.new 'link'
-      link << feed_url
-      @channel << link
-      image = XML::Node.new 'image'
-      @channel << image
-      url = XML::Node.new 'url'
-      url << 'http://www.openstreetmap.org/images/mag_map-rss2.0.png'
-      image << url
-      title = XML::Node.new 'title'
-      title << "OpenStreetMap"
-      image << title
-      width = XML::Node.new 'width'
-      width << '100'
-      image << width
-      height = XML::Node.new 'height'
-      height << '100'
-      image << height
-      link = XML::Node.new 'link'
-      link << feed_url
-      image << link
-    end
-
-    def add(latitude=0, longitude=0, title_text='dummy title', author_text='anonymous', url='http://www.example.com/', description_text='dummy description', timestamp=DateTime.now)
-      item = XML::Node.new 'item'
-
-      title = XML::Node.new 'title'
-      item << title
-      title << title_text
-      link = XML::Node.new 'link'
-      link << url
-      item << link
-
-      guid = XML::Node.new 'guid'
-      guid << url
-      item << guid
-
-      description = XML::Node.new 'description'
-      description << description_text
-      item << description
-
-      author = XML::Node.new 'author'
-      author << author_text
-      item << author
-
-      pubDate = XML::Node.new 'pubDate'
-      pubDate << timestamp.to_s(:rfc822)
-      item << pubDate
-
-      if latitude
-        lat_el = XML::Node.new 'geo:lat'
-        lat_el << latitude.to_s
-        item << lat_el
-      end
-
-      if longitude
-        lon_el = XML::Node.new 'geo:long'
-        lon_el << longitude.to_s
-        item << lon_el
-      end
-
-      @channel << item
-    end
-
-    def to_s
-      return @doc.to_s
-    end
-  end
-
   class API
     def get_xml_doc
       doc = XML::Document.new
@@ -561,6 +491,18 @@ module OSM
     return nil
   end
 
+  # Parse a float, either raising a specified exception or calling the given error-handling
+  # callable object on failure.
+  def self.parse_float(str, klass_or_callable, *args)
+    Float(str)
+  rescue
+    if klass_or_callable.respond_to?(:call)
+      klass_or_callable.call(*args)
+    else
+      raise klass_or_callable.new(*args)
+    end
+  end
+
   # Construct a random token of a given length
   def self.make_token(length = 30)
     chars = 'abcdefghijklmnopqrtuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
@@ -571,12 +513,6 @@ module OSM
     end
 
     return token
-  end
-
-  # Return an encrypted version of a password
-  def self.encrypt_password(password, salt)
-    return Digest::MD5.hexdigest(password) if salt.nil?
-    return Digest::MD5.hexdigest(salt + password)
   end
 
   # Return an SQL fragment to select a given area of the globe

@@ -5,11 +5,6 @@ class ApplicationController < ActionController::Base
 
   before_filter :fetch_body
 
-  if STATUS == :database_readonly or STATUS == :database_offline
-    def self.cache_sweeper(*sweepers)
-    end
-  end
-
   def authorize_web
     if session[:user]
       @user = User.where(:id => session[:user]).where("status IN ('active', 'confirmed', 'suspended')").first
@@ -50,7 +45,7 @@ class ApplicationController < ActionController::Base
       if request.get?
         redirect_to :controller => 'user', :action => 'login', :referer => request.fullpath
       else
-        render :nothing => true, :status => :forbidden
+        render :text => "", :status => :forbidden
       end
     end
   end
@@ -129,7 +124,7 @@ class ApplicationController < ActionController::Base
         flash[:error] = t('application.require_moderator.not_a_moderator')
         redirect_to :action => 'index'
       else
-        render :nothing => true, :status => :forbidden
+        render :text => "", :status => :forbidden
       end
     end
   end
@@ -289,14 +284,14 @@ class ApplicationController < ActionController::Base
     response.header['Vary'] = 'Accept-Language'
 
     if @user && !@user.languages.empty?
-      request.user_preferred_languages = @user.languages
+      http_accept_language.user_preferred_languages = @user.languages
       response.header['Vary'] = '*'
     end
 
     I18n.locale = select_locale
 
-    if @user && @user.languages.empty? && !request.user_preferred_languages.empty?
-      @user.languages = request.user_preferred_languages
+    if @user && @user.languages.empty? && !http_accept_language.user_preferred_languages.empty?
+      @user.languages = http_accept_language.user_preferred_languages
       @user.save
     end
 
@@ -305,11 +300,11 @@ class ApplicationController < ActionController::Base
 
   def select_locale(locales = I18n.available_locales)
     if params[:locale]
-      request.user_preferred_languages = [ params[:locale] ]
+      http_accept_language.user_preferred_languages = [ params[:locale] ]
     end
 
-    if request.compatible_language_from(locales).nil?
-      request.user_preferred_languages = request.user_preferred_languages.collect do |pl|
+    if http_accept_language.compatible_language_from(locales).nil?
+      http_accept_language.user_preferred_languages = http_accept_language.user_preferred_languages.collect do |pl|
         pls = [ pl ]
 
         while pl.match(/^(.*)-[^-]+$/)
@@ -321,7 +316,7 @@ class ApplicationController < ActionController::Base
       end.flatten
     end
 
-    request.compatible_language_from(locales) || I18n.default_locale
+    http_accept_language.compatible_language_from(locales) || I18n.default_locale
   end
 
   helper_method :select_locale
@@ -330,7 +325,7 @@ class ApplicationController < ActionController::Base
     begin
       yield
     rescue ActiveRecord::RecordNotFound => ex
-      render :nothing => true, :status => :not_found
+      render :text => "", :status => :not_found
     rescue LibXML::XML::Error, ArgumentError => ex
       report_error ex.message, :bad_request
     rescue ActiveRecord::RecordInvalid => ex
@@ -375,7 +370,7 @@ class ApplicationController < ActionController::Base
   rescue ActionView::Template::Error => ex
     ex = ex.original_exception
 
-    if ex.is_a?(ActiveRecord::StatementInvalid) and ex.message =~ /^Timeout::Error/
+    if ex.is_a?(ActiveRecord::StatementInvalid) and ex.message =~ /execution expired/
       ex = Timeout::Error.new
     end
 
@@ -386,40 +381,6 @@ class ApplicationController < ActionController::Base
     end
   rescue Timeout::Error
     render :action => "timeout"
-  end
-
-  ##
-  # extend caches_action to include the parameters, locale and logged in
-  # status in all cache keys
-  def self.caches_action(*actions)
-    options = actions.extract_options!
-    cache_path = options[:cache_path] || Hash.new
-
-    options[:unless] = case options[:unless]
-                       when NilClass then Array.new
-                       when Array then options[:unless]
-                       else unlessp = [ options[:unless] ]
-                       end
-
-    options[:unless].push(Proc.new do |controller|
-      controller.params.include?(:page)
-    end)
-
-    options[:cache_path] = Proc.new do |controller|
-      cache_path.merge(controller.params).merge(:host => SERVER_URL, :locale => I18n.locale)
-    end
-
-    actions.push(options)
-
-    super *actions
-  end
-
-  ##
-  # extend expire_action to expire all variants
-  def expire_action(options = {})
-    I18n.available_locales.each do |locale|
-      super options.merge(:host => SERVER_URL, :locale => locale)
-    end
   end
 
   ##
@@ -444,7 +405,7 @@ class ApplicationController < ActionController::Base
 
     respond_to do |format|
       format.html { render :template => "user/no_such_user", :status => :not_found }
-      format.all { render :nothing => true, :status => :not_found }
+      format.all { render :text => "", :status => :not_found }
     end
   end
 
@@ -460,6 +421,24 @@ class ApplicationController < ActionController::Base
   def fetch_body
     request.body.rewind
   end
+
+  def preferred_editor
+    editor = if params[:editor]
+      params[:editor]
+    elsif @user and @user.preferred_editor
+      @user.preferred_editor
+    else
+      DEFAULT_EDITOR
+    end
+
+    if request.env['HTTP_USER_AGENT'] =~ /MSIE/ and editor == 'id'
+      editor = 'potlatch2'
+    end
+
+    editor
+  end
+
+  helper_method :preferred_editor
 
 private 
 

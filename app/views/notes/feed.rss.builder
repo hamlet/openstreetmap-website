@@ -1,6 +1,7 @@
 xml.instruct!
 
 xml.rss("version" => "2.0", 
+        "xmlns:dc" => "http://purl.org/dc/elements/1.1/",
         "xmlns:geo" => "http://www.w3.org/2003/01/geo/wgs84_pos#",
         "xmlns:georss" => "http://www.georss.org/georss") do
   xml.channel do
@@ -12,25 +13,17 @@ xml.rss("version" => "2.0",
       location = describe_location(comment.note.lat, comment.note.lon, 14, locale)
 
       xml.item do
-        if comment.event == "closed"
-          xml.title t('note.rss.closed', :place => location)
-        elsif comment.event == "commented"
-          xml.title t('note.rss.comment', :place => location)
-        elsif comment.event == "opened"
-          xml.title t('note.rss.new', :place => location)
-        else
-          xml.title "unknown event"
-        end
+        xml.title t("note.rss.#{comment.event}", :place => location)
         
-        xml.link url_for(:controller => "browse", :action => "note", :id => comment.note.id, :only_path => false)
-        xml.guid url_for(:controller => "browse", :action => "note", :id => comment.note.id, :only_path => false)
+        xml.link url_for(:controller => "browse", :action => "note", :id => comment.note.id, :anchor => "c#{comment.id}", :only_path => false)
+        xml.guid url_for(:controller => "browse", :action => "note", :id => comment.note.id, :anchor => "c#{comment.id}", :only_path => false)
 
         xml.description do
           xml.cdata! render(:partial => "entry", :object => comment, :formats => [ :html ])
         end
 
         if comment.author
-          xml.author comment.author.display_name
+          xml.dc :creator, comment.author.display_name
         end
 
         xml.pubDate comment.created_at.to_s(:rfc822)

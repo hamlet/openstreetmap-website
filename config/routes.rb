@@ -90,6 +90,7 @@ OpenStreetMap::Application.routes.draw do
       member do
         post 'comment'
         post 'close'
+        post 'reopen'
       end
     end
 
@@ -111,21 +112,22 @@ OpenStreetMap::Application.routes.draw do
   match '/browse/changeset/:id' => 'browse#changeset', :via => :get, :as => :changeset, :id => /\d+/
   match '/browse/note/:id' => 'browse#note', :via => :get, :id => /\d+/, :as => "browse_note"
   match '/user/:display_name/edits' => 'changeset#list', :via => :get
-  match '/user/:display_name/edits/feed' => 'changeset#feed', :via => :get, :format => :atom
+  match '/user/:display_name/edits/feed' => 'changeset#feed', :via => :get, :defaults => { :format => :atom }
   match '/user/:display_name/notes' => 'notes#mine', :via => :get
   match '/browse/friends' => 'changeset#list', :via => :get, :friends => true, :as => "friend_changesets"
   match '/browse/nearby' => 'changeset#list', :via => :get, :nearby => true, :as => "nearby_changesets"
   match '/browse/changesets' => 'changeset#list', :via => :get
-  match '/browse/changesets/feed' => 'changeset#feed', :via => :get, :format => :atom
+  match '/browse/changesets/feed' => 'changeset#feed', :via => :get, :defaults => { :format => :atom }
   match '/browse' => 'changeset#list', :via => :get
 
   # web site
   root :to => 'site#index', :via => [:get, :post]
-  match '/edit' => 'site#edit', :via => :get
+  match '/edit' => 'site#edit', :via => :get, :as => :edit
   match '/copyright/:copyright_locale' => 'site#copyright', :via => :get
   match '/copyright' => 'site#copyright', :via => :get
+  match '/welcome' => 'site#welcome', :via => :get, :as => :welcome
   match '/history' => 'changeset#list', :via => :get
-  match '/history/feed' => 'changeset#feed', :via => :get, :format => :atom
+  match '/history/feed' => 'changeset#feed', :via => :get, :defaults => { :format => :atom }
   match '/export' => 'site#index', :export => true, :via => :get
   match '/login' => 'user#login', :via => [:get, :post]
   match '/logout' => 'user#logout', :via => [:get, :post]
@@ -133,7 +135,8 @@ OpenStreetMap::Application.routes.draw do
   match '/key' => 'site#key', :via => :get
   match '/id' => 'site#id', :via => :get
   match '/user/new' => 'user#new', :via => :get
-  match '/user/terms' => 'user#terms', :via => [:get, :post]
+  match '/user/new' => 'user#create', :via => :post
+  match '/user/terms' => 'user#terms', :via => :get
   match '/user/save' => 'user#save', :via => :post
   match '/user/:display_name/confirm/resend' => 'user#confirm_resend', :via => :get
   match '/user/:display_name/confirm' => 'user#confirm', :via => [:get, :post]
@@ -152,15 +155,15 @@ OpenStreetMap::Application.routes.draw do
   match '/go/:code' => 'site#permalink', :via => :get, :code => /[a-zA-Z0-9_@~]+[=-]*/
 
   # rich text preview
-  match '/preview/:format' => 'site#preview', :as => :preview
+  match '/preview/:format' => 'site#preview', :via => :post, :as => :preview
 
   # traces
   match '/user/:display_name/traces/tag/:tag/page/:page' => 'trace#list', :via => :get
   match '/user/:display_name/traces/tag/:tag' => 'trace#list', :via => :get
   match '/user/:display_name/traces/page/:page' => 'trace#list', :via => :get
   match '/user/:display_name/traces' => 'trace#list', :via => :get
-  match '/user/:display_name/traces/tag/:tag/rss' => 'trace#georss', :via => :get
-  match '/user/:display_name/traces/rss' => 'trace#georss', :via => :get
+  match '/user/:display_name/traces/tag/:tag/rss' => 'trace#georss', :via => :get, :defaults => { :format => :rss }
+  match '/user/:display_name/traces/rss' => 'trace#georss', :via => :get, :defaults => { :format => :rss }
   match '/user/:display_name/traces/:id' => 'trace#view', :via => :get
   match '/user/:display_name/traces/:id/picture' => 'trace#picture', :via => :get
   match '/user/:display_name/traces/:id/icon' => 'trace#icon', :via => :get
@@ -168,24 +171,24 @@ OpenStreetMap::Application.routes.draw do
   match '/traces/tag/:tag' => 'trace#list', :via => :get
   match '/traces/page/:page' => 'trace#list', :via => :get
   match '/traces' => 'trace#list', :via => :get
-  match '/traces/tag/:tag/rss' => 'trace#georss', :via => :get
-  match '/traces/rss' => 'trace#georss', :via => :get
+  match '/traces/tag/:tag/rss' => 'trace#georss', :via => :get, :defaults => { :format => :rss }
+  match '/traces/rss' => 'trace#georss', :via => :get, :defaults => { :format => :rss }
   match '/traces/mine/tag/:tag/page/:page' => 'trace#mine', :via => :get
   match '/traces/mine/tag/:tag' => 'trace#mine', :via => :get
   match '/traces/mine/page/:page' => 'trace#mine', :via => :get
   match '/traces/mine' => 'trace#mine', :via => :get
   match '/trace/create' => 'trace#create', :via => [:get, :post]
-  match '/trace/:id/data' => 'trace#data', :via => :get
-  match '/trace/:id/edit' => 'trace#edit', :via => [:get, :post, :put]
-  match '/trace/:id/delete' => 'trace#delete', :via => :post
+  match '/trace/:id/data' => 'trace#data', :via => :get, :id => /\d+/
+  match '/trace/:id/edit' => 'trace#edit', :via => [:get, :post, :patch], :id => /\d+/, :as => "trace_edit"
+  match '/trace/:id/delete' => 'trace#delete', :via => :post, :id => /\d+/
 
   # diary pages
   match '/diary/new' => 'diary_entry#new', :via => [:get, :post]
   match '/diary/friends' => 'diary_entry#list', :friends => true, :via => :get, :as => "friend_diaries"
   match '/diary/nearby' => 'diary_entry#list', :nearby => true, :via => :get, :as => "nearby_diaries"
-  match '/user/:display_name/diary/rss' => 'diary_entry#rss', :via => :get, :format => :rss
-  match '/diary/:language/rss' => 'diary_entry#rss', :via => :get, :format => :rss
-  match '/diary/rss' => 'diary_entry#rss', :via => :get, :format => :rss
+  match '/user/:display_name/diary/rss' => 'diary_entry#rss', :via => :get, :defaults => { :format => :rss }
+  match '/diary/:language/rss' => 'diary_entry#rss', :via => :get, :defaults => { :format => :rss }
+  match '/diary/rss' => 'diary_entry#rss', :via => :get, :defaults => { :format => :rss }
   match '/user/:display_name/diary/comments/:page' => 'diary_entry#comments', :via => :get, :page => /\d+/
   match '/user/:display_name/diary/comments/' => 'diary_entry#comments', :via => :get
   match '/user/:display_name/diary' => 'diary_entry#list', :via => :get
@@ -215,13 +218,10 @@ OpenStreetMap::Application.routes.draw do
   match '/geocoder/search_us_postcode' => 'geocoder#search_us_postcode', :via => :get
   match '/geocoder/search_uk_postcode' => 'geocoder#search_uk_postcode', :via => :get
   match '/geocoder/search_ca_postcode' => 'geocoder#search_ca_postcode', :via => :get
-  match '/geocoder/search_osm_namefinder' => 'geocoder#search_osm_namefinder', :via => :get
   match '/geocoder/search_osm_nominatim' => 'geocoder#search_osm_nominatim', :via => :get
   match '/geocoder/search_geonames' => 'geocoder#search_geonames', :via => :get
-  match '/geocoder/description' => 'geocoder#description', :via => :post
-  match '/geocoder/description_osm_namefinder' => 'geocoder#description_osm_namefinder', :via => :get
-  match '/geocoder/description_osm_nominatim' => 'geocoder#description_osm_nominatim', :via => :get
-  match '/geocoder/description_geonames' => 'geocoder#description_geonames', :via => :get
+  match '/geocoder/search_osm_nominatim_reverse' => 'geocoder#search_osm_nominatim_reverse', :via => :get
+  match '/geocoder/search_geonames_reverse' => 'geocoder#search_geonames_reverse', :via => :get
 
   # export
   match '/export/start' => 'export#start', :via => :get
@@ -241,12 +241,12 @@ OpenStreetMap::Application.routes.draw do
   scope "/user/:display_name" do
     resources :oauth_clients
   end
-  match '/oauth/revoke' => 'oauth#revoke'
-  match '/oauth/authorize' => 'oauth#authorize', :as => :authorize
-  match '/oauth/token' => 'oauth#token', :as => :token
-  match '/oauth/request_token' => 'oauth#request_token', :as => :request_token
-  match '/oauth/access_token' => 'oauth#access_token', :as => :access_token
-  match '/oauth/test_request' => 'oauth#test_request', :as => :test_request
+  match '/oauth/revoke' => 'oauth#revoke', :via => [:get, :post]
+  match '/oauth/authorize' => 'oauth#authorize', :via => [:get, :post], :as => :authorize
+  match '/oauth/token' => 'oauth#token', :via => :get, :as => :token
+  match '/oauth/request_token' => 'oauth#request_token', :via => [:get, :post], :as => :request_token
+  match '/oauth/access_token' => 'oauth#access_token', :via => [:get, :post], :as => :access_token
+  match '/oauth/test_request' => 'oauth#test_request', :via => :get, :as => :test_request
 
   # roles and banning pages
   match '/user/:display_name/role/:role/grant' => 'user_roles#grant', :via => :post, :as => "grant_role"
