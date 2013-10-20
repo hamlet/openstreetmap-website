@@ -643,13 +643,20 @@ class NodeControllerTest < ActionController::TestCase
     checknode = Node.find(nodeid)
     assert_not_nil checknode, "node not found in data base after upload"
 
-    # TODO: use JSON here too
     # and grab it using the api
+    @request.headers["Accept"] = "application/json"
     get :read, :id => nodeid
     assert_response :success
-    apinode = Node.from_xml(@response.body)
+    apinode = Node.from_format(Mime::JSON, @response.body)
     assert_not_nil apinode, "downloaded node is nil, but shouldn't be"
-    
+
+    # check the ordering of the JSON doc - should be headers first, then data
+    data = JSON.parse(@response.body)
+    assert_equal data.keys, ['version', 'generator', 'copyright', 'attribution', 'license', 'nodes', 'ways', 'relations'], 
+      "JSON document should preserve top level key ordering."
+    assert_equal data['ways'], [], "Ways key should be present, but be an empty array."
+    assert_equal data['relations'], [], "Relations key should be present, but be an empty array."
+
     # check the tags are not corrupted
     assert_equal checknode.tags, apinode.tags
     assert apinode.tags.include?('#{@user.inspect}')

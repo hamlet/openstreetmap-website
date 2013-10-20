@@ -447,7 +447,18 @@ module OSM
 
     def get_json_doc
       doc = Hash.new
+      # the ruby Hash documentation says "Hashes enumerate their values
+      # in the order that the corresponding keys were inserted." this
+      # works in our favour here, as we want to ensure that JSON docs
+      # have the "header" fields before the content fields. since
+      # to_json appears to preserve enumeration order, we just have to
+      # make sure the "header" fields are inserted first, even if they
+      # get changed later.
       set_hashlike_attributes(doc)
+      # we always want nodes, ways & relations elements, even if they
+      # are empty, so set them here and have them overridden by later
+      # methods.
+      ['nodes', 'ways', 'relations'].each {|k| doc[k] = []}
       return doc
     end
 
