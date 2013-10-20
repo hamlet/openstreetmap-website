@@ -670,6 +670,31 @@ class WayControllerTest < ActionController::TestCase
   end
 
   # --------------------------------------------------------
+  # test getting a single way JSON
+  # --------------------------------------------------------
+
+  def test_get_single_json_way
+    way = current_ways(:visible_way)
+
+    @request.headers["Accept"] = "application/json"
+    get :read, :id => way.id
+
+    assert_response :success
+    data = JSON.parse(@response.body)
+
+    ['nodes','ways','relations'].each do |type|
+      assert data.has_key?(type), "The #{type} array should be present in response."
+    end
+    assert_equal Array, data['ways'].class, "Ways should be an array, but is a #{data['ways'].class}"
+    assert_equal 1, data['ways'].length, "Should have got a single way from API, but got #{data['ways'].inspect}"
+    jway = data['ways'][0]
+
+    assert_equal way.id, jway['id'], "Way ID is not the same"
+    assert_equal way.changeset.id, jway['changeset'], "Way changeset ID is not the same"
+    assert_equal way.version, jway['version'], "Way version is not the same"
+  end
+
+  # --------------------------------------------------------
   # utility functions
   # --------------------------------------------------------
 

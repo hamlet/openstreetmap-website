@@ -29,7 +29,7 @@ class WayController < ApplicationController
     response.last_modified = way.timestamp
     
     if way.visible
-      render_way way
+      render_ways [way]
     else
       render :text => "", :status => :gone
     end
@@ -109,11 +109,6 @@ class WayController < ApplicationController
   end
 
 private
-
-  def render_way(way)
-    format = request.negotiate_mime([Mime::JSON]) or Mime::XML
-    render :text => way.to_format(format).to_s, :content_type => format
-  end
 
   def render_ways(ways)
     if request.negotiate_mime([Mime::JSON]) == Mime::JSON

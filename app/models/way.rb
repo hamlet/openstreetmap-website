@@ -179,7 +179,7 @@ class Way < ActiveRecord::Base
 
   def to_osmjson
     doc = OSM::API.new.get_json_doc
-    doc['ways'] = to_osmjson_node()
+    doc['ways'] = [to_osmjson_node()]
     return doc.to_json
   end
 

@@ -151,15 +151,18 @@ class WayTest < ActiveSupport::TestCase
 
     data = JSON.parse(way.to_format(Mime::JSON))
 
-    assert_equal(way.id, data['ways']['id'])
-    assert_equal(way.version, data['ways']['version'])
-    assert_equal(way.changeset.id, data['ways']['changeset'])
-    assert_equal(way.changeset.user.id, data['ways']['uid'])
-    assert_equal(way.changeset.user.display_name, data['ways']['user'])
-    assert_equal(way.visible, data['ways']['visible'])
-    assert_equal(way.timestamp, Time.parse(data['ways']['timestamp']))
-    assert_equal(way.tags, data['ways']['tags'])
-    assert_equal(way.nds, data['ways']['nds'])
+    assert_equal(Array, data['ways'].class)
+    assert_equal(1, data['ways'].length)
+    jway = data['ways'][0]
+    assert_equal(way.id, jway['id'])
+    assert_equal(way.version, jway['version'])
+    assert_equal(way.changeset.id, jway['changeset'])
+    assert_equal(way.changeset.user.id, jway['uid'])
+    assert_equal(way.changeset.user.display_name, jway['user'])
+    assert_equal(way.visible, jway['visible'])
+    assert_equal(way.timestamp, Time.parse(jway['timestamp']))
+    assert_equal(way.tags, jway['tags'])
+    assert_equal(way.nds, jway['nds'])
   end
 
   #### utility methods ####
