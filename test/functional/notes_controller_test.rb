@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class NotesControllerTest < ActionController::TestCase
-  fixtures :users, :notes, :note_comments
+  fixtures :users, :user_roles, :notes, :note_comments
 
   ##
   # test all routes which lead to this controller
