@@ -22,19 +22,15 @@ class OldController < ApplicationController
     # to do that ourselves.
     raise OSM::APINotFoundError.new if @elements.empty?
 
-    doc = OSM::API.new.get_xml_doc
-    
     visible_elements = if show_redactions?
                          @elements
                        else
                          @elements.unredacted
                        end
 
-    visible_elements.each do |element|
-      doc.root << element.to_xml_node
-    end
-    
-    render :text => doc.to_s, :content_type => "text/xml"
+    doc = OSM::Format::Document.new(request)
+    doc << visible_elements
+    render :text => doc.render, :content_type => doc.mime
   end
   
   def version
@@ -44,10 +40,9 @@ class OldController < ApplicationController
     else
       response.last_modified = @old_element.timestamp
       
-      doc = OSM::API.new.get_xml_doc
-      doc.root << @old_element.to_xml_node
-        
-      render :text => doc.to_s, :content_type => "text/xml"
+      doc = OSM::Format::Document.new(request)
+      doc << @old_element
+      render :text => doc.render, :content_type => doc.mime
     end
   end
 

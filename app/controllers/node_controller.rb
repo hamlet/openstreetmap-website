@@ -30,7 +30,9 @@ class NodeController < ApplicationController
     response.last_modified = node.timestamp
 
     if node.visible
-      render_nodes [node]
+      doc = OSM::Format::Document.new(request)
+      doc << node
+      render :text => doc.render, :content_type => doc.mime
     else
       render :text => "", :status => :gone
     end
@@ -74,23 +76,8 @@ class NodeController < ApplicationController
       raise OSM::APIBadUserInput.new("No nodes were given to search for")
     end
 
-    render_nodes Node.find(ids)
-  end
-
-private
-
-  def render_nodes(nodes)
-    if request.negotiate_mime([Mime::JSON]) == Mime::JSON
-      doc = OSM::API.new.get_json_doc
-      doc['nodes'] = nodes.map {|node| node.to_osmjson_node}
-      render :text => doc.to_json, :content_type => Mime::JSON
-
-    else
-      doc = OSM::API.new.get_xml_doc
-      nodes.each do |node|
-        doc.root << node.to_xml_node
-      end
-      render :text => doc.to_s, :content_type => "text/xml"
-    end
+    doc = OSM::Format::Document.new(request)
+    doc << Node.find(ids)
+    render :text => doc.render, :content_type => doc.mime
   end
 end
