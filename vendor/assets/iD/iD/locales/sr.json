@@ -380,6 +380,9 @@
     },
     "presets": {
         "categories": {
+            "category-building": {
+                "name": "Зграда"
+            },
             "category-landuse": {
                 "name": "Коришћење земљишта"
             },
@@ -394,9 +397,6 @@
             },
             "category-route": {
                 "name": "Путања"
-            },
-            "category-water": {
-                "name": "Вода"
             }
         },
         "fields": {
@@ -436,9 +436,6 @@
                         "description": "Приступ дозвољен само за пролазак до одредишта"
                     }
                 }
-            },
-            "access_toilets": {
-                "label": "Приступ"
             },
             "address": {
                 "label": "Адреса",
@@ -484,9 +481,6 @@
                 "label": "Зграда"
             },
             "building_area": {
-                "label": "Зграда"
-            },
-            "building_yes": {
                 "label": "Зграда"
             },
             "capacity": {
@@ -694,6 +688,9 @@
             "shelter": {
                 "label": "Склониште"
             },
+            "shelter_type": {
+                "label": "Врста"
+            },
             "shop": {
                 "label": "Врста"
             },
@@ -733,6 +730,9 @@
             },
             "trail_visibility": {
                 "label": "Видљивост стазе"
+            },
+            "tree_type": {
+                "label": "Врста"
             },
             "vending": {
                 "label": "Врста добара"
@@ -874,9 +874,6 @@
             },
             "amenity/marketplace": {
                 "name": "Тржница"
-            },
-            "amenity/parking": {
-                "name": "Паркинг"
             },
             "amenity/pharmacy": {
                 "name": "Апотека"
@@ -1039,6 +1036,9 @@
             },
             "entrance": {
                 "name": "Улаз"
+            },
+            "footway/crossing": {
+                "name": "Прелаз"
             },
             "highway": {
                 "name": "Ауто-пут"
@@ -1295,6 +1295,9 @@
             "man_made/cutline": {
                 "name": "Усек"
             },
+            "man_made/embankment": {
+                "name": "Насип"
+            },
             "man_made/lighthouse": {
                 "name": "Светионик"
             },
@@ -1384,6 +1387,9 @@
             },
             "office": {
                 "name": "Канцеларија"
+            },
+            "office/travel_agent": {
+                "name": "Туристичка агенција"
             },
             "place": {
                 "name": "Место"

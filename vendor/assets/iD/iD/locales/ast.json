@@ -277,9 +277,6 @@
             "building_area": {
                 "label": "Edificiu"
             },
-            "building_yes": {
-                "label": "Edificiu"
-            },
             "capacity": {
                 "label": "Capacidá"
             },
@@ -515,9 +512,6 @@
             },
             "amenity/marketplace": {
                 "name": "Mercáu"
-            },
-            "amenity/parking": {
-                "name": "Aparcaderu"
             },
             "amenity/pharmacy": {
                 "name": "Farmacia"

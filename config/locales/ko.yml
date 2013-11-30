@@ -59,13 +59,13 @@ ko:
       old_node: 이전 노드
       old_node_tag: 이전 노드 태그
       old_relation: 이전 관계
-      old_relation_member: 이전 관계 멤버
+      old_relation_member: 이전 관계 구성원
       old_relation_tag: 이전 관계 태그
       old_way: 이전 길
       old_way_node: 이전 길 노드
       old_way_tag: 이전 길 태그
       relation: 관계
-      relation_member: 관계 멤버
+      relation_member: 관계 구성원
       relation_tag: 관계 태그
       session: 세션
       trace: 추적
@@ -195,7 +195,7 @@ ko:
       relation_title: "관계: %{relation_name}"
       view_history: 역사 보기
     relation_details: 
-      members: "멤버:"
+      members: "구성원:"
       part_of: "포함되는 관계:"
     relation_history: 
       download_xml: XML 다운로드
@@ -216,7 +216,6 @@ ko:
       hide_areas: 지역 숨기기
       history_for_feature: "%{feature}의 역사"
       load_data: 데이터 불러오기
-      loaded_an_area_with_num_features: 당신은 특성을 가진 지역 %{num_features}개를 불러왔습니다. 일반적으로, 일부 브라우저에서는 이 데이터 개수를 모두 처리하지 못할 수도 있습니다. 일반적으로, 브라우저들은 대개 특성 %{max_features}개 이하를 처리하여 보여줄 수 있습니다. 그렇지 않은 경우, 브라우저의 속도가 저하되거나 브라우저의 반응이 느려질 수 있습니다. 여전히 이 데이터를 표시하려면, 아래의 버튼을 클릭하세요.
       loading: 불러오는 중...
       manually_select: 다른 지역 선택
       notes_layer_name: 참고 찾아보기
@@ -1050,7 +1049,7 @@ ko:
   layouts: 
     community: 커뮤니티
     community_blogs: 커뮤니티 블로그
-    community_blogs_title: OpenStreetMap 커뮤니티 회원 블로그
+    community_blogs_title: OpenStreetMap 커뮤니티의 구성원에서의 블로그
     copyright: 저작권 및 라이선스
     data: 데이터
     documentation: 설명서
@@ -1069,7 +1068,7 @@ ko:
     help_title: 프로젝트에 대한 도움말 사이트
     history: 역사
     home: 집 위치로 가기
-    intro_1: OpenStreetMap은 여러분같은 사람에 의해 만들어진 우리 모두의 전세계 지도입니다.
+    intro_1: OpenStreetMap은 여러분 같은 사람에 의해 만들어진 자유로운 전세계 지도입니다.
     intro_2_create_account: 사용자 계정을 만드세요
     intro_2_download: 다운로드
     intro_2_html: 데이터는 %{license}에 따라 자유롭게 %{download}와 %{use}할 수 있습니다. 지도를 개선하려면 %{create_account}.
@@ -1146,7 +1145,7 @@ ko:
       date: 날짜
       from: 보낸 사람
       messages: "%{new_messages}와 %{old_messages}가 있습니다"
-      my_inbox: 내 쪽지함
+      my_inbox: 내 받은 쪽지함
       new_messages: 
         one: 새 메시지 %{count}개
         other: 새 메시지 %{count}개
@@ -1181,13 +1180,13 @@ ko:
       title: 메시지가 없습니다.
     outbox: 
       date: 날짜
-      inbox: 받은 편지함
+      inbox: 받은 쪽지함
       messages: 
         one: 메시지 %{count}개를 보냈습니다
         other: 메시지 %{count}개를 보냈습니다
       my_inbox: 내 %{inbox_link}
       no_sent_messages: 아직 보낸 메시지가 없습니다. %{people_mapping_nearby_link}에서 마음에 드는 친구를 찾아보는 것은 어떨까요?
-      outbox: 보낸 편지함
+      outbox: 보낸 쪽지함
       people_mapping_nearby: 근처에 매핑한 사람
       subject: 제목
       title: 보낸 쪽지함

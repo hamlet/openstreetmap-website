@@ -2,6 +2,8 @@
 # Exported from translatewiki.net
 # Export driver: syck-pecl
 # Author: Erdemaslancan
+# Author: Gorizon
+# Author: Marmase
 # Author: Mirzali
 diq: 
   activerecord: 
@@ -30,7 +32,7 @@ diq:
         public: Şar
         size: Gırdiye
         user: Karber
-        visible: Mocnerey
+        visible: Aseno
       user: 
         active: Aktiv
         description: Sılasnayış
@@ -527,7 +529,7 @@ diq:
           company: Şirket
           lawyer: Abuqat
         place: 
-          city: Sûke
+          city: Suk
           farm: Erdo Bec
           hamlet: Mezra
           house: Keye
@@ -571,7 +573,7 @@ diq:
     community_blogs: Blogê Cemaeti
     documentation: Dokumentasyon
     edit: Timar ke
-    help: Peşti
+    help: Desteg
     history: Ravêrden
     intro_1: OpenStreetMap yew xeritey dınyayo u merduma hemın rê belaso.
     intro_2_download: ronayış
@@ -693,6 +695,7 @@ diq:
       where_am_i: Edo kotideya?
     sidebar: 
       close: Racnê
+      search_results: Neticeya geyrayışi
   time: 
     formats: 
       friendly: "%e %B %Y seate %H:%M"
@@ -729,7 +732,7 @@ diq:
       trackable: SEYRKERDENEN
       view_map: Xeriti Bımocnê
     trace_form: 
-      help: Peşti
+      help: Desteg
       tags: "Etiketi:"
       upload_button: Bar ke
       visibility: Vinayîşî

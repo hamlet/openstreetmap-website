@@ -288,9 +288,6 @@
             },
             "category-route": {
                 "name": "Roete"
-            },
-            "category-water": {
-                "name": "Water"
             }
         },
         "fields": {
@@ -364,9 +361,6 @@
                 "label": "Gebou"
             },
             "building_area": {
-                "label": "Gebou"
-            },
-            "building_yes": {
                 "label": "Gebou"
             },
             "capacity": {
@@ -726,9 +720,6 @@
             },
             "amenity/marketplace": {
                 "name": "Markplein"
-            },
-            "amenity/parking": {
-                "name": "Parkering"
             },
             "amenity/pharmacy": {
                 "name": "Apteek"

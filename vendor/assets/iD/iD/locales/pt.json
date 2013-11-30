@@ -398,9 +398,6 @@
             },
             "category-route": {
                 "name": "Rota"
-            },
-            "category-water": {
-                "name": "Água"
             }
         },
         "fields": {
@@ -440,9 +437,6 @@
                         "description": "Acesso permitido apenas para chegar a determinado destino"
                     }
                 }
-            },
-            "access_toilets": {
-                "label": "Acesso"
             },
             "address": {
                 "label": "Morada",
@@ -488,9 +482,6 @@
                 "label": "Edifício"
             },
             "building_area": {
-                "label": "Edifício"
-            },
-            "building_yes": {
                 "label": "Edifício"
             },
             "capacity": {
@@ -883,9 +874,6 @@
             },
             "amenity/marketplace": {
                 "name": "Mercado / Feira"
-            },
-            "amenity/parking": {
-                "name": "Estacionamento"
             },
             "amenity/pharmacy": {
                 "name": "Farmácia"

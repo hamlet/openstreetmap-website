@@ -402,9 +402,6 @@
             },
             "category-route": {
                 "name": "Ruta"
-            },
-            "category-water": {
-                "name": "Voda"
             }
         },
         "fields": {
@@ -444,9 +441,6 @@
                         "description": "Pristup dozvoljen samo za pristup destinaciji"
                     }
                 }
-            },
-            "access_toilets": {
-                "label": "Dozvola pristupa"
             },
             "address": {
                 "label": "Adresa",
@@ -492,9 +486,6 @@
                 "label": "Građevina"
             },
             "building_area": {
-                "label": "Građevina"
-            },
-            "building_yes": {
                 "label": "Građevina"
             },
             "capacity": {
@@ -1774,6 +1765,9 @@
             },
             "shop/pet": {
                 "name": "Prodavaonica kućnim ljubimcima"
+            },
+            "shop/photo": {
+                "name": "Prodavaonica fotografske opreme"
             },
             "shop/shoes": {
                 "name": "Prodavaonica obuće"

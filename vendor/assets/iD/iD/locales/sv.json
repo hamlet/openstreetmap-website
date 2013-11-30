@@ -393,9 +393,6 @@
             "building_area": {
                 "label": "Byggnad"
             },
-            "building_yes": {
-                "label": "Byggnad"
-            },
             "capacity": {
                 "label": "Kapacitet"
             },
@@ -622,9 +619,6 @@
             },
             "amenity/marketplace": {
                 "name": "Maknadsplats"
-            },
-            "amenity/parking": {
-                "name": "Parkering"
             },
             "amenity/pharmacy": {
                 "name": "Läkemedel"

@@ -355,9 +355,6 @@
             },
             "category-route": {
                 "name": "路線"
-            },
-            "category-water": {
-                "name": "水"
             }
         },
         "fields": {
@@ -433,9 +430,6 @@
                 "label": "建築物"
             },
             "building_area": {
-                "label": "建築物"
-            },
-            "building_yes": {
                 "label": "建築物"
             },
             "capacity": {
@@ -799,9 +793,6 @@
             },
             "amenity/marketplace": {
                 "name": "市場"
-            },
-            "amenity/parking": {
-                "name": "停車場"
             },
             "amenity/pharmacy": {
                 "name": "藥房",

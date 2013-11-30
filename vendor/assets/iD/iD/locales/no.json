@@ -223,9 +223,6 @@
             },
             "category-route": {
                 "name": "Rute"
-            },
-            "category-water": {
-                "name": "Vann"
             }
         },
         "fields": {
@@ -299,9 +296,6 @@
                 "label": "Bygning"
             },
             "building_area": {
-                "label": "Bygning"
-            },
-            "building_yes": {
                 "label": "Bygning"
             },
             "capacity": {
@@ -633,9 +627,6 @@
             },
             "amenity/marketplace": {
                 "name": "Markedsplass"
-            },
-            "amenity/parking": {
-                "name": "Parkering"
             },
             "amenity/pharmacy": {
                 "name": "Apotek"

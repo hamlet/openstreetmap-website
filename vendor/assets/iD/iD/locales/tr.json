@@ -341,9 +341,6 @@
             "building_area": {
                 "label": "Bina"
             },
-            "building_yes": {
-                "label": "Bina"
-            },
             "capacity": {
                 "label": "Kapasite"
             },
@@ -595,9 +592,6 @@
             },
             "amenity/marketplace": {
                 "name": "Pazar Yeri"
-            },
-            "amenity/parking": {
-                "name": "Park Alanı"
             },
             "amenity/pharmacy": {
                 "name": "Eczane"

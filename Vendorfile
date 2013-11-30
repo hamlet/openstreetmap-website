@@ -9,14 +9,13 @@ folder 'vendor/assets' do
   end
 
   folder 'leaflet' do
-    file 'leaflet.js', 'http://cdn.leafletjs.com/leaflet-0.6.3/leaflet-src.js'
-    file 'leaflet.css', 'http://cdn.leafletjs.com/leaflet-0.6.3/leaflet.css'
-    file 'leaflet.ie.css', 'http://cdn.leafletjs.com/leaflet-0.6.3/leaflet.ie.css'
+    file 'leaflet.js', 'http://cdn.leafletjs.com/leaflet-0.7/leaflet-src.js'
+    file 'leaflet.css', 'http://cdn.leafletjs.com/leaflet-0.7/leaflet.css'
 
     [ 'layers.png', 'layers-2x.png',
       'marker-icon.png', 'marker-icon-2x.png',
       'marker-shadow.png' ].each do |image|
-      file "images/#{image}", "http://cdn.leafletjs.com/leaflet-0.6.3/images/#{image}"
+      file "images/#{image}", "http://cdn.leafletjs.com/leaflet-0.7/images/#{image}"
     end
 
     from 'git://github.com/kajic/leaflet-locationfilter.git' do
@@ -31,10 +30,6 @@ folder 'vendor/assets' do
 
     from 'git://github.com/jfirebaugh/leaflet-osm.git' do
       file 'leaflet.osm.js', 'leaflet-osm.js'
-    end
-
-    from 'git://github.com/mlevans/leaflet-hash.git' do
-      file 'leaflet.hash.js', 'leaflet-hash.js'
     end
   end
 
@@ -53,5 +48,9 @@ folder 'vendor/assets' do
       end
       file 'iD.js', 'dist/iD.js'
     end
+  end
+
+  folder 'javascripts' do
+    file 'html5shiv.js', 'https://raw.github.com/aFarkas/html5shiv/master/src/html5shiv.js'
   end
 end

@@ -251,7 +251,8 @@
         "unknown": "Невідомо",
         "incomplete": "<не завантажено>",
         "feature_list": "Пошук об’єктів",
-        "edit": "Властивості об’єкта"
+        "edit": "Властивості об’єкта",
+        "none": "Нічого"
     },
     "background": {
         "title": "Тло",
@@ -387,6 +388,9 @@
     },
     "presets": {
         "categories": {
+            "category-building": {
+                "name": "Будинок"
+            },
             "category-landuse": {
                 "name": "Землекористування"
             },
@@ -402,7 +406,10 @@
             "category-route": {
                 "name": "Маршрути"
             },
-            "category-water": {
+            "category-water-area": {
+                "name": "Вода"
+            },
+            "category-water-line": {
                 "name": "Вода"
             }
         },
@@ -444,7 +451,7 @@
                     }
                 }
             },
-            "access_toilets": {
+            "access_simple": {
                 "label": "Доступ"
             },
             "address": {
@@ -491,9 +498,6 @@
                 "label": "Будинок"
             },
             "building_area": {
-                "label": "Будинок"
-            },
-            "building_yes": {
                 "label": "Будинок"
             },
             "capacity": {
@@ -701,6 +705,9 @@
             "shelter": {
                 "label": "Навіс"
             },
+            "shelter_type": {
+                "label": "Тип"
+            },
             "shop": {
                 "label": "Тип"
             },
@@ -740,6 +747,9 @@
             },
             "trail_visibility": {
                 "label": "Видимість маршруту"
+            },
+            "tree_type": {
+                "label": "Тип"
             },
             "vending": {
                 "label": "Тип товарів"
@@ -921,8 +931,7 @@
                 "terms": "Marketplace, hbyjr,базар,базарна площа"
             },
             "amenity/parking": {
-                "name": "Стоянка",
-                "terms": "Parking, cnjzyrf,парковка,паркування"
+                "name": "Автостоянка"
             },
             "amenity/pharmacy": {
                 "name": "Аптека",
@@ -975,6 +984,9 @@
             "amenity/school": {
                 "name": "Школа",
                 "terms": "School, irjkf,навчання,факультет"
+            },
+            "amenity/shelter": {
+                "name": "Притулок"
             },
             "amenity/swimming_pool": {
                 "name": "Басейн",
@@ -1124,6 +1136,9 @@
                 "name": "Житлова будівля",
                 "terms": "Residential Building,bnkjdf elsdkz"
             },
+            "embankment": {
+                "name": "Насип"
+            },
             "emergency/ambulance_station": {
                 "name": "Станція швидкої медичної допомоги",
                 "terms": "Ambulance Station,cnfywsz idblrj vtlbxyj ljgjvjub, швидка допомога, перша допомога"
@@ -1139,6 +1154,12 @@
             "entrance": {
                 "name": "Вхід",
                 "terms": "Entrance,dsl,двері,ворота,вихід,фіртка"
+            },
+            "footway/crossing": {
+                "name": "Перехрестя"
+            },
+            "footway/sidewalk": {
+                "name": "Тротуар"
             },
             "highway": {
                 "name": "Дорога",
@@ -1344,6 +1365,9 @@
                 "name": "Ферма",
                 "terms": "Farm,athvf"
             },
+            "landuse/farmland": {
+                "name": "Сільгосп. угіддя"
+            },
             "landuse/farmyard": {
                 "name": "Двір ферми",
                 "terms": "Farmyard,ldsh athvb"
@@ -1480,6 +1504,12 @@
                 "name": "Просіка",
                 "terms": "Cut line,ghjcsrf"
             },
+            "man_made/embankment": {
+                "name": "Насип"
+            },
+            "man_made/flagpole": {
+                "name": "Флагшток"
+            },
             "man_made/lighthouse": {
                 "name": "Маяк",
                 "terms": "Lighthouse,vfzr,сигнал,вогонь"
@@ -1519,6 +1549,18 @@
             "man_made/water_works": {
                 "name": "Водозабір",
                 "terms": "Water Works,djljpfsh"
+            },
+            "military/airfield": {
+                "name": "Аеродром"
+            },
+            "military/barracks": {
+                "name": "Казарма"
+            },
+            "military/bunker": {
+                "name": "Бункер"
+            },
+            "military/range": {
+                "name": "Військовий полігон"
             },
             "natural": {
                 "name": "Природа",
@@ -1604,6 +1646,36 @@
                 "name": "Офіс",
                 "terms": "Office,jasc"
             },
+            "office/accountant": {
+                "name": "Бухгалтерська або аудиторська фірма",
+                "terms": "Бухгалтерська або аудиторська фірма, eufknthcmrf fj felbnjhcmrf ashvf, Accountant"
+            },
+            "office/architect": {
+                "name": "Архітектурне або дизайнерське бюро",
+                "terms": "архітектор, Архітектурне або дизайнерське бюро, fhsntrnehyt fj lbpfqythcmrt hj, Architect"
+            },
+            "office/company": {
+                "name": "Офіс компанії",
+                "terms": "фірма, підприємство, контора, бюро, юридична особа, Офіс компанії, jasc rjvgfys, Company Office"
+            },
+            "office/educational_institution": {
+                "name": "Офіс освітнього закладу",
+                "terms": "Офіс освітнього закладу, jasc jcdsnymjuj pfrkfle, Educational Institution"
+            },
+            "office/employment_agency": {
+                "name": "Кадрова агенція",
+                "terms": "працевлаштування, робота, пошук роботи, рекрутингова агенція, Кадрова агенція, rflhjdf futywsz, Employment Agency"
+            },
+            "office/estate_agent": {
+                "name": "Агенція з нерухомості",
+                "terms": "ріелтор, Агенція з нерухомості, futywsz p ythejvjcns, Real Estate Office"
+            },
+            "office/therapist": {
+                "name": "Терапевт"
+            },
+            "office/travel_agent": {
+                "name": "Туристична агенція"
+            },
             "place": {
                 "name": "Місцевість",
                 "terms": "Place,vscwtdscnm"
@@ -1649,8 +1721,12 @@
                 "terms": "Power Generator,tktrnhjcnfywsz"
             },
             "power/line": {
-                "name": "Лінія електропередач",
-                "terms": "Power Line,ksysz tktrnhjgthtlfx"
+                "name": "Лінія електропередачі високої напруги",
+                "terms": "Power Line,ksysz tktrnhjgthtlfxs dbcjrj yfgheub, Лінія електропередачі високої напруги, ЛЕП"
+            },
+            "power/minor_line": {
+                "name": "Лінія електропередачі середньої напруги",
+                "terms": "Minor Power Line, ksysz tktrnhjgthtlfxs cthtlymj yfghueb, Лінія електропередачі середньої напруги, ЛЕП"
             },
             "power/pole": {
                 "name": "Опора",
@@ -1667,6 +1743,12 @@
             "power/transformer": {
                 "name": "Трансформатор",
                 "terms": "Transformer,nhfycajhvfnjh"
+            },
+            "public_transport/platform": {
+                "name": "Платформа"
+            },
+            "public_transport/stop_position": {
+                "name": "Місце зупинки"
             },
             "railway": {
                 "name": "Залізниця",
@@ -1899,6 +1981,10 @@
             "shop/pet": {
                 "name": "Товари для тварин",
                 "terms": "Pet Store,njdfhb lkz ndfhby"
+            },
+            "shop/photo": {
+                "name": "Фототовари",
+                "terms": "Photography Store, ajnjnjdfhb"
             },
             "shop/shoes": {
                 "name": "Взуття",

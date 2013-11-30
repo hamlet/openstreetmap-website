@@ -316,7 +316,8 @@
         "untagged_area": "Untagged area",
         "many_deletions": "You're deleting {n} objects. Are you sure you want to do this? This will delete them from the map that everyone else sees on openstreetmap.org.",
         "tag_suggests_area": "The tag {tag} suggests line should be area, but it is not an area",
-        "deprecated_tags": "Deprecated tags: {tags}"
+        "deprecated_tags": "Deprecated tags: {tags}",
+        "untagged_tooltip": "Select a feature type that describes what this {geometry} is."
     },
     "zoom": {
         "in": "Zoom In",
@@ -392,6 +393,12 @@
     },
     "presets": {
         "categories": {
+            "category-building": {
+                "name": "Building"
+            },
+            "category-golf": {
+                "name": "Golf"
+            },
             "category-landuse": {
                 "name": "Land Use"
             },
@@ -407,7 +414,10 @@
             "category-route": {
                 "name": "Route"
             },
-            "category-water": {
+            "category-water-area": {
+                "name": "Water"
+            },
+            "category-water-line": {
                 "name": "Water"
             }
         },
@@ -449,7 +459,7 @@
                     }
                 }
             },
-            "access_toilets": {
+            "access_simple": {
                 "label": "Access"
             },
             "address": {
@@ -498,8 +508,8 @@
             "building_area": {
                 "label": "Building"
             },
-            "building_yes": {
-                "label": "Building"
+            "cans": {
+                "label": "Accepts Cans"
             },
             "capacity": {
                 "label": "Capacity",
@@ -515,6 +525,9 @@
                     "anticlockwise": "Counterclockwise"
                 }
             },
+            "clothes": {
+                "label": "Accepts Clothes"
+            },
             "collection_times": {
                 "label": "Collection Times"
             },
@@ -523,6 +536,9 @@
             },
             "country": {
                 "label": "Country"
+            },
+            "covered": {
+                "label": "Covered"
             },
             "crossing": {
                 "label": "Type"
@@ -570,6 +586,17 @@
             "generator/type": {
                 "label": "Type"
             },
+            "glass": {
+                "label": "Accepts Glass"
+            },
+            "golf_hole": {
+                "label": "Reference",
+                "placeholder": "Hole number (1-18)"
+            },
+            "handicap": {
+                "label": "Handicap",
+                "placeholder": "1-18"
+            },
             "highway": {
                 "label": "Type"
             },
@@ -584,6 +611,9 @@
             },
             "incline": {
                 "label": "Incline"
+            },
+            "information": {
+                "label": "Type"
             },
             "internet_access": {
                 "label": "Internet Access",
@@ -653,6 +683,13 @@
             "operator": {
                 "label": "Operator"
             },
+            "paper": {
+                "label": "Accepts Paper"
+            },
+            "par": {
+                "label": "Par",
+                "placeholder": "3, 4, 5..."
+            },
             "park_ride": {
                 "label": "Park and Ride"
             },
@@ -708,6 +745,9 @@
             "shelter": {
                 "label": "Shelter"
             },
+            "shelter_type": {
+                "label": "Type"
+            },
             "shop": {
                 "label": "Type"
             },
@@ -747,6 +787,9 @@
             },
             "trail_visibility": {
                 "label": "Trail Visibility"
+            },
+            "tree_type": {
+                "label": "Type"
             },
             "vending": {
                 "label": "Type of Goods"
@@ -928,7 +971,7 @@
                 "terms": ""
             },
             "amenity/parking": {
-                "name": "Parking",
+                "name": "Car Parking",
                 "terms": ""
             },
             "amenity/pharmacy": {
@@ -973,7 +1016,11 @@
             },
             "amenity/ranger_station": {
                 "name": "Ranger Station",
-                "terms": "visitor center,visitor centre,permit center,permit centre,backcountry office"
+                "terms": "visitor center,visitor centre,permit center,permit centre,backcountry office,warden office,warden center"
+            },
+            "amenity/recycling": {
+                "name": "Recycling",
+                "terms": ""
             },
             "amenity/restaurant": {
                 "name": "Restaurant",
@@ -982,6 +1029,10 @@
             "amenity/school": {
                 "name": "School",
                 "terms": "academy,alma mater,blackboard,college,department,discipline,establishment,faculty,hall,halls of ivy,institute,institution,jail*,schoolhouse,seminary,university"
+            },
+            "amenity/shelter": {
+                "name": "Shelter",
+                "terms": "lean-to"
             },
             "amenity/swimming_pool": {
                 "name": "Swimming Pool",
@@ -993,7 +1044,7 @@
             },
             "amenity/telephone": {
                 "name": "Telephone",
-                "terms": ""
+                "terms": "phone"
             },
             "amenity/theatre": {
                 "name": "Theater",
@@ -1131,6 +1182,10 @@
                 "name": "Residential Building",
                 "terms": ""
             },
+            "embankment": {
+                "name": "Embankment",
+                "terms": ""
+            },
             "emergency/ambulance_station": {
                 "name": "Ambulance Station",
                 "terms": ""
@@ -1145,6 +1200,46 @@
             },
             "entrance": {
                 "name": "Entrance",
+                "terms": ""
+            },
+            "footway/crossing": {
+                "name": "Crossing",
+                "terms": "crosswalk,zebra crossing"
+            },
+            "footway/sidewalk": {
+                "name": "Sidewalk",
+                "terms": ""
+            },
+            "golf/bunker": {
+                "name": "Sand Trap",
+                "terms": "hazard,bunker"
+            },
+            "golf/fairway": {
+                "name": "Fairway",
+                "terms": ""
+            },
+            "golf/green": {
+                "name": "Putting Green",
+                "terms": "putting green"
+            },
+            "golf/hole": {
+                "name": "Golf Hole",
+                "terms": ""
+            },
+            "golf/lateral_water_hazard": {
+                "name": "Lateral Water Hazard",
+                "terms": ""
+            },
+            "golf/rough": {
+                "name": "Rough",
+                "terms": ""
+            },
+            "golf/tee": {
+                "name": "Tee Box",
+                "terms": "teeing ground"
+            },
+            "golf/water_hazard": {
+                "name": "Water Hazard",
                 "terms": ""
             },
             "highway": {
@@ -1351,6 +1446,10 @@
                 "name": "Farm",
                 "terms": ""
             },
+            "landuse/farmland": {
+                "name": "Farmland",
+                "terms": ""
+            },
             "landuse/farmyard": {
                 "name": "Farmyard",
                 "terms": ""
@@ -1409,7 +1508,7 @@
             },
             "leisure/golf_course": {
                 "name": "Golf Course",
-                "terms": ""
+                "terms": "links"
             },
             "leisure/marina": {
                 "name": "Marina",
@@ -1491,6 +1590,14 @@
                 "name": "Cut line",
                 "terms": ""
             },
+            "man_made/embankment": {
+                "name": "Embankment",
+                "terms": ""
+            },
+            "man_made/flagpole": {
+                "name": "Flagpole",
+                "terms": ""
+            },
             "man_made/lighthouse": {
                 "name": "Lighthouse",
                 "terms": ""
@@ -1529,6 +1636,22 @@
             },
             "man_made/water_works": {
                 "name": "Water Works",
+                "terms": ""
+            },
+            "military/airfield": {
+                "name": "Airfield",
+                "terms": ""
+            },
+            "military/barracks": {
+                "name": "Barracks",
+                "terms": ""
+            },
+            "military/bunker": {
+                "name": "Bunker",
+                "terms": ""
+            },
+            "military/range": {
+                "name": "Military Range",
                 "terms": ""
             },
             "natural": {
@@ -1615,6 +1738,86 @@
                 "name": "Office",
                 "terms": ""
             },
+            "office/accountant": {
+                "name": "Accountant",
+                "terms": ""
+            },
+            "office/administrative": {
+                "name": "Administrative Office",
+                "terms": ""
+            },
+            "office/architect": {
+                "name": "Architect",
+                "terms": ""
+            },
+            "office/company": {
+                "name": "Company Office",
+                "terms": ""
+            },
+            "office/educational_institution": {
+                "name": "Educational Institution",
+                "terms": ""
+            },
+            "office/employment_agency": {
+                "name": "Employment Agency",
+                "terms": ""
+            },
+            "office/estate_agent": {
+                "name": "Real Estate Office",
+                "terms": ""
+            },
+            "office/financial": {
+                "name": "Financial Office",
+                "terms": ""
+            },
+            "office/government": {
+                "name": "Government Office",
+                "terms": ""
+            },
+            "office/insurance": {
+                "name": "Insurance Office",
+                "terms": ""
+            },
+            "office/it": {
+                "name": "IT Office",
+                "terms": ""
+            },
+            "office/lawyer": {
+                "name": "Law Office",
+                "terms": ""
+            },
+            "office/newspaper": {
+                "name": "Newspaper",
+                "terms": ""
+            },
+            "office/ngo": {
+                "name": "NGO Office",
+                "terms": ""
+            },
+            "office/physician": {
+                "name": "Physician",
+                "terms": ""
+            },
+            "office/political_party": {
+                "name": "Political Party",
+                "terms": ""
+            },
+            "office/research": {
+                "name": "Research Office",
+                "terms": ""
+            },
+            "office/telecommunication": {
+                "name": "Telecom Office",
+                "terms": ""
+            },
+            "office/therapist": {
+                "name": "Therapist",
+                "terms": ""
+            },
+            "office/travel_agent": {
+                "name": "Travel Agency",
+                "terms": ""
+            },
             "place": {
                 "name": "Place",
                 "terms": ""
@@ -1663,6 +1866,10 @@
                 "name": "Power Line",
                 "terms": ""
             },
+            "power/minor_line": {
+                "name": "Minor Power Line",
+                "terms": ""
+            },
             "power/pole": {
                 "name": "Power Pole",
                 "terms": ""
@@ -1677,6 +1884,14 @@
             },
             "power/transformer": {
                 "name": "Transformer",
+                "terms": ""
+            },
+            "public_transport/platform": {
+                "name": "Platform",
+                "terms": ""
+            },
+            "public_transport/stop_position": {
+                "name": "Stop Position",
                 "terms": ""
             },
             "railway": {
@@ -1713,7 +1928,7 @@
             },
             "railway/station": {
                 "name": "Railway Station",
-                "terms": ""
+                "terms": "train station,station"
             },
             "railway/subway": {
                 "name": "Subway",
@@ -1973,7 +2188,7 @@
             },
             "tourism/camp_site": {
                 "name": "Camp Site",
-                "terms": ""
+                "terms": "camping"
             },
             "tourism/caravan_site": {
                 "name": "RV Park",

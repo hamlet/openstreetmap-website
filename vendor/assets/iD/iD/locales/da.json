@@ -388,6 +388,9 @@
     },
     "presets": {
         "categories": {
+            "category-building": {
+                "name": "Bygning"
+            },
             "category-landuse": {
                 "name": "Brug af land"
             },
@@ -403,7 +406,10 @@
             "category-route": {
                 "name": "Rute"
             },
-            "category-water": {
+            "category-water-area": {
+                "name": "Vand"
+            },
+            "category-water-line": {
                 "name": "Vand"
             }
         },
@@ -445,7 +451,7 @@
                     }
                 }
             },
-            "access_toilets": {
+            "access_simple": {
                 "label": "Adgang"
             },
             "address": {
@@ -492,9 +498,6 @@
                 "label": "Bygning"
             },
             "building_area": {
-                "label": "Bygning"
-            },
-            "building_yes": {
                 "label": "Bygning"
             },
             "capacity": {
@@ -702,6 +705,9 @@
             "shelter": {
                 "label": "Shelter"
             },
+            "shelter_type": {
+                "label": "Type"
+            },
             "shop": {
                 "label": "Type"
             },
@@ -741,6 +747,9 @@
             },
             "trail_visibility": {
                 "label": "Spor synlighed"
+            },
+            "tree_type": {
+                "label": "Type"
             },
             "vending": {
                 "label": "Gods type"
@@ -922,8 +931,8 @@
                 "terms": "Markedsplads"
             },
             "amenity/parking": {
-                "name": "Parkering",
-                "terms": "Parkering, Bilparkering"
+                "name": "Bilparkering",
+                "terms": "Bilparkering"
             },
             "amenity/pharmacy": {
                 "name": "Apotek",
@@ -976,6 +985,10 @@
             "amenity/school": {
                 "name": "Skole",
                 "terms": "Skole, Folkeskole, Privatskole"
+            },
+            "amenity/shelter": {
+                "name": "Shelter",
+                "terms": "Shelter, læskur"
             },
             "amenity/swimming_pool": {
                 "name": "Svømmebassin",
@@ -1125,6 +1138,10 @@
                 "name": "Beboelsesbygning",
                 "terms": "Beboelsesbygning, Parcelhus"
             },
+            "embankment": {
+                "name": "Forhøjning til tog, vej",
+                "terms": "Forhøjning"
+            },
             "emergency/ambulance_station": {
                 "name": "Udrykningsstation",
                 "terms": "Ambulancestation, Falckstation"
@@ -1140,6 +1157,14 @@
             "entrance": {
                 "name": "Indgang",
                 "terms": "Indgang, Indgangsparti"
+            },
+            "footway/crossing": {
+                "name": "Kryds",
+                "terms": "Kryds"
+            },
+            "footway/sidewalk": {
+                "name": "Fortov",
+                "terms": "Fortov"
             },
             "highway": {
                 "name": "Vej",
@@ -1345,6 +1370,10 @@
                 "name": "Landbrugsjord",
                 "terms": "Landbrugsjord"
             },
+            "landuse/farmland": {
+                "name": "Landbrugsjord",
+                "terms": "Landbrugsjord, Marker"
+            },
             "landuse/farmyard": {
                 "name": "Gårdsplads",
                 "terms": "Gård, Bondegård"
@@ -1485,6 +1514,14 @@
                 "name": "Skærelinje",
                 "terms": "Skærelinje"
             },
+            "man_made/embankment": {
+                "name": "Forhøjning til tog, vej",
+                "terms": "Forhøjning"
+            },
+            "man_made/flagpole": {
+                "name": "Flagstang",
+                "terms": "Flagstang"
+            },
             "man_made/lighthouse": {
                 "name": "Fyr (navigation)",
                 "terms": "Fyr (navigation)"
@@ -1524,6 +1561,22 @@
             "man_made/water_works": {
                 "name": "Vandforsyning",
                 "terms": "Vandforsyning, Vandværk"
+            },
+            "military/airfield": {
+                "name": "Flyveplads",
+                "terms": "Flyveplads"
+            },
+            "military/barracks": {
+                "name": "Kaserne",
+                "terms": "Kaserne, barakker"
+            },
+            "military/bunker": {
+                "name": "Bunker",
+                "terms": "Bunker, Beskyttelsesrum"
+            },
+            "military/range": {
+                "name": "Skydebane",
+                "terms": "Skydebane, Skydeplads, Militærskydebane"
             },
             "natural": {
                 "name": "Naturlig",
@@ -1609,6 +1662,86 @@
                 "name": "Kontor",
                 "terms": "Kontor"
             },
+            "office/accountant": {
+                "name": "Revisor",
+                "terms": "Revisor"
+            },
+            "office/administrative": {
+                "name": "Administrativt kontor",
+                "terms": "Administrativt kontor"
+            },
+            "office/architect": {
+                "name": "Arkitekt",
+                "terms": "Arkitekt, Arkitektfirma"
+            },
+            "office/company": {
+                "name": "Firmakontor",
+                "terms": "Firmakontor, Selskabskonto"
+            },
+            "office/educational_institution": {
+                "name": "Uddannelsesinstitution",
+                "terms": "Uddannelsesinstitution"
+            },
+            "office/employment_agency": {
+                "name": "Arbejdsformidling",
+                "terms": "Arbejdsformidling, Jobcenter"
+            },
+            "office/estate_agent": {
+                "name": "Ejendomsmælger",
+                "terms": "Ejendomsmælger"
+            },
+            "office/financial": {
+                "name": "Finanskontor",
+                "terms": "Finanskontor"
+            },
+            "office/government": {
+                "name": "Statslig kontor",
+                "terms": "Statslig kontor, Styrelse"
+            },
+            "office/insurance": {
+                "name": "Forsikringselskab",
+                "terms": "Forsikringsselskab"
+            },
+            "office/it": {
+                "name": "IT-kontor",
+                "terms": "IT-kontor, IT-firma"
+            },
+            "office/lawyer": {
+                "name": "Advokatkontor",
+                "terms": "Advokatkontor, Advokatfirma"
+            },
+            "office/newspaper": {
+                "name": "Avis",
+                "terms": "Avis"
+            },
+            "office/ngo": {
+                "name": "NGO kontor",
+                "terms": "NGO kontor, NGO"
+            },
+            "office/physician": {
+                "name": "Læge",
+                "terms": "Læge, Doktor"
+            },
+            "office/political_party": {
+                "name": "Politisk parti",
+                "terms": "Politisk parti"
+            },
+            "office/research": {
+                "name": "Forskning",
+                "terms": "Forskning"
+            },
+            "office/telecommunication": {
+                "name": "Teleselskabskontor",
+                "terms": "Teleselskabskontor"
+            },
+            "office/therapist": {
+                "name": "Terapeut",
+                "terms": "Terapeut"
+            },
+            "office/travel_agent": {
+                "name": "Rejsebureau",
+                "terms": "Rejseselskab, Rejsebureau"
+            },
             "place": {
                 "name": "Lokalitet",
                 "terms": "Lokalitet, Sted"
@@ -1657,6 +1790,10 @@
                 "name": "Elledning",
                 "terms": "Elledning"
             },
+            "power/minor_line": {
+                "name": "Elledning",
+                "terms": "Elledning"
+            },
             "power/pole": {
                 "name": "Elmast (telefonmast)",
                 "terms": "Elmast (telefonmast)"
@@ -1672,6 +1809,14 @@
             "power/transformer": {
                 "name": "Transformer",
                 "terms": "Transformer"
+            },
+            "public_transport/platform": {
+                "name": "Platform",
+                "terms": "Platform"
+            },
+            "public_transport/stop_position": {
+                "name": "Stopposition",
+                "terms": "Stopposition"
             },
             "railway": {
                 "name": "Jernbane",

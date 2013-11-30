@@ -394,9 +394,6 @@
             },
             "category-route": {
                 "name": "Útvonal"
-            },
-            "category-water": {
-                "name": "Víz"
             }
         },
         "fields": {
@@ -436,9 +433,6 @@
                         "description": "A behajtás csak a célpont eléréséhez engedélyezett"
                     }
                 }
-            },
-            "access_toilets": {
-                "label": "Hozzáférés"
             },
             "address": {
                 "label": "Cím",
@@ -484,9 +478,6 @@
                 "label": "Épület"
             },
             "building_area": {
-                "label": "Épület"
-            },
-            "building_yes": {
                 "label": "Épület"
             },
             "capacity": {
@@ -868,9 +859,6 @@
             },
             "amenity/marketplace": {
                 "name": "Piac"
-            },
-            "amenity/parking": {
-                "name": "Parkoló"
             },
             "amenity/pharmacy": {
                 "name": "Gyógyszertár"

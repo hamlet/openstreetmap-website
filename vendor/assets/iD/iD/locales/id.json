@@ -371,9 +371,6 @@
             },
             "category-route": {
                 "name": "Rute"
-            },
-            "category-water": {
-                "name": "Air"
             }
         },
         "fields": {
@@ -440,9 +437,6 @@
                 "label": "Bangunan"
             },
             "building_area": {
-                "label": "Bangunan"
-            },
-            "building_yes": {
                 "label": "Bangunan"
             },
             "capacity": {
@@ -750,9 +744,6 @@
             },
             "amenity/marketplace": {
                 "name": "Pasar"
-            },
-            "amenity/parking": {
-                "name": "Parkir"
             },
             "amenity/pharmacy": {
                 "name": "Farmasi"
