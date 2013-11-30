@@ -1,7 +1,7 @@
 source 'http://rubygems.org'
 
 # Require rails
-gem 'rails', '4.0.0'
+gem 'rails', '4.0.1'
 
 # Require things which have moved to gems in ruby 1.9
 gem 'bigdecimal', "~> 1.1.0", :platforms => :ruby_19
@@ -34,9 +34,6 @@ gem 'jsonify-rails'
 # Use R2 for RTL conversion
 gem 'r2'
 
-# Use ejs for javascript templates
-gem 'ejs'
-
 # Load rails plugins
 gem 'rails-i18n', "~> 4.0.0"
 gem 'dynamic_form'
@@ -44,7 +41,7 @@ gem 'rinku', '>= 1.2.2', :require => 'rails_rinku'
 gem 'oauth-plugin', '>= 0.5.1'
 gem 'open_id_authentication', '>= 1.1.0'
 gem 'validates_email_format_of', '>= 1.5.1'
-gem 'composite_primary_keys', '>= 6.0.0'
+gem 'composite_primary_keys', '>= 6.0.1'
 gem 'http_accept_language', '~> 2.0.0'
 gem 'paperclip', '~> 3.0'
 gem 'deadlock_retry', '>= 1.2.0'

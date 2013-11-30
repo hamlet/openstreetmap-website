@@ -1,0 +1,419 @@
+{
+    "modes": {
+        "add_area": {
+            "title": "مساحت"
+        },
+        "add_point": {
+            "title": "نقطه"
+        },
+        "browse": {
+            "title": "جستجو"
+        }
+    },
+    "operations": {
+        "add": {
+            "annotation": {
+                "point": "افزودن یک نقطه."
+            }
+        },
+        "continue": {
+            "key": "A",
+            "title": "ادامه",
+            "description": "ادامه این خط."
+        },
+        "delete": {
+            "title": "حذف"
+        }
+    },
+    "translate": {
+        "translate": "برگردان",
+        "localized_translation_language": "گزینش زبان",
+        "localized_translation_name": "نام"
+    },
+    "zoom_in_edit": "بزرگنمایی درون به ویرایش",
+    "commit": {
+        "message_label": "پیام بکاربردن",
+        "save": "انباره",
+        "cancel": "لغو",
+        "warnings": "اخطارها",
+        "modified": "اصلاح شد",
+        "deleted": "پاک شد",
+        "created": "ساخته شد"
+    },
+    "contributors": {
+        "list": "ویرایش توسط {users}",
+        "truncated_list": "ویرایش توسط  {users} و {count}  دیگران"
+    },
+    "inspector": {
+        "show_more": "بیشتر نمایش بده",
+        "view_on_osm": "نمایش در openstreetmap.org",
+        "all_tags": "همه برچسب ها",
+        "all_members": "همه عضوها",
+        "role": "نقش",
+        "reference": "نمایش در ویکی  OpenStreetMap",
+        "remove": "پلک کردن",
+        "search": "جسنجو",
+        "multiselect": "گزینش موارد",
+        "unknown": "ناشناس",
+        "edit": "ویرایش ویژگیها",
+        "none": "هیچ"
+    },
+    "background": {
+        "none": "هیچ",
+        "custom": "سفارشی",
+        "reset": "نوسازی"
+    },
+    "restore": {
+        "restore": "بازیابی"
+    },
+    "save": {
+        "title": "انباره"
+    },
+    "success": {
+        "edited_osm": "OSMویرایش شد!",
+        "twitter": "اشتراک در twitter",
+        "google": "اشتراک گذاری در Google+"
+    },
+    "splash": {
+        "walkthrough": "آغاز پیاده روی",
+        "start": "حالا ویرایش کن"
+    },
+    "tag_reference": {
+        "description": "توضیحات"
+    },
+    "validations": {
+        "untagged_point": "نقطه برچسب نخورده"
+    },
+    "zoom": {
+        "in": "بزرگنمایی درون",
+        "out": "بزرگنمایی برون"
+    },
+    "gpx": {
+        "local_layer": "فایل GPX محلی"
+    },
+    "help": {
+        "title": "کمک"
+    },
+    "intro": {
+        "points": {
+            "title": "نقاط"
+        },
+        "areas": {
+            "title": "فضاها"
+        },
+        "lines": {
+            "title": "خطوط"
+        },
+        "startediting": {
+            "title": "ویرایش آغاز شد"
+        }
+    },
+    "presets": {
+        "fields": {
+            "access": {
+                "label": "دسترسي"
+            },
+            "address": {
+                "label": "ادرس",
+                "placeholders": {
+                    "housename": "نام خانه",
+                    "number": "123",
+                    "street": "خيابان",
+                    "city": "شهر"
+                }
+            },
+            "aeroway": {
+                "label": "نوع"
+            },
+            "amenity": {
+                "label": "نوع"
+            },
+            "artwork_type": {
+                "label": "نوع"
+            },
+            "atm": {
+                "label": "ATM"
+            },
+            "barrier": {
+                "label": "نوع"
+            },
+            "bicycle_parking": {
+                "label": "نوع"
+            },
+            "boundary": {
+                "label": "نوع"
+            },
+            "building": {
+                "label": "ساختمان"
+            },
+            "building_area": {
+                "label": "ساختمان"
+            },
+            "capacity": {
+                "label": "ظرفيت"
+            },
+            "construction": {
+                "label": "نوع"
+            },
+            "crossing": {
+                "label": "نوع"
+            },
+            "elevation": {
+                "label": "ارتفاع"
+            },
+            "entrance": {
+                "label": "نوع"
+            },
+            "fax": {
+                "label": "نمابر"
+            },
+            "fire_hydrant/type": {
+                "label": "نوع"
+            },
+            "generator/type": {
+                "label": "نوع"
+            },
+            "highway": {
+                "label": "نوع"
+            },
+            "historic": {
+                "label": "نوع"
+            },
+            "internet_access": {
+                "label": "دسترسی اینترنت",
+                "options": {
+                    "wlan": "واي فاي",
+                    "wired": "سيمي",
+                    "terminal": "پايانه"
+                }
+            },
+            "landuse": {
+                "label": "نوع"
+            },
+            "layer": {
+                "label": "لايه"
+            },
+            "leisure": {
+                "label": "نوع"
+            },
+            "levels": {
+                "label": "لایه ها"
+            },
+            "man_made": {
+                "label": "نوع"
+            },
+            "network": {
+                "label": "شبکه"
+            },
+            "note": {
+                "label": "يادداشت"
+            },
+            "office": {
+                "label": "نوع"
+            },
+            "oneway": {
+                "label": "يک طرفه"
+            },
+            "opening_hours": {
+                "label": "ساعت"
+            },
+            "operator": {
+                "label": "اپراتور"
+            },
+            "parking": {
+                "label": "نوع"
+            },
+            "phone": {
+                "label": "تلفن"
+            },
+            "place": {
+                "label": "نوع"
+            },
+            "power": {
+                "label": "نوع"
+            },
+            "railway": {
+                "label": "نوع"
+            },
+            "relation": {
+                "label": "نوع"
+            },
+            "restriction": {
+                "label": "نوع"
+            },
+            "route": {
+                "label": "نوع"
+            },
+            "route_master": {
+                "label": "نوع"
+            },
+            "service": {
+                "label": "نوع"
+            },
+            "shop": {
+                "label": "نوع"
+            },
+            "sport": {
+                "label": "ورزشي"
+            },
+            "structure": {
+                "options": {
+                    "bridge": "پل",
+                    "tunnel": "تونل"
+                }
+            },
+            "tourism": {
+                "label": "نوع"
+            },
+            "towertype": {
+                "label": "نوع برج"
+            },
+            "tracktype": {
+                "label": "نوع"
+            },
+            "vending": {
+                "label": "نوع محموله"
+            },
+            "water": {
+                "label": "نوع"
+            },
+            "waterway": {
+                "label": "نوع"
+            },
+            "website": {
+                "label": "وب سايت"
+            },
+            "wetland": {
+                "label": "نوع"
+            },
+            "wikipedia": {
+                "label": "ويکي پديا"
+            },
+            "wood": {
+                "label": "نوع"
+            }
+        },
+        "presets": {
+            "aeroway/aerodrome": {
+                "name": "فرودگاه"
+            },
+            "amenity/bank": {
+                "name": "بانک"
+            },
+            "amenity/bar": {
+                "name": "بار"
+            },
+            "amenity/cafe": {
+                "name": "کافه"
+            },
+            "amenity/fire_station": {
+                "name": "ایستگاه آتش نشانی"
+            },
+            "amenity/hospital": {
+                "name": "بیمارستان"
+            },
+            "amenity/library": {
+                "name": "کتابخانه"
+            },
+            "amenity/pharmacy": {
+                "name": "داروخانه"
+            },
+            "amenity/place_of_worship/christian": {
+                "name": "کلیسا"
+            },
+            "amenity/place_of_worship/muslim": {
+                "name": "مسجد"
+            },
+            "amenity/police": {
+                "name": "پليس"
+            },
+            "amenity/post_box": {
+                "name": "صندوق پستی"
+            },
+            "amenity/post_office": {
+                "name": "اداره پست"
+            },
+            "amenity/school": {
+                "name": "مدرسه"
+            },
+            "amenity/theatre": {
+                "name": "تئاتر"
+            },
+            "amenity/university": {
+                "name": "دانشگاه"
+            },
+            "barrier/wall": {
+                "name": "دیوار"
+            },
+            "building": {
+                "name": "ساختمان"
+            },
+            "highway": {
+                "name": "بزرگراه"
+            },
+            "highway/bus_stop": {
+                "name": "ایستاه اتوبوس"
+            },
+            "highway/cycleway": {
+                "name": "مسیر دوچرخه سواری"
+            },
+            "highway/footway": {
+                "name": "مسیر پیاده روی"
+            },
+            "highway/motorway": {
+                "name": "مسیر موتور سواری"
+            },
+            "highway/path": {
+                "name": "مسیر"
+            },
+            "historic/castle": {
+                "name": "قلعه"
+            },
+            "landuse/forest": {
+                "name": "جنگل"
+            },
+            "leisure/park": {
+                "name": "پارک"
+            },
+            "leisure/stadium": {
+                "name": "استودیوم"
+            },
+            "natural/water": {
+                "name": "آب"
+            },
+            "natural/wood": {
+                "name": "چوب"
+            },
+            "office": {
+                "name": "اداره"
+            },
+            "place/locality": {
+                "name": "محلی"
+            },
+            "shop": {
+                "name": "فروشگاه"
+            },
+            "shop/electronics": {
+                "name": "فروشگاه الکترونیک"
+            },
+            "shop/supermarket": {
+                "name": "سوپرمارکت"
+            },
+            "tourism": {
+                "name": "توریستی"
+            },
+            "tourism/hotel": {
+                "name": "هتل"
+            },
+            "tourism/museum": {
+                "name": "موزه"
+            },
+            "tourism/zoo": {
+                "name": "باغ وحش"
+            },
+            "waterway/canal": {
+                "name": "کانال"
+            }
+        }
+    }
+}

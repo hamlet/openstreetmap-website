@@ -7,6 +7,7 @@ class GeocoderController < ApplicationController
 
   before_filter :authorize_web
   before_filter :set_locale
+  before_filter :require_oauth, :only => [:search]
 
   def search
     normalize_params
@@ -29,6 +30,8 @@ class GeocoderController < ApplicationController
       @sources.push "osm_nominatim"
       @sources.push "geonames" if defined?(GEONAMES_USERNAME)
     end
+
+    render :layout => map_layout
   end
 
   def search_latlon
@@ -160,7 +163,11 @@ class GeocoderController < ApplicationController
       type = place.attributes["type"].to_s
       name = place.attributes["display_name"].to_s
       min_lat,max_lat,min_lon,max_lon = place.attributes["boundingbox"].to_s.split(",")
-      prefix_name = t "geocoder.search_osm_nominatim.prefix.#{klass}.#{type}", :default => type.gsub("_", " ").capitalize
+      if type.empty?
+        prefix_name = ""
+      else
+        prefix_name = t "geocoder.search_osm_nominatim.prefix.#{klass}.#{type}", :default => type.gsub("_", " ").capitalize
+      end
       if klass == 'boundary' and type == 'administrative'
         rank = (place.attributes["place_rank"].to_i + 1) / 2
         prefix_name = t "geocoder.search_osm_nominatim.admin_levels.level#{rank}", :default => prefix_name

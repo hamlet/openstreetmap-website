@@ -9,11 +9,7 @@ class ApplicationController < ActionController::Base
     if session[:user]
       @user = User.where(:id => session[:user]).where("status IN ('active', 'confirmed', 'suspended')").first
 
-      if @user.display_name != cookies["_osm_username"]
-        logger.info "Session user '#{@user.display_name}' does not match cookie user '#{cookies['_osm_username']}'"
-        reset_session
-        @user = nil
-      elsif @user.status == "suspended"
+    if @user.status == "suspended"
         session.delete(:user)
         session_expires_automatically
 
@@ -420,6 +416,10 @@ class ApplicationController < ActionController::Base
   # as a filter, to force it to be fetched from Apache into a file.
   def fetch_body
     request.body.rewind
+  end
+
+  def map_layout
+    request.xhr? ? 'xhr' : 'map'
   end
 
   def preferred_editor

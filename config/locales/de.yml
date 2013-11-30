@@ -11,6 +11,7 @@
 # Author: CygnusOlor
 # Author: Daswaldhorn
 # Author: Diebuche
+# Author: Dieterdreist
 # Author: Fujnky
 # Author: Grille chompa
 # Author: Holger
@@ -245,7 +246,6 @@ de:
       hide_areas: Flächen ausblenden
       history_for_feature: Chronik für %{feature}
       load_data: Daten laden
-      loaded_an_area_with_num_features: Du hast einen Bereich ausgewählt, der %{num_features} Elemente enthält. Manche Browser werden bei der Verarbeitung einer so großen Datenmenge langsam oder frieren ein (reagieren nicht mehr auf Eingaben). Üblicherweise sollten weniger als %{max_features} Elemente angezeigt werden. Falls du dir sicher bist, dass so viele Elemente laden möchtest, klicke unten auf „Daten laden“.
       loading: Lade …
       manually_select: Einen anderen Kartenausschnitt manuell auswählen
       notes_layer_name: Alle Hinweise anzeigen
@@ -2067,7 +2067,7 @@ de:
     questions: 
       paragraph_1_html: "Falls Du zusätzliche Hilfe beim Mapping brauchst oder etwas nicht klar ist, gibt es zusätzliche\nHilfe auf <a href='http://help.openstreetmap.org/'>der Hilfe-Seite</a>."
       title: Fragen?
-    start_mapping: Beginne mit dem Berarbeiten der Karte
+    start_mapping: Beginne mit dem Bearbeiten der Karte
     title: Willkommen!
     whats_on_the_map: 
       off_html: "Was <em>nicht</em> in die Datenbank gehört sind subjektive Daten wie Bewertungen, nicht mehr aktuelle\nhistorische Fakten oder nicht real existierende Dinge. Ausserdem ist es wichtig, nichts von\nanderen Quellen (auch nicht aus Papierkarten) zu kopieren, da OpenStreetMap das Urheberrecht sehr ernst nimmt."

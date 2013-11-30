@@ -234,7 +234,6 @@ it:
       hide_areas: Nascondi le aree
       history_for_feature: Cronologia per %{feature}
       load_data: Carica dati
-      loaded_an_area_with_num_features: "È stata caricata un'area che contiene %{num_features} caratteristiche. In generale, alcuni browser potrebbero non visualizzare correttamente questa quantità di dati. Generalmente i browser lavorano al meglio se si visualizzano meno di %{max_features} caratteristiche alla volta: se si fa qualcos'altro il proprio browser potrebbe diventare lento o non rispondere più. Se si è sicuri di voler visualizzare questi dati, allora si può premere il pulsante sottostante."
       loading: Caricamento in corso...
       manually_select: Seleziona manualmente un'area differente
       notes_layer_name: Mostra le note
@@ -1003,7 +1002,7 @@ it:
       tooltip_disabled: La legenda è disponibile solo per il livello Standard
     map: 
       base: 
-        cycle_map: Open Cycle Map
+        cycle_map: Mappa ciclabile
         hot: Umanitario
         mapquest: MapQuest Open
         standard: Standard
@@ -1111,7 +1110,7 @@ it:
     partners_ucl: UCL VR Centre
     sign_up: iscriviti
     sign_up_tooltip: Crea un profilo utente per apportare modifiche
-    tag_line: La wiki-mappa Libera del Mondo
+    tag_line: La wiki-mappa libera del mondo
     user_diaries: Diari degli utenti
     user_diaries_tooltip: Visualizza diari utente
     view: Visualizza

@@ -1,4 +1,4 @@
-# Messages for Czech (česky)
+# Messages for Czech (čeština)
 # Exported from translatewiki.net
 # Export driver: syck-pecl
 # Author: Bilbo
@@ -233,7 +233,6 @@ cs:
       hide_areas: Schovat oblasti
       history_for_feature: Historie pro %{feature}
       load_data: Nahrát data
-      loaded_an_area_with_num_features: Máte načtenu oblast, která obsahuje %{num_features} prvků. Některé prohlížeče mohou mít potíže při zobrazování takového množství dat. Obecně fungují prohlížeče nejlépe při zobrazování ne více než %{max_features} prvků současně – větší množství může způsobit, že bude prohlížeč reagovat pomalu či vůbec. Pokud jste si jisti, že chcete tato data zobrazit, klikněte na tlačítko níže.
       loading: Načítá se…
       manually_select: Ručně vybrat jinou oblast
       notes_layer_name: Procházet poznámky
@@ -778,7 +777,7 @@ cs:
           crater: Kráter
           dune: Duna
           feature: Prvek
-          fell: See http://wiki.openstreetmap.org/wiki/Tag:natural=fell
+          fell: Fjell
           fjord: Fjord
           forest: Les
           geyser: Gejzír
@@ -1312,7 +1311,7 @@ cs:
       header: "%{from_user} vám poslal(a) prostřednictvím OpenStreetMap zprávu s předmětem %{subject}:"
       hi: Dobrý den, uživateli %{to_user},
     note_comment_notification: 
-      anonymous: Jako anonymní uživatel
+      anonymous: Anonymní uživatel
       closed: 
         commented_note: "%{commenter} vyřešil poznámku k mapě, kterou jste komentovali. Poznámka je umístěna poblíž %{place}."
         subject_other: "[OpenStreetMap] %{commenter} vyřešil jednu z poznámek, která vás zajímá"
