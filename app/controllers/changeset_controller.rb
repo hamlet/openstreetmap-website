@@ -110,7 +110,10 @@ class ChangesetController < ApplicationController
     # save the larger bounding box and return the changeset, which
     # will include the bigger bounding box.
     cs.save!
-    render :text => cs.to_xml.to_s, :content_type => "text/xml"
+
+    doc = OSM::Format::Document.new(request)
+    doc << cs
+    render :text => doc.render, :content_type => doc.mime
   end
 
   ##
@@ -226,14 +229,14 @@ class ChangesetController < ApplicationController
     changesets = conditions_closed(changesets, params['closed'])
 
     # create the results document
-    results = OSM::API.new.get_xml_doc
+    doc = OSM::Format::Document.new(request)
 
     # add all matching changesets to the XML results document
     changesets.order("created_at DESC").limit(100).each do |cs|
-      results.root << cs.to_xml_node
+      doc << cs
     end
 
-    render :text => results.to_s, :content_type => "text/xml"
+    render :text => doc.render, :content_type => doc.mime
   end
 
   ##
@@ -254,7 +257,10 @@ class ChangesetController < ApplicationController
     unless new_changeset.nil?
       check_changeset_consistency(changeset, @user)
       changeset.update_from(new_changeset, @user)
-      render :text => changeset.to_xml, :mime_type => "text/xml"
+
+      doc = OSM::Format::Document.new(request)
+      doc << changeset
+      render :text => doc.render, :content_type => doc.mime
     else
 
       render :text => "", :status => :bad_request

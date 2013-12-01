@@ -1531,71 +1531,79 @@ EOF
   ##
   # test the query functionality of changesets
   def test_query
-    get :query, :bbox => "-10,-10, 10, 10"
-    assert_response :success, "can't get changesets in bbox"
-    assert_changesets [1,4,6]
+    ["text/xml", "application/json"].each do |mime_type|
+      @request.headers["Accept"] = mime_type
 
-    get :query, :bbox => "4.5,4.5,4.6,4.6"
-    assert_response :success, "can't get changesets in bbox"
-    assert_changesets [1]
+      get :query, :bbox => "-10,-10, 10, 10"
+      assert_response :success, "can't get changesets in bbox"
+      assert_changesets [1,4,6], mime_type
+      
+      get :query, :bbox => "4.5,4.5,4.6,4.6"
+      assert_response :success, "can't get changesets in bbox"
+      assert_changesets [1], mime_type
 
-    # not found when looking for changesets of non-existing users
-    get :query, :user => User.maximum(:id) + 1
-    assert_response :not_found
-    get :query, :display_name => " "
-    assert_response :not_found
+      # not found when looking for changesets of non-existing users
+      get :query, :user => User.maximum(:id) + 1
+      assert_response :not_found
+      get :query, :display_name => " "
+      assert_response :not_found
 
-    # can't get changesets of user 1 without authenticating
-    get :query, :user => users(:normal_user).id
-    assert_response :not_found, "shouldn't be able to get changesets by non-public user (ID)"
-    get :query, :display_name => users(:normal_user).display_name
-    assert_response :not_found, "shouldn't be able to get changesets by non-public user (name)"
+      # can't get changesets of user 1 without authenticating
+      get :query, :user => users(:normal_user).id
+      assert_response :not_found, "shouldn't be able to get changesets by non-public user (ID)"
+      get :query, :display_name => users(:normal_user).display_name
+      assert_response :not_found, "shouldn't be able to get changesets by non-public user (name)"
+    end
 
-    # but this should work
     basic_authorization "test@openstreetmap.org", "test"
-    get :query, :user => users(:normal_user).id
-    assert_response :success, "can't get changesets by user ID"
-    assert_changesets [1,3,6]
 
-    get :query, :display_name => users(:normal_user).display_name
-    assert_response :success, "can't get changesets by user name"
-    assert_changesets [1,3,6]
+    ["text/xml", "application/json"].each do |mime_type|
+      @request.headers["Accept"] = mime_type
+      # but this should work
+      get :query, :user => users(:normal_user).id
+      assert_response :success, "can't get changesets by user ID"
+      assert_changesets [1,3,6], mime_type
 
-    # check that the correct error is given when we provide both UID and name
-    get :query, :user => users(:normal_user).id, :display_name => users(:normal_user).display_name
-    assert_response :bad_request, "should be a bad request to have both ID and name specified"
+      get :query, :display_name => users(:normal_user).display_name
+      assert_response :success, "can't get changesets by user name"
+      assert_changesets [1,3,6], mime_type
 
-    get :query, :user => users(:normal_user).id, :open => true
-    assert_response :success, "can't get changesets by user and open"
-    assert_changesets [1]
+      # check that the correct error is given when we provide both UID and name
+      get :query, :user => users(:normal_user).id, :display_name => users(:normal_user).display_name
+      assert_response :bad_request, "should be a bad request to have both ID and name specified"
 
-    get :query, :time => '2007-12-31'
-    assert_response :success, "can't get changesets by time-since"
-    assert_changesets [1,2,4,5,6]
+      get :query, :user => users(:normal_user).id, :open => true
+      assert_response :success, "can't get changesets by user and open"
+      assert_changesets [1], mime_type
 
-    get :query, :time => '2008-01-01T12:34Z'
-    assert_response :success, "can't get changesets by time-since with hour"
-    assert_changesets [1,2,4,5,6]
+      get :query, :time => '2007-12-31'
+      assert_response :success, "can't get changesets by time-since"
+      assert_changesets [1,2,4,5,6], mime_type
 
-    get :query, :time => '2007-12-31T23:59Z,2008-01-01T00:01Z'
-    assert_response :success, "can't get changesets by time-range"
-    assert_changesets [1,5,6]
+      get :query, :time => '2008-01-01T12:34Z'
+      assert_response :success, "can't get changesets by time-since with hour"
+      assert_changesets [1,2,4,5,6], mime_type
 
-    get :query, :open => 'true'
-    assert_response :success, "can't get changesets by open-ness"
-    assert_changesets [1,2,4]
+      get :query, :time => '2007-12-31T23:59Z,2008-01-01T00:01Z'
+      assert_response :success, "can't get changesets by time-range"
+      assert_changesets [1,5,6], mime_type
 
-    get :query, :closed => 'true'
-    assert_response :success, "can't get changesets by closed-ness"
-    assert_changesets [3,5,6,7]
+      get :query, :open => 'true'
+      assert_response :success, "can't get changesets by open-ness"
+      assert_changesets [1,2,4], mime_type
 
-    get :query, :closed => 'true', :user => users(:normal_user).id
-    assert_response :success, "can't get changesets by closed-ness and user"
-    assert_changesets [3,6]
+      get :query, :closed => 'true'
+      assert_response :success, "can't get changesets by closed-ness"
+      assert_changesets [3,5,6,7], mime_type
 
-    get :query, :closed => 'true', :user => users(:public_user).id
-    assert_response :success, "can't get changesets by closed-ness and user"
-    assert_changesets [7]
+      get :query, :closed => 'true', :user => users(:normal_user).id
+      assert_response :success, "can't get changesets by closed-ness and user"
+      assert_changesets [3,6], mime_type
+
+      get :query, :closed => 'true', :user => users(:public_user).id
+      assert_response :success, "can't get changesets by closed-ness and user"
+      assert_changesets [7], mime_type
+    end
   end
 
   ##
@@ -1896,10 +1904,20 @@ EOF
   ##
   # boilerplate for checking that certain changesets exist in the
   # output.
-  def assert_changesets(ids)
-    assert_select "osm>changeset", ids.size
-    ids.each do |id|
-      assert_select "osm>changeset[id=#{id}]", 1
+  def assert_changesets(ids, mime_type = "text/xml")
+    if mime_type == "text/xml"
+      assert_select "osm>changeset", ids.size
+      ids.each do |id|
+        assert_select "osm>changeset[id=#{id}]", 1
+      end
+
+    else
+      doc = JSON.parse(@response.body)
+      assert_equal true, doc.has_key?('changesets')
+      assert_equal Array, doc['changesets'].class
+      assert_equal ids.length, doc['changesets'].length
+      existing_ids = doc['changesets'].map {|x| x['id'].to_i }
+      assert_equal ids.sort, existing_ids.sort
     end
   end
 
