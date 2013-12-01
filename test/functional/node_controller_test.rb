@@ -652,7 +652,7 @@ class NodeControllerTest < ActionController::TestCase
 
     # check the ordering of the JSON doc - should be headers first, then data
     data = JSON.parse(@response.body)
-    assert_equal data.keys, ['version', 'generator', 'copyright', 'attribution', 'license', 'nodes', 'ways', 'relations'], 
+    assert_equal data.keys, ['version', 'generator', 'copyright', 'attribution', 'license', 'changesets', 'nodes', 'ways', 'relations'], 
       "JSON document should preserve top level key ordering."
     assert_equal data['ways'], [], "Ways key should be present, but be an empty array."
     assert_equal data['relations'], [], "Relations key should be present, but be an empty array."

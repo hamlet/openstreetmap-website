@@ -37,7 +37,9 @@ class ChangesetController < ApplicationController
   # return anything about the nodes, ways and relations in the changeset.
   def read
     changeset = Changeset.find(params[:id])
-    render :text => changeset.to_xml.to_s, :content_type => "text/xml"
+    doc = OSM::Format::Document.new(request)
+    doc << changeset
+    render :text => doc.render, :content_type => doc.mime
   end
 
   ##
@@ -77,10 +79,22 @@ class ChangesetController < ApplicationController
 
     # the request is in pseudo-osm format... this is kind-of an
     # abuse, maybe should change to some other format?
-    doc = XML::Parser.string(request.raw_post).parse
-    doc.find("//osm/node").each do |n|
-      lon << n['lon'].to_f * GeoRecord::SCALE
-      lat << n['lat'].to_f * GeoRecord::SCALE
+    if request.content_mime_type == Mime::JSON
+      doc = JSON.parse(request.raw_post)
+      if not doc.nil? and doc.has_key?('nodes')
+        doc['nodes'].each do |n|
+          lon << n['lon'].to_f * GeoRecord::SCALE if n.has_key?('lon')
+          lat << n['lat'].to_f * GeoRecord::SCALE if n.has_key?('lat')
+        end
+      end
+
+    else
+      # assume XML if it isn't explicitly JSON
+      doc = XML::Parser.string(request.raw_post).parse
+      doc.find("//osm/node").each do |n|
+        lon << n['lon'].to_f * GeoRecord::SCALE
+        lat << n['lat'].to_f * GeoRecord::SCALE
+      end
     end
 
     # add the existing bounding box to the lon-lat array
