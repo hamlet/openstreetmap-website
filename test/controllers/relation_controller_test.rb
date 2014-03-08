@@ -106,11 +106,26 @@ class RelationControllerTest < ActionController::TestCase
 
   def test_full
     # check the "full" mode
-    get :full, :id => current_relations(:visible_relation).id
-    assert_response :success
-    # FIXME check whether this contains the stuff we want!
-    if $VERBOSE
+    ["text/xml", "application/json"].each do |mime_type|
+      target_rel = current_relations(:visible_relation)
+      @request.headers["Accept"] = mime_type
+      get :full, :id => target_rel.id
+      assert_response :success
+
+      rel_ids = [target_rel.id] + target_rel.members.select {|t,i,r| t == 'Relation'}.map {|t,i,r| i}
+      way_ids = target_rel.members.select {|t,i,r| t == 'Way'}.map {|t,i,r| i}
+      node_ids = target_rel.members.select {|t,i,r| t == 'Node'}.map {|t,i,r| i}
+      way_ids.each do |id|
+        node_ids += Way.find(id).way_nodes.map {|wn| wn.node_id}
+      end
+
+      if $VERBOSE
         print @response.body
+      end
+
+      assert_relations(rel_ids, mime_type)
+      assert_ways(way_ids, mime_type)
+      assert_nodes(node_ids, mime_type)
     end
   end
 
@@ -1122,5 +1137,47 @@ OSM
 
   def content_type(t)
     @request.env["CONTENT_TYPE"] = t.to_s
+  end
+
+  def assert_relations(ids, mime_type)
+    if mime_type == "text/xml"
+      ids.each do |id|
+        assert_select "osm relation[id=#{id}]", 1
+      end
+
+    else
+      doc = JSON.parse(@response.body)
+      assert_equal true, doc.has_key?('relations')
+      assert_equal Array, doc['relations'].class
+      assert_equal ids.sort, doc['relations'].map {|relation| relation['id'].to_i}.sort
+    end
+  end
+
+  def assert_ways(ids, mime_type)
+    if mime_type == "text/xml"
+      ids.each do |id|
+        assert_select "osm way[id=#{id}]", 1
+      end
+
+    else
+      doc = JSON.parse(@response.body)
+      assert_equal true, doc.has_key?('ways')
+      assert_equal Array, doc['ways'].class
+      assert_equal ids.sort, doc['ways'].map {|way| way['id'].to_i}.sort
+    end
+  end
+
+  def assert_nodes(ids, mime_type)
+    if mime_type == "text/xml"
+      ids.each do |id|
+        assert_select "osm node[id=#{id}]", 1
+      end
+
+    else
+      doc = JSON.parse(@response.body)
+      assert_equal true, doc.has_key?('nodes')
+      assert_equal Array, doc['nodes'].class
+      assert_equal ids.sort, doc['nodes'].map {|node| node['id'].to_i}.sort
+    end
   end
 end
