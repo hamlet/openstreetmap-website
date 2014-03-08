@@ -48,7 +48,7 @@ en:
         body: "Body"
       diary_entry:
         user: "User"
-        title: "Title"
+        title: "Subject"
         latitude: "Latitude"
         longitude: "Longitude"
         language: "Language"
@@ -66,7 +66,7 @@ en:
         description: "Description"
       message:
         sender: "Sender"
-        title: "Title"
+        title: "Subject"
         body: "Body"
         recipient: "Recipient"
       user:
@@ -111,6 +111,7 @@ en:
     download_xml: "Download XML"
     view_history: "View History"
     view_details: "View Details"
+    location: "Location:"
     changeset:
       title: "Changeset: %{id}"
       belongs_to: "Author"
@@ -171,9 +172,8 @@ en:
         way: "way"
         relation: "relation"
     start_rjs:
-      loaded_an_area_with_num_features: "Loading %{num_features} features, which may make your browser slow or unresponsive. Are sure you want to display this data?"
+      feature_warning: "Loading %{num_features} features, which may make your browser slow or unresponsive. Are sure you want to display this data?"
       load_data: "Load Data"
-      unable_to_load_size: "Unable to load map data, too large of an area (%{bbox_size}). Area must be smaller than %{max_bbox_size} square degrees."
       loading: "Loading..."
     tag_details:
       tags: "Tags"
@@ -184,6 +184,7 @@ en:
     note:
       title: "Note: %{id}"
       new_note: "New Note"
+      description: "Description"
       open_title: "Unresolved note #%{note_name}"
       closed_title: "Resolved note #%{note_name}"
       hidden_title: "Hidden note #%{note_name}"
@@ -311,10 +312,14 @@ en:
       licence: "Licence"
       export_details: 'OpenStreetMap data is licensed under the <a href="http://opendatacommons.org/licenses/odbl/1.0/">Open Data Commons Open Database License</a> (ODbL).'
       too_large:
+        advice: "If the above export fails, please consider using one of the sources listed below:"
         body: "This area is too large to be exported as OpenStreetMap XML Data. Please zoom in or select a smaller area, or use one of the sources listed below for bulk data downloads."
         planet:
           title: "Planet OSM"
           description: "Regularly-updated copies of the complete OpenStreetMap database"
+        overpass:
+          title: "Overpass API"
+          description: "Download this bounding box from a mirror of the OpenStreetMap database"
         geofabrik:
           title: "Geofabrik Downloads"
           description: "Regularly-updated extracts of continents, countries, and selected cities"
@@ -907,7 +912,7 @@ en:
     donate: "Support OpenStreetMap by %{link} to the Hardware Upgrade Fund."
     help: Help
     about: About
-    copyright: "Copyright & License"
+    copyright: Copyright
     community: Community
     community_blogs: "Community Blogs"
     community_blogs_title: "Blogs from members of the OpenStreetMap community"
@@ -917,6 +922,7 @@ en:
       title: Support OpenStreetMap with a monetary donation
       text: Make a Donation
     learn_more: "Learn More"
+    more: More
   license_page:
     foreign:
       title: About this translation
@@ -993,6 +999,11 @@ en:
         Resources Canada), CanVec (&copy; Department of Natural
         Resources Canada), and StatCan (Geography Division,
         Statistics Canada).
+      contributors_fi_html: |
+        <strong>Finland</strong>: Contains data from the
+        National Land Survey of Finland's Topographic Database
+        and other datasets, under the
+        <a href="http://www.maanmittauslaitos.fi/en/NLS_open_data_licence_version1_20120501">NLSFI License</a>.
       contributors_fr_html: |
         <strong>France</strong>: Contains data sourced from
         Direction Générale des Impôts.
@@ -1053,7 +1064,7 @@ en:
       editor_html: |
         An <strong>editor</strong> is a program or website you can use to edit the map.
       node_html: |
-        A <strong>node</strong> is a point on the map, like a single restauraunt or a tree.
+        A <strong>node</strong> is a point on the map, like a single restaurant or a tree.
       way_html: |
         A <strong>way</strong> is a line or area, like a road, stream, lake or building.
       tag_html: |
@@ -1075,6 +1086,26 @@ en:
         Just go to <a href='%{map_url}'>the map</a> and click the note icon:
         <span class='icon note'></span>. This will add a marker to the map, which you can move
         by dragging. Add your message, then click save, and other mappers will investigate.
+  fixthemap:
+    title: Report a problem / Fix the map
+    how_to_help:
+      title: How to Help
+      join_the_community:
+        title: Join the community
+        explanation_html: |
+          If you have noticed a problem with our map data, for example a road is missing or your address, the best way to
+          proceed is to join the OpenStreetMap community and add or repair the data yourself. 
+      add_a_note:
+        instructions_html: |
+          Just click <a class='icon note'></a> or the same icon on the map display.
+          This will add a marker to the map, which you can move
+          by dragging. Add your message, then click save, and other mappers will investigate.
+    other_concerns:
+      title: Other concerns
+      explanation_html: |
+        If you have concerns about how our data is being used or about the contents please consult our
+        <a href='/copyright'>copyright page</a> for more legal information, or contact the appropriate 
+        <a href='http://wiki.osmfoundation.org/wiki/Working_Groups'>OSMF working group</a>.  
   help_page:
     title: Getting Help
     introduction: |
@@ -1500,6 +1531,7 @@ en:
       need_to_see_terms: "Your access to the API is temporarily suspended. Please log-in to the web interface to view the Contributor Terms. You do not need to agree, but you must view them."
   oauth:
     oauthorize:
+      title: "Authorize access to your account"
       request_access: "The application %{app_name} is requesting access to your account, %{user}. Please check whether you would like the application to have the following capabilities. You may choose as many or as few as you like."
       allow_to: "Allow the client application to:"
       allow_read_prefs:  "read your user preferences."
@@ -1509,6 +1541,14 @@ en:
       allow_read_gpx:    "read your private GPS traces."
       allow_write_gpx:   "upload GPS traces."
       allow_write_notes: "modify notes."
+    oauthorize_success:
+      title: "Authorization request allowed"
+      allowed: "You have granted application %{app_name} access to your account."
+      verification: "The verification code is %{code}."
+    oauthorize_failure:
+      title: "Authorization request failed"
+      denied: "You have denied application %{app_name} access to your account."
+      invalid: "The authorization token is not valid."
     revoke:
       flash: "You've revoked the token for %{application}"
   oauth_clients:
@@ -1694,6 +1734,7 @@ en:
       my edits: My Edits
       my traces: My Traces
       my notes: My Notes
+      my messages: My Messages
       my profile: My Profile
       my settings: My Settings
       my comments: My Comments
@@ -2062,19 +2103,10 @@ en:
       map_data_zoom_in_tooltip: Zoom in to see map data
     notes:
       new:
-        intro: "In order to improve the map the information you enter is shown to other mappers, so please be as descriptive and precise as possible when moving the marker to the correct position and entering your note below."
+        intro: "Spotted a mistake or something missing? Let other mappers know so we can fix it. Move the marker to the correct position and type a note to explain the problem. (Please don't enter personal information here.)"
         add: Add Note
       show:
-        permalink: Permalink
         anonymous_warning: This note includes comments from anonymous users which should be independently verified.
-        opened_by: "created by <a href='%{user_url}'>%{user}</a> at %{time}"
-        opened_by_anonymous: "created by anonymous at %{time}"
-        commented_by: "comment from <a href='%{user_url}'>%{user}</a> at %{time}"
-        commented_by_anonymous: "comment from anonymous at %{time}"
-        closed_by: "resolved by <a href='%{user_url}'>%{user}</a> at %{time}"
-        closed_by_anonymous: "resolved by anonymous at %{time}"
-        reopened_by: "reactivated by <a href='%{user_url}'>%{user}</a> at %{time}"
-        reopened_by_anonymous: "reactivated by anonymous at %{time}"
         hide: Hide
         resolve: Resolve
         reactivate: Reactivate

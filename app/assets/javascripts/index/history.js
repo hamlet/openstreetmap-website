@@ -1,3 +1,5 @@
+//= require jquery.simulate
+
 OSM.History = function(map) {
   var page = {};
 
@@ -9,8 +11,10 @@ OSM.History = function(map) {
     .on("mouseout", "[data-changeset]", function () {
       unHighlightChangeset($(this).data("changeset").id);
     })
-    .on("click", "[data-changeset]", function () {
-      clickChangeset($(this).data("changeset").id);
+    .on("click", "[data-changeset]", function (e) {
+      if (!$(e.target).is('a')) {
+        clickChangeset($(this).data("changeset").id, e);
+      }
     });
 
   var group = L.featureGroup()
@@ -21,7 +25,7 @@ OSM.History = function(map) {
       unHighlightChangeset(e.layer.id);
     })
     .on("click", function (e) {
-      clickChangeset(e.layer.id);
+      clickChangeset(e.layer.id, e);
     });
 
   group.getLayerId = function(layer) {
@@ -38,15 +42,15 @@ OSM.History = function(map) {
     $("#changeset_" + id).removeClass("selected");
   }
 
-  function clickChangeset(id) {
-    OSM.router.route($("#changeset_" + id).find(".changeset_id").attr("href"));
+  function clickChangeset(id, e) {
+    $("#changeset_" + id).find("a.changeset_id").simulate("click", e);
   }
 
-  function loadData() {
-    var data = {};
+  function update() {
+    var data = {list: '1'};
 
     if (window.location.pathname === '/history') {
-      data = {bbox: map.getBounds().wrap().toBBoxString()};
+      data.bbox = map.getBounds().wrap().toBBoxString();
     }
 
     $.ajax({
@@ -58,6 +62,11 @@ OSM.History = function(map) {
         updateMap();
       }
     });
+
+    var feedLink = $('link[type="application/atom+xml"]'),
+      feedHref = feedLink.attr('href').split('?')[0];
+
+    feedLink.attr('href', feedHref + '?bbox=' + data.bbox);
   }
 
   function loadMore(e) {
@@ -117,18 +126,15 @@ OSM.History = function(map) {
     map.addLayer(group);
 
     if (window.location.pathname === '/history') {
-      map.on("moveend", loadData)
+      map.on("moveend", update);
     }
 
-    loadData();
+    update();
   };
 
   page.unload = function() {
     map.removeLayer(group);
-
-    if (window.location.pathname === '/history') {
-      map.off("moveend", loadData)
-    }
+    map.off("moveend", update);
 
     $("#history_tab").removeClass("current");
   };

@@ -46,7 +46,8 @@
         var content = $(xhr.responseText);
 
         if (xhr.getResponseHeader('X-Page-Title')) {
-          document.title = xhr.getResponseHeader('X-Page-Title');
+          var title = xhr.getResponseHeader('X-Page-Title');
+          document.title = decodeURIComponent(escape(title));
         }
 
         $('head')
@@ -139,16 +140,27 @@ $(document).ready(function () {
 
   $('.leaflet-control .control-button').tooltip({placement: 'left', container: 'body'});
 
+  var expiry = new Date();
+  expiry.setYear(expiry.getFullYear() + 10);
+
   map.on('moveend layeradd layerremove', function() {
-    updatelinks(
+    updateLinks(
       map.getCenter().wrap(),
       map.getZoom(),
       map.getLayersCode(),
       map._object);
 
-    var expiry = new Date();
-    expiry.setYear(expiry.getFullYear() + 10);
-    $.cookie("_osm_location", cookieContent(map), { expires: expiry });
+    $.removeCookie("_osm_location");
+    $.cookie("_osm_location", OSM.locationCookie(map), { expires: expiry, path: "/" });
+  });
+
+  if ($.cookie('_osm_welcome') == 'hide') {
+    $('.welcome').hide();
+  }
+
+  $('.welcome .close').on('click', function() {
+    $('.welcome').hide();
+    $.cookie("_osm_welcome", 'hide', { expires: expiry });
   });
 
   if (OSM.PIWIK) {
@@ -186,13 +198,10 @@ $(document).ready(function () {
   });
 
   $("a[data-editor=remote]").click(function(e) {
-      remoteEditHandler(map.getBounds());
-      e.preventDefault();
+    var params = OSM.mapParams(this.search);
+    remoteEditHandler(map.getBounds(), params.object);
+    e.preventDefault();
   });
-
-  if (OSM.preferred_editor == "remote" && $('body').hasClass("site-edit")) {
-    remoteEditHandler(map.getBounds());
-  }
 
   if (OSM.params().edit_help) {
     $('#editanchor')
@@ -215,15 +224,20 @@ $(document).ready(function () {
       $("#content").addClass("overlay-sidebar");
       map.invalidateSize({pan: false})
         .panBy([-350, 0], {animate: false});
+      document.title = I18n.t('layouts.project_name.title');
     };
 
     page.load = function() {
+      if (!("autofocus" in document.createElement("input"))) {
+        $("#sidebar .search_form input[name=query]").focus();
+      }
       return map.getState();
     };
 
     page.popstate = function() {
       $("#content").addClass("overlay-sidebar");
       map.invalidateSize({pan: false});
+      document.title = I18n.t('layouts.project_name.title');
     };
 
     page.unload = function() {
@@ -240,13 +254,23 @@ $(document).ready(function () {
 
     page.pushstate = page.popstate = function(path, id) {
       OSM.loadSidebarContent(path, function() {
-        page.load(path, id);
+        addObject(type, id);
       });
     };
 
     page.load = function(path, id) {
-      map.addObject({type: type, id: parseInt(id)});
+      addObject(type, id, true);
     };
+
+    function addObject(type, id, center) {
+      var bounds = map.addObject({type: type, id: parseInt(id)}, function(bounds) {
+        if (!window.location.hash && bounds.isValid()) {
+          OSM.router.moveListenerOff();
+          map.once('moveend', OSM.router.moveListenerOn);
+          if (center || !map.getBounds().contains(bounds)) map.fitBounds(bounds);
+        }
+      });
+    }
 
     page.unload = function() {
       map.removeObject();
@@ -273,11 +297,27 @@ $(document).ready(function () {
     "/changeset/:id":              OSM.Browse(map, 'changeset')
   });
 
+  if (OSM.preferred_editor == "remote" && document.location.pathname == "/edit") {
+    remoteEditHandler(map.getBounds(), params.object);
+    OSM.router.setCurrentPath("/");
+  }
+
   OSM.router.load();
 
   $(document).on("click", "a", function(e) {
-    if (e.isDefaultPrevented() || e.isPropagationStopped()) return;
-    if (this.host === window.location.host && OSM.router.route(this.pathname + this.search + this.hash)) e.preventDefault();
+    if (e.isDefaultPrevented() || e.isPropagationStopped())
+      return;
+
+    // Open links in a new tab as normal.
+    if (e.which > 1 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey)
+      return;
+
+    // Ignore cross-protocol and cross-origin links.
+    if (location.protocol !== this.protocol || location.host !== this.host)
+      return;
+
+    if (OSM.router.route(this.pathname + this.search + this.hash))
+      e.preventDefault();
   });
 
   $(".search_form").on("submit", function(e) {
@@ -293,7 +333,7 @@ $(document).ready(function () {
 
   $(".describe_location").on("click", function(e) {
     e.preventDefault();
-    var precision = zoomPrecision(map.getZoom());
+    var precision = OSM.zoomPrecision(map.getZoom());
     OSM.router.route("/search?query=" + encodeURIComponent(
       map.getCenter().lat.toFixed(precision) + "," +
       map.getCenter().lng.toFixed(precision)));

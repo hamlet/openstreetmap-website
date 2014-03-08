@@ -36,7 +36,7 @@ L.OSM.Map = L.Map.extend({
         name: I18n.t("javascripts.map.base.transport_map")
       }),
       new L.OSM.MapQuestOpen({
-        attribution: copyright + ". Tiles courtesy of <a href='http://www.mapquest.com/' target='_blank'>MapQuest</a> <img src='http://developer.mapquest.com/content/osm/mq_logo.png'>",
+        attribution: copyright + ". Tiles courtesy of <a href='http://www.mapquest.com/' target='_blank'>MapQuest</a> <img src='https://developer.mapquest.com/content/osm/mq_logo.png'>",
         code: "Q",
         keyid: "mapquest",
         name: I18n.t("javascripts.map.base.mapquest")
@@ -91,17 +91,13 @@ L.OSM.Map = L.Map.extend({
   },
 
   getUrl: function(marker) {
-    var precision = zoomPrecision(this.getZoom()),
+    var precision = OSM.zoomPrecision(this.getZoom()),
         params = {};
 
     if (marker && this.hasLayer(marker)) {
       var latLng = marker.getLatLng().wrap();
       params.mlat = latLng.lat.toFixed(precision);
       params.mlon = latLng.lng.toFixed(precision);
-    }
-
-    if (this._object) {
-      params[this._object.type] = this._object.id;
     }
 
     var url = 'http://' + OSM.SERVER_URL + '/',
@@ -152,6 +148,11 @@ L.OSM.Map = L.Map.extend({
     }
 
     var params = {};
+    var layers = this.getLayersCode().replace('M', '');
+
+    if (layers) {
+      params.layers = layers;
+    }
 
     if (marker && this.hasLayer(marker)) {
       params.m = '';
@@ -169,7 +170,7 @@ L.OSM.Map = L.Map.extend({
     return str;
   },
 
-  addObject: function(object) {
+  addObject: function(object, callback) {
     var objectStyle = {
       color: "#FF6200",
       weight: 4,
@@ -219,14 +220,7 @@ L.OSM.Map = L.Map.extend({
         map._objectLayer.addData(xml);
         map._objectLayer.addTo(map);
 
-        if (!window.location.hash) {
-          var bounds = map._objectLayer.getBounds();
-          if (bounds.isValid()) {
-            OSM.router.moveListenerOff();
-            map.once('moveend', OSM.router.moveListenerOn);
-            map.fitBounds(bounds);
-          }
-        }
+        if (callback) callback(map._objectLayer.getBounds());
       }
     });
   },
@@ -243,6 +237,11 @@ L.OSM.Map = L.Map.extend({
       zoom: this.getZoom(),
       layers: this.getLayersCode()
     }
+  },
+
+  setState: function(state, options) {
+    if (state.center) this.setView(state.center, state.zoom, options);
+    this.updateLayers(state.layers);
   }
 });
 

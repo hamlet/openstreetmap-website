@@ -91,7 +91,7 @@ OSM.Router = function(map, rts) {
     }
   };
 
-  var currentPath = window.location.pathname + window.location.search,
+  var currentPath = window.location.pathname.replace(/(.)\/$/, '$1') + window.location.search,
     currentRoute = routes.recognize(currentPath),
     currentHash = location.hash || OSM.formatHash(map);
 
@@ -106,19 +106,15 @@ OSM.Router = function(map, rts) {
       currentPath = path;
       currentRoute = routes.recognize(currentPath);
       currentRoute.run('popstate', currentPath);
-      var state = e.originalEvent.state;
-      if (state.center) {
-        map.setView(state.center, state.zoom, {animate: false});
-        map.updateLayers(state.layers);
-      }
+      map.setState(e.originalEvent.state, {animate: false});
     });
 
     router.route = function (url) {
       var path = url.replace(/#.*/, ''),
         route = routes.recognize(path);
       if (!route) return false;
-      window.history.pushState(OSM.parseHash(url) || {}, document.title, url);
       currentRoute.run('unload');
+      window.history.pushState(OSM.parseHash(url), document.title, url);
       currentPath = path;
       currentRoute = route;
       currentRoute.run('pushstate', currentPath);
@@ -154,9 +150,7 @@ OSM.Router = function(map, rts) {
     if (hash === currentHash) return;
     currentHash = hash;
     var state = OSM.parseHash(hash);
-    if (!state) return;
-    map.setView(state.center, state.zoom);
-    map.updateLayers(state.layers);
+    map.setState(state);
     router.stateChange(state, hash);
   };
 
@@ -171,6 +165,11 @@ OSM.Router = function(map, rts) {
   router.load = function() {
     var loadState = currentRoute.run('load', currentPath);
     router.stateChange(loadState || {});
+  };
+
+  router.setCurrentPath = function (path) {
+    currentPath = path;
+    currentRoute = routes.recognize(currentPath);
   };
 
   map.on('moveend baselayerchange overlaylayerchange', router.updateHash);

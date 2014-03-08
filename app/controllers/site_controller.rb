@@ -17,7 +17,7 @@ class SiteController < ApplicationController
 
   def permalink
     lon, lat, zoom = ShortLink::decode(params[:code])
-    new_params = params.except(:code, :lon, :lat, :zoom)
+    new_params = params.except(:code, :lon, :lat, :zoom, :node, :way, :relation, :changeset)
 
     if new_params.has_key? :m
       new_params.delete :m
@@ -25,8 +25,27 @@ class SiteController < ApplicationController
       new_params[:mlon] = lon
     end
 
-    new_params[:controller] = 'site'
-    new_params[:action] = 'index'
+    if params.has_key? :node
+      new_params[:controller] = 'browse'
+      new_params[:action] = 'node'
+      new_params[:id] = params[:node]
+    elsif params.has_key? :way
+      new_params[:controller] = 'browse'
+      new_params[:action] = 'way'
+      new_params[:id] = params[:way]
+    elsif params.has_key? :relation
+      new_params[:controller] = 'browse'
+      new_params[:action] = 'relation'
+      new_params[:id] = params[:relation]
+    elsif params.has_key? :changeset
+      new_params[:controller] = 'browse'
+      new_params[:action] = 'changeset'
+      new_params[:id] = params[:changeset]
+    else
+      new_params[:controller] = 'site'
+      new_params[:action] = 'index'
+    end
+
     new_params[:anchor] = "map=#{zoom}/#{lat}/#{lon}"
 
     redirect_to new_params
@@ -42,7 +61,7 @@ class SiteController < ApplicationController
 
     if editor == "remote"
       require_oauth
-      render :action => :index
+      render :action => :index, :layout => map_layout
       return
     end
 
@@ -50,18 +69,22 @@ class SiteController < ApplicationController
       bbox = Node.find(params[:node]).bbox.to_unscaled
       @lat = bbox.centre_lat
       @lon = bbox.centre_lon
+      @zoom = 18
     elsif params[:way]
       bbox = Way.find(params[:way]).bbox.to_unscaled
       @lat = bbox.centre_lat
       @lon = bbox.centre_lon
+      @zoom = 17
     elsif params[:note]
       note = Note.find(params[:note])
       @lat = note.lat
       @lon = note.lon
+      @zoom = 17
     elsif params[:gpx]
       trace = Trace.visible_to(@user).find(params[:gpx])
       @lat = trace.latitude
       @lon = trace.longitude
+      @zoom = 16
     end
   end
 
@@ -76,6 +99,12 @@ class SiteController < ApplicationController
   end
 
   def about
+  end
+
+  def export
+  end
+
+  def offline
   end
 
   def preview
@@ -97,6 +126,8 @@ class SiteController < ApplicationController
       redirect_to relation_path(params[:relation])
     elsif params[:note]
       redirect_to browse_note_path(params[:note])
+    elsif params[:query]
+      redirect_to search_path(:query => params[:query])
     end
   end
 

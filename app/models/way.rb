@@ -3,6 +3,7 @@ class Way < ActiveRecord::Base
   
   include ConsistencyValidations
   include NotRedactable
+  include ObjectMetadata
 
   self.table_name = "current_ways"
   
@@ -16,7 +17,7 @@ class Way < ActiveRecord::Base
   has_many :way_tags
 
   has_many :containing_relation_members, :class_name => "RelationMember", :as => :member
-  has_many :containing_relations, :class_name => "Relation", :through => :containing_relation_members, :source => :relation, :extend => ObjectFinder
+  has_many :containing_relations, :class_name => "Relation", :through => :containing_relation_members, :source => :relation
 
   validates_presence_of :id, :on => :update
   validates_presence_of :changeset_id,:version,  :timestamp
@@ -27,7 +28,7 @@ class Way < ActiveRecord::Base
   validates_associated :changeset
 
   scope :visible, -> { where(:visible => true) }
-    scope :invisible, -> { where(:visible => false) }
+  scope :invisible, -> { where(:visible => false) }
 
   def self.from_format(format, data, create=false)
     case format
@@ -188,23 +189,11 @@ class Way < ActiveRecord::Base
   end 
 
   def nds
-    unless @nds
-      @nds = Array.new
-      self.way_nodes.each do |nd|
-        @nds += [nd.node_id]
-      end
-    end
-    @nds
+    @nds ||= self.way_nodes.collect { |n| n.node_id }
   end
 
   def tags
-    unless @tags
-      @tags = {}
-      self.way_tags.each do |tag|
-        @tags[tag.k] = tag.v
-      end
-    end
-    @tags
+    @tags ||= Hash[self.way_tags.collect { |t| [t.k, t.v] }]
   end
 
   def nds=(s)

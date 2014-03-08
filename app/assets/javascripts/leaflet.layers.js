@@ -121,9 +121,7 @@ L.OSM.layers = function(options) {
         .appendTo(overlaySection);
 
       function addOverlay(layer, name, maxArea) {
-        var refName = name.split(' ').join('_').toLowerCase();
         var item = $('<li>')
-          .attr('class', refName)
           .tooltip({
             placement: 'top'
           })
@@ -132,15 +130,18 @@ L.OSM.layers = function(options) {
         var label = $('<label>')
           .appendTo(item);
 
+        var checked = map.hasLayer(layer);
+
         var input = $('<input>')
           .attr('type', 'checkbox')
-          .prop('checked', map.hasLayer(layer))
+          .prop('checked', checked)
           .appendTo(label);
 
-        label.append(name);
+        label.append(I18n.t('javascripts.map.layers.' + name));
 
         input.on('change', function() {
-          if (input.is(':checked')) {
+          checked = input.is(':checked');
+          if (checked) {
             map.addLayer(layer);
           } else {
             map.removeLayer(layer);
@@ -155,14 +156,24 @@ L.OSM.layers = function(options) {
         map.on('zoomend', function() {
           var disabled = map.getBounds().getSize() >= maxArea;
           $(input).prop('disabled', disabled);
+
+          if (disabled && $(input).is(':checked')) {
+            $(input).prop('checked', false)
+              .trigger('change');
+            checked = true;
+          } else if (!disabled && !$(input).is(':checked') && checked) {
+            $(input).prop('checked', true)
+              .trigger('change');
+          }
+
           $(item).attr('class', disabled ? 'disabled' : '');
           item.attr('data-original-title', disabled ?
-            I18n.t('javascripts.site.' + refName + '_zoom_in_tooltip') : '');
+            I18n.t('javascripts.site.map_' + name + '_zoom_in_tooltip') : '');
         });
       }
 
-      addOverlay(map.noteLayer, I18n.t('javascripts.map.layers.notes'), OSM.MAX_NOTE_REQUEST_AREA);
-      addOverlay(map.dataLayer, I18n.t('javascripts.map.layers.data'), OSM.MAX_REQUEST_AREA);
+      addOverlay(map.noteLayer, 'notes', OSM.MAX_NOTE_REQUEST_AREA);
+      addOverlay(map.dataLayer, 'data', OSM.MAX_REQUEST_AREA);
     }
 
     options.sidebar.addPane($ui);

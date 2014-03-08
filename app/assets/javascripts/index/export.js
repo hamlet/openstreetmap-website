@@ -36,11 +36,16 @@ OSM.Export = function(map) {
   }
 
   function setBounds(bounds) {
-    var precision = zoomPrecision(map.getZoom());
+    var precision = OSM.zoomPrecision(map.getZoom());
     $("#minlon").val(bounds.getWest().toFixed(precision));
     $("#minlat").val(bounds.getSouth().toFixed(precision));
     $("#maxlon").val(bounds.getEast().toFixed(precision));
     $("#maxlat").val(bounds.getNorth().toFixed(precision));
+
+    $("#export_overpass").attr("href",
+        "http://overpass-api.de/api/map?bbox=" +
+        $("#minlon").val() + "," + $("#minlat").val() + "," +
+        $("#maxlon").val() + "," + $("#maxlat").val());
   }
 
   function validateControls() {

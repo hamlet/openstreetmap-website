@@ -6,6 +6,7 @@
 # Author: Asieriko
 # Author: MikelEH
 # Author: PerroVerd
+# Author: Subi
 # Author: Theklan
 # Author: Xabier Armendaritz
 eu: 
@@ -17,15 +18,16 @@ eu:
         language: Hizkuntza
         latitude: Latitude
         longitude: Longitude
-        title: Izenburua
+        title: Gaia
         user: Erabiltzailea
       friend: 
         friend: Lagun
         user: Erabiltzailea
       message: 
         body: Testua
+        recipient: Hartzailea
         sender: Igorlea
-        title: Izenburua
+        title: Gaia
       trace: 
         description: Deskribapen
         latitude: Latitude
@@ -50,6 +52,7 @@ eu:
       old_relation: Erlazio zaharra
       old_way: Bide zaharra
       relation: Erlazioa
+      session: Saioa
       trace: Trazoa
       tracepoint: Trazo puntua
       tracetag: Trazo etiketa
@@ -57,95 +60,36 @@ eu:
       way: Bidea
       way_tag: Bidearen etiketa
   browse: 
-    changeset_details: 
-      box: kutxa
-      closed_at: "Noiz itxita:"
-      created_at: "Noiz sortua:"
-    common_details: 
-      changeset_comment: "Iruzkin:"
-      edited_at: "Noiz aldatuta:"
-      edited_by: "Nork aldatuta:"
-      version: "Bertsio:"
+    changeset: 
+      belongs_to: Egilea
     containing_relation: 
       entry: "%{relation_name} erlazioa"
-    map: 
-      deleted: Ezabatua
-      loading: Kargatzen...
-    node: 
-      download_xml: XML jaitsi
-      edit: aldatu
-      node: Nodo
-      node_title: "%{node_name} nodoa"
-      view_history: historia ikusi
-    node_details: 
-      coordinates: "Koordenatuak:"
-    node_history: 
-      download_xml: XML jaitsi
-      view_details: xehetasunak ikusi
+    location: "Kokapena:"
     not_found: 
       type: 
         node: nodo
         relation: erlazio
         way: bide
+    note: 
+      title: "Oharra: %{id}"
     relation: 
-      download_xml: XML jaitsi
-      relation: Erlazio
-      relation_title: "%{relation_name} erlazioa"
-      view_history: historia ikusi
-    relation_details: 
-      members: "Kideak:"
-    relation_history: 
-      download_xml: XML jaitsi
-      view_details: Xehetasunak ikusi
+      members: Kideak
     relation_member: 
       type: 
         node: Nodo
         relation: Erlazio
         way: Bide
     start_rjs: 
-      data_frame_title: Datuak
-      data_layer_name: Datuak
-      details: Xehetasunak
       loading: Kargatzen...
-      object_list: 
-        back: Objetu zerrendara itzuli
-        details: Xehetasunak
-        heading: Objetu zerrenda
-        history: 
-          type: 
-            node: "%{id}. nodoa"
-            way: "%{id}. bidea"
-        selected: 
-          type: 
-            node: "%{id}. nodoa"
-            way: "%{id}. bidea"
-        type: 
-          node: Nodo
-          way: Bide
-      private_user: erabiltzaile pribatua
-      show_history: Historia Ikusi
-      wait: Itxoin...
     tag_details: 
-      tags: "Etiketak:"
+      tags: Etiketak
     timeout: 
       type: 
         relation: erlazio
-    way: 
-      download_xml: XML jaitsi
-      edit: Bidea aldatu
-      view_history: Historia ikusi
-      way: Bide
-      way_title: "%{way_name} bidea"
-    way_details: 
-      nodes: "Nodoak:"
-    way_history: 
-      download_xml: XML jaitsi
-      view_details: xehetasunak ikusi
+    version: Bertsioa
   changeset: 
     changeset: 
       anonymous: Anonimoa
-      big_area: (handia)
-      no_comment: (bat ere)
     changeset_paging_nav: 
       next: Hurrengoa »
       previous: « Aurrekoa
@@ -202,8 +146,6 @@ eu:
       osm_xml_data: OpenStreetMap XML Data
       scale: Eskala
       zoom: Zooma
-    start_rjs: 
-      export: Esportatu
   geocoder: 
     description: 
       types: 
@@ -233,6 +175,7 @@ eu:
           runway: Lurreratze pista
           terminal: Terminala
         amenity: 
+          WLAN: WiFi Sarbidea
           airport: Aireportu
           arts_centre: Arte Zentroa
           atm: Kutxazain automatikoa
@@ -321,6 +264,7 @@ eu:
           national_park: Parke Nazionala
           protected_area: Babestutako Eremua
         bridge: 
+          aqueduct: Akueduktua
           "yes": Zubia
         building: 
           "yes": Eraikina
@@ -364,6 +308,7 @@ eu:
           construction: Eraikuntza
           farm: Baserria
           forest: Baso
+          garages: Garajeak
           meadow: Larre
           military: Eremu Militarra
           mine: Meategi
@@ -386,6 +331,7 @@ eu:
           park: Parkea
           pitch: Kirolgunea
           playground: Jolastoki
+          sauna: Sauna
           sports_centre: Kiroldegi
           stadium: Estadio
           swimming_pool: Igerilekua
@@ -397,6 +343,7 @@ eu:
           channel: Kanal
           crater: Crater
           fjord: Fiordo
+          forest: Basoa
           geyser: Geiser
           glacier: Glaziar
           hill: Muinoa
@@ -416,6 +363,7 @@ eu:
           water: Ura
           wood: Baso
         office: 
+          architect: Arkitektoa
           employment_agency: Enplegu agentzia
           estate_agent: Inmobiliaria
           government: Gobernuko bulegoa
@@ -489,6 +437,7 @@ eu:
           newsagent: Kioskoa
           optician: Optika
           pet: Animalia-denda
+          pharmacy: Farmazia
           photo: Argazki-denda
           shoes: Zapatadenda
           shopping_centre: Merkatal Gunea
@@ -524,21 +473,21 @@ eu:
           waterfall: Ur-jauzi
           weir: Uharka
   layouts: 
+    about: Honi buruz
     edit: Aldatu
+    export: Esportatu
     help: Laguntza
-    help_centre: Laguntza Zentroa
     history: Historia
     home: hasiera
+    learn_more: Gehiago ikasi
     log_in: Saioa hasi
     logo: 
       alt_text: OpenStreetMap logoa
     logout: saioa itxi
     make_a_donation: 
       text: Dohaintza egin
+    more: Gehiago
     sign_up: izena eman
-    view: Ikusi
-    view_tooltip: Mapa ikusi
-    wiki: Wikia
   license_page: 
     foreign: 
       title: Itzulpen honi buruz
@@ -556,9 +505,9 @@ eu:
       title: Sarrera-ontzia
     message_summary: 
       delete_button: Ezabatu
-      read_button: Markatu irakurrita gisa
+      read_button: Markatu irakurritzat
       reply_button: Erantzun
-      unread_button: Markatu irakurri gabe gisa
+      unread_button: Markatu irakurri gabekotzat
     new: 
       back_to_inbox: Itzuli sarrera-ontzira
       body: Testua
@@ -577,11 +526,15 @@ eu:
       from: Igorlea
       reply_button: Erantzun
       subject: Gaia
-      title: Mezua irakurri
+      title: Irakurri mezua
       to: Hartzailea
-      unread_button: Markatu irakurri gabe gisa
+      unread_button: Markatu irakurri gabekotzat
     sent_message_summary: 
       delete_button: Ezabatu
+  note: 
+    mine: 
+      creator: Sortzailea
+      description: Deskribapena
   notifier: 
     diary_comment_notification: 
       hi: Kaixo %{to_user},
@@ -599,6 +552,8 @@ eu:
       greeting: Kaixo,
     message_notification: 
       hi: Kaixo %{to_user},
+    note_comment_notification: 
+      greeting: Kaixo,
   oauth: 
     oauthorize: 
       allow_write_api: mapa aldatu.
@@ -609,6 +564,11 @@ eu:
       name: Izena
     show: 
       allow_write_api: mapa aldatu.
+      confirm: Ziur zaude?
+  redaction: 
+    show: 
+      description: "Deskribapena:"
+      user: "Sortzailea:"
   site: 
     edit: 
       user_page_link: Lankide orria
@@ -794,25 +754,26 @@ eu:
       ago: (duela %{time_in_words_ago})
       confirm: Berretsi
       confirm_user: erabiltzaile hau baieztatu
-      create_block: Erabiltzaile hau blokeatu
+      create_block: Blokeatu erabiltzaile hau
       deactivate_user: erabiltzaile hau ezgaitu
       delete_user: lankide hau ezabatu
       description: Deskribapen
-      diary: egunerokoa
-      edits: aldaketak
+      diary: Egunerokoa
+      edits: Aldaketak
       email address: "Eposta helbidea:"
       hide_user: Erabiltzaile hau ezkutatu
       km away: "%{count} km-tara"
       m away: "%{count} m-tara"
       mapper since: "Noiztik mapatzaile:"
+      my comments: Nire Iruzkinak
       my diary: nire egunerokoa
       my edits: nire aldaketak
-      my settings: nire aukerak
+      my settings: Nire Hobespenak
       remove as friend: lagun bezala kendu
       role: 
         administrator: Lankide hau administratzailea da
         moderator: Lankide hau moderatzailea da
-      send message: mezua bidali
+      send message: Mezua bidali
       settings_link_text: hobespenak
       status: "Egoera:"
       user location: Lankidearen kokapena
@@ -821,6 +782,8 @@ eu:
     partial: 
       creator_name: Egilea
       edit: Aldatu
+      next: Hurrengoa »
+      previous: « Aurrekoa
       show: Erakutsi
       status: Egoera
     period: 
@@ -836,3 +799,5 @@ eu:
       confirm: Berretsi
     revoke: 
       confirm: Berretsi
+  welcome_page: 
+    title: Ongi etorri!

@@ -1,5 +1,6 @@
 class OldWay < ActiveRecord::Base
   include ConsistencyValidations
+  include ObjectMetadata
 
   self.table_name = "ways"
   self.primary_keys = "way_id", "version"
@@ -64,24 +65,11 @@ class OldWay < ActiveRecord::Base
   end
 
   def nds
-    unless @nds
-      @nds = Array.new
-      OldWayNode.where(:way_id => self.way_id, :version => self.version).order(:sequence_id).each do |nd|
-        @nds += [nd.node_id]
-      end
-    end
-    @nds
+    @nds ||= self.old_nodes.order(:sequence_id).collect { |n| n.node_id }
   end
 
   def tags
-    unless @tags
-      @tags = Hash.new
-      OldWayTag.where(:way_id => self.way_id, :version => self.version).each do |tag|
-        @tags[tag.k] = tag.v
-      end
-    end
-    @tags = Hash.new unless @tags
-    @tags
+    @tags ||= Hash[self.old_tags.collect { |t| [t.k, t.v] }]
   end
 
   def nds=(s)
@@ -108,12 +96,10 @@ class OldWay < ActiveRecord::Base
   # (i.e. is it visible? are we actually reverting to an earlier version?)
 
   def get_nodes_undelete
-    points = []
-    self.nds.each do |n|
+    self.nds.collect do |n|
       node = Node.find(n)
-      points << [node.lon, node.lat, n, node.version, node.tags_as_hash, node.visible]
+      [node.lon, node.lat, n, node.version, node.tags_as_hash, node.visible]
     end
-    points
   end
   
   def get_nodes_revert(timestamp)

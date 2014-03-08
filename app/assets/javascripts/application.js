@@ -20,11 +20,7 @@
 
 var querystring = require('querystring-component');
 
-function zoomPrecision(zoom) {
-    return Math.max(0, Math.ceil(Math.log(zoom) / Math.LN2));
-}
-
-function remoteEditHandler(bbox, select) {
+function remoteEditHandler(bbox, object) {
   var loaded = false,
       query = {
           left: bbox.getWest() - 0.0001,
@@ -33,7 +29,7 @@ function remoteEditHandler(bbox, select) {
           bottom: bbox.getSouth() - 0.0001
       };
 
-  if (select) query.select = select;
+  if (object) query.select = object.type + object.id;
 
   var iframe = $('<iframe>')
     .hide()
@@ -58,18 +54,18 @@ function remoteEditHandler(bbox, select) {
  * Called as the user scrolls/zooms around to maniplate hrefs of the
  * view tab and various other links
  */
-function updatelinks(loc, zoom, layers, object) {
+function updateLinks(loc, zoom, layers, object) {
   $(".geolink").each(function(index, link) {
     var href = link.href.split(/[?#]/)[0],
       args = querystring.parse(link.search.substring(1)),
       editlink = $(link).hasClass("editlink");
 
-    if (object && editlink) {
-      delete args['node'];
-      delete args['way'];
-      delete args['relation'];
-      delete args['changeset'];
+    delete args['node'];
+    delete args['way'];
+    delete args['relation'];
+    delete args['changeset'];
 
+    if (object && editlink) {
       args[object.type] = object.id;
     }
 
@@ -78,7 +74,7 @@ function updatelinks(loc, zoom, layers, object) {
 
     args = {
       lat: loc.lat,
-      lon: loc.lon || loc.lng,
+      lon: 'lon' in loc ? loc.lon : loc.lng,
       zoom: zoom
     };
 
@@ -99,12 +95,6 @@ function updatelinks(loc, zoom, layers, object) {
     .toggleClass('disabled', editDisabled)
     .attr('data-original-title', editDisabled ?
       I18n.t('javascripts.site.edit_disabled_tooltip') : '');
-}
-
-// generate a cookie-safe string of map state
-function cookieContent(map) {
-  var center = map.getCenter().wrap();
-  return [center.lng, center.lat, map.getZoom(), map.getLayersCode()].join('|');
 }
 
 function escapeHTML(string) {

@@ -3,6 +3,7 @@ class Relation < ActiveRecord::Base
   
   include ConsistencyValidations
   include NotRedactable
+  include ObjectMetadata
 
   self.table_name = "current_relations"
 
@@ -14,7 +15,7 @@ class Relation < ActiveRecord::Base
   has_many :relation_tags
 
   has_many :containing_relation_members, :class_name => "RelationMember", :as => :member
-  has_many :containing_relations, :class_name => "Relation", :through => :containing_relation_members, :source => :relation, :extend => ObjectFinder
+  has_many :containing_relations, :class_name => "Relation", :through => :containing_relation_members, :source => :relation
 
   validates_presence_of :id, :on => :update
   validates_presence_of :timestamp,:version,  :changeset_id 
@@ -211,13 +212,7 @@ class Relation < ActiveRecord::Base
   end
 
   def tags
-    unless @tags
-      @tags = Hash.new
-      self.relation_tags.each do |tag|
-        @tags[tag.k] = tag.v
-      end
-    end
-    @tags
+    @tags ||= Hash[self.relation_tags.collect { |t| [t.k, t.v] }]
   end
 
   def members=(m)

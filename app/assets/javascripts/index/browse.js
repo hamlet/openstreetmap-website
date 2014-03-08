@@ -47,29 +47,23 @@ function initializeBrowse(map) {
     }
   }
 
-  function displayFeatureWarning(count, limit, callback) {
+  function displayFeatureWarning(count, limit, add, cancel) {
     $('#browse_status').html(
       $("<p class='warning'></p>")
-        .text(I18n.t("browse.start_rjs.loaded_an_area_with_num_features", { num_features: count, max_features: limit }))
+        .text(I18n.t("browse.start_rjs.feature_warning", { num_features: count, max_features: limit }))
+        .prepend(
+          $("<span class='icon close'></span>")
+            .click(cancel))
         .append(
           $("<input type='submit'>")
             .val(I18n.t('browse.start_rjs.load_data'))
-            .click(callback)));
+            .click(add)));
   }
 
   var dataLoader;
 
   function getData() {
     var bounds = map.getBounds();
-    var size = bounds.getSize();
-
-    if (size > OSM.MAX_REQUEST_AREA) {
-      $('#browse_status').html(
-        $("<p class='warning'></p>")
-          .text(I18n.t("browse.start_rjs.unable_to_load_size", { max_bbox_size: OSM.MAX_REQUEST_AREA, bbox_size: size.toFixed(2) })));
-      return;
-    }
-
     var url = "/api/" + OSM.API_VERSION + "/map?bbox=" + bounds.toBBoxString();
 
     /*
@@ -100,16 +94,20 @@ function initializeBrowse(map) {
         function addFeatures() {
           $('#browse_status').empty();
           dataLayer.addData(features);
+          browseBounds = bounds;
+        }
+
+        function cancelAddFeatures() {
+          $('#browse_status').empty();
         }
 
         if (features.length < maxFeatures) {
           addFeatures();
         } else {
-          displayFeatureWarning(features.length, maxFeatures, addFeatures);
+          displayFeatureWarning(features.length, maxFeatures, addFeatures, cancelAddFeatures);
         }
 
         dataLoader = null;
-        browseBounds = bounds;
       }
     });
   }

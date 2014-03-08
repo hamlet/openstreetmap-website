@@ -1,6 +1,26 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require 'test_helper'
 
 class RedirectTest  < ActionDispatch::IntegrationTest
+  def test_legacy_redirects
+    get "/index.html"
+    assert_response :redirect
+    assert_redirected_to "/"
+
+    get "/create-account.html"
+    assert_response :redirect
+    assert_redirected_to "/user/new"
+
+    get "/forgot-password.html"
+    assert_response :redirect
+    assert_redirected_to "/user/forgot-password"
+  end
+
+  def test_search_redirects
+    get "/?query=test"
+    assert_response :redirect
+    assert_redirected_to "/search?query=test"
+  end
+
   def test_history_redirects
     get "/browse"
     assert_response :redirect
@@ -9,6 +29,10 @@ class RedirectTest  < ActionDispatch::IntegrationTest
     get "/browse/changesets"
     assert_response :redirect
     assert_redirected_to "/history"
+
+    get "/browse/changesets?bbox=-80.54%2C40.358%2C-79.526%2C40.779"
+    assert_response :redirect
+    assert_redirected_to "/history?bbox=-80.54%2C40.358%2C-79.526%2C40.779"
 
     get "/browse/friends"
     assert_response :redirect
@@ -21,6 +45,10 @@ class RedirectTest  < ActionDispatch::IntegrationTest
     get "/user/name/edits"
     assert_response :redirect
     assert_redirected_to "/user/name/history"
+
+    get "/user/name%20with%20spaces/edits"
+    assert_response :redirect
+    assert_redirected_to "/user/name%20with%20spaces/history"
   end
 
   def test_history_feed_redirects
@@ -28,9 +56,17 @@ class RedirectTest  < ActionDispatch::IntegrationTest
     assert_response :redirect
     assert_redirected_to "/history/feed"
 
+    get "/browse/changesets/feed?bbox=-80.54%2C40.358%2C-79.526%2C40.779"
+    assert_response :redirect
+    assert_redirected_to "/history/feed?bbox=-80.54%2C40.358%2C-79.526%2C40.779"
+
     get "/user/name/edits/feed"
     assert_response :redirect
     assert_redirected_to "/user/name/history/feed"
+
+    get "/user/name%20with%20spaces/edits/feed"
+    assert_response :redirect
+    assert_redirected_to "/user/name%20with%20spaces/history/feed"
   end
 
   def test_browse_redirects

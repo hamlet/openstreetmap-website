@@ -1,11 +1,12 @@
 OSM.Search = function(map) {
   $(".search_form input[name=query]")
-    .on("focus", function() {
-      $(".describe_location").fadeOut(100);
+    .on("input", function(e) {
+      if ($(e.target).val() == "") {
+        $(".describe_location").fadeIn(100);
+      } else {
+        $(".describe_location").fadeOut(100);
+      }
     })
-    .on("blur", function() {
-      $(".describe_location").fadeIn(100);
-    });
 
   $("#sidebar_content")
     .on("click", ".search_more a", clickSearchMore)
@@ -30,11 +31,18 @@ OSM.Search = function(map) {
       center = L.latLng(data.lat, data.lon);
 
     if (data.minLon && data.minLat && data.maxLon && data.maxLat) {
-      map.fitBounds([[data.minLat, data.minLon],
-        [data.maxLat, data.maxLon]]);
+      map.fitBounds([[data.minLat, data.minLon], [data.maxLat, data.maxLon]]);
     } else {
       map.setView(center, data.zoom);
     }
+
+    // Let clicks to object browser links propagate.
+    if (data.type && data.id) return;
+
+    marker.setLatLng(center).addTo(map);
+
+    e.preventDefault();
+    e.stopPropagation();
   }
 
   var marker = L.marker([0, 0], {icon: getUserIcon()});
@@ -73,6 +81,7 @@ OSM.Search = function(map) {
     map.removeLayer(marker);
     map.removeObject();
     $(".search_form input[name=query]").val("");
+    $(".describe_location").fadeIn(100);
   };
 
   return page;

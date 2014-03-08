@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require 'test_helper'
 
 class OAuthTest < ActionDispatch::IntegrationTest
   fixtures :users, :client_applications, :gpx_files
@@ -285,7 +285,7 @@ class OAuthTest < ActionDispatch::IntegrationTest
       :allow_read_prefs => true, :allow_write_prefs => true
     assert_response :success
     assert_template "authorize_success"
-    m = response.body.match("<p>The verification code is ([A-Za-z0-9]+)</p>")
+    m = response.body.match("<p>The verification code is ([A-Za-z0-9]+).</p>")
     assert_not_nil m
     verifier = m[1]
     token.reload

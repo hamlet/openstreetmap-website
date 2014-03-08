@@ -1,6 +1,7 @@
 class OldNode < ActiveRecord::Base
   include GeoRecord
   include ConsistencyValidations
+  include ObjectMetadata
 
   self.table_name = "nodes"
   self.primary_keys = "node_id", "version"
@@ -18,6 +19,8 @@ class OldNode < ActiveRecord::Base
   belongs_to :changeset
   belongs_to :redaction
   belongs_to :current_node, :class_name => "Node", :foreign_key => "node_id"
+
+  has_many :old_tags, :class_name => 'OldNodeTag', :foreign_key => [:node_id, :version]
 
   def validate_position
     errors.add(:base, "Node is not in the world") unless in_world?
@@ -84,14 +87,7 @@ class OldNode < ActiveRecord::Base
   end
 
   def tags
-    unless @tags
-      @tags = Hash.new
-      OldNodeTag.where(:node_id => self.node_id, :version => self.version).each do |tag|
-        @tags[tag.k] = tag.v
-      end
-    end
-    @tags = Hash.new unless @tags
-    @tags
+    @tags ||= Hash[self.old_tags.collect { |t| [t.k, t.v] }]
   end
 
   def tags=(t)
