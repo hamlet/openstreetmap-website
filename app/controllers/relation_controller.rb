@@ -169,17 +169,10 @@ private
   end
 
   def render_relations(relations)
-    if request.negotiate_mime([Mime::JSON]) == Mime::JSON
-      doc = OSM::API.new.get_json_doc
-      doc['relations'] = relations.map {|relation| relation.to_osmjson_node}
-      render :text => doc.to_json, :content_type => Mime::JSON
-
-    else
-      doc = OSM::API.new.get_xml_doc
-      relations.each do |relation|
-        doc.root << relation.to_xml_node
-      end
-      render :text => doc.to_s, :content_type => "text/xml"
+    doc = OSM::Format::Document.new(request)
+    relations.each do |relation|
+      doc << relation
     end
+    render :text => doc.render, :content_type => doc.mime
   end
 end
