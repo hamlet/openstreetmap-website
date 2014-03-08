@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class DiaryEntryControllerTest < ActionController::TestCase
-  fixtures :users, :diary_entries, :diary_comments, :languages
+  fixtures :users, :languages, :diary_entries, :diary_comments
 
   include ActionView::Helpers::NumberHelper
 

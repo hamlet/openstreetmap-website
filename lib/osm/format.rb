@@ -134,6 +134,41 @@ module OSM::Format
     end
   end
 
+  def self.changeset(format, cs_id, cs_obj, changeset_cache = {}, user_display_name_cache = {})
+    elt = OSM::Format.get_wrapper(format, 'changeset', changeset_cache, user_display_name_cache)
+
+    user_id = (changeset_cache[cs_id] ||= cs_obj.user_id)
+    display_name = (user_display_name_cache[user_id] ||= (cs_obj.user.data_public? ? cs_obj.user.display_name : nil))
+
+    elt['id'] = cs_id
+    
+    if display_name.nil?
+      elt['user'] = nil
+      elt['uid'] = nil
+    else
+      elt['user'] = display_name
+      elt['uid'] = user_id
+    end
+
+    elt['created_at'] = cs_obj.created_at.xmlschema
+    elt['closed_at'] = cs_obj.closed_at.xmlschema unless cs_obj.is_open?
+    elt['open'] = cs_obj.is_open?
+
+    if cs_obj.bbox.complete?
+      # would use the utility method for this, but it calls .to_s on its
+      # arguments and i want to keep them as floating point numbers.
+      unscaled = cs_obj.bbox.to_unscaled
+      elt['min_lat'] = unscaled.min_lat
+      elt['min_lon'] = unscaled.min_lon
+      elt['max_lat'] = unscaled.max_lat
+      elt['max_lon'] = unscaled.max_lon
+    end
+
+    elt.tags = cs_obj.tags
+
+    return elt.value
+  end
+
   def self.node(format, node_id, node_obj, changeset_cache = {}, user_display_name_cache = {})
     elt = OSM::Format.get_wrapper(format, 'node', changeset_cache, user_display_name_cache)
     elt.common_attributes(node_id, node_obj)
@@ -187,6 +222,9 @@ module OSM::Format
       case @format
       when Mime::JSON
         doc = get_json_doc
+        doc['changesets'] = @changesets.map do |cs|
+          OSM::Format.changeset(Mime::JSON, cs.id, cs, @changeset_cache, @user_display_name_cache)
+        end
         doc['nodes'] = @nodes.map do |n| 
           id = n.respond_to?(:node_id) ? n.node_id : n.id
           OSM::Format.node(Mime::JSON, id, n, @changeset_cache, @user_display_name_cache)
@@ -203,6 +241,9 @@ module OSM::Format
 
       when Mime::XML
         doc = get_xml_doc
+        @changesets.each do |cs|
+          doc.root << OSM::Format.changeset(Mime::XML, cs.id, cs, @changeset_cache, @user_display_name_cache)
+        end
         @nodes.each do |n|
           id = n.respond_to?(:node_id) ? n.node_id : n.id
           doc.root << OSM::Format.node(Mime::XML, id, n, @changeset_cache, @user_display_name_cache)
@@ -268,7 +309,7 @@ module OSM::Format
       # we always want nodes, ways & relations elements, even if they
       # are empty, so set them here and have them overridden by later
       # methods.
-      ['nodes', 'ways', 'relations'].each {|k| doc[k] = []}
+      ['changesets', 'nodes', 'ways', 'relations'].each {|k| doc[k] = []}
       return doc
     end
 

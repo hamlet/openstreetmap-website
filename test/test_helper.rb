@@ -9,6 +9,9 @@ class ActiveSupport::TestCase
     #print "setting up the api_fixtures"
     fixtures :users, :user_roles, :changesets, :changeset_tags
 
+    # set up redactions first, so that they can be referenced by nodes, ways, relations, etc...
+    fixtures :redactions
+
     fixtures :current_nodes, :nodes
     set_fixture_class :current_nodes => 'Node'
     set_fixture_class :nodes => 'OldNode'
@@ -52,8 +55,6 @@ class ActiveSupport::TestCase
 
     fixtures :client_applications
     
-    fixtures :redactions
-
     fixtures :notes, :note_comments
   end
 
