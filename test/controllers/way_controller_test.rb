@@ -1,3 +1,4 @@
+
 require 'test_helper'
 require 'way_controller'
 
@@ -55,26 +56,28 @@ class WayControllerTest < ActionController::TestCase
   # check the "full" mode
   def test_full
     Way.all.each do |way|
-      get :full, :id => way.id
-
-      # full call should say "gone" for non-visible ways...
-      unless way.visible
-        assert_response :gone
-        next
-      end
-
-      # otherwise it should say success
-      assert_response :success
+      ["text/xml", "application/json"].each do |mime_type|
+        @request.headers["Accept"] = mime_type
+        get :full, :id => way.id
+        
+        # full call should say "gone" for non-visible ways...
+        unless way.visible
+          assert_response :gone
+          next
+        end
+        
+        # otherwise it should say success
+        assert_response :success
       
-      # Check the way is correctly returned
-      assert_select "osm way[id=#{way.id}][version=#{way.version}][visible=#{way.visible}]", 1
-      
-      # check that each node in the way appears once in the output as a 
-      # reference and as the node element.
-      way.nodes.each do |n|
-        count = (way.nodes - (way.nodes - [n])).length
-        assert_select "osm way nd[ref=#{n.id}]", count
-        assert_select "osm node[id=#{n.id}][version=#{n.version}][lat=#{n.lat}][lon=#{n.lon}]", 1
+        # Check the way is correctly returned
+        way_nodes = way.nodes.map {|wn| wn.id.to_i }
+        assert_way(way.id, way.version, way.visible, way_nodes, mime_type)
+        
+        # check that each node in the way appears once in the output as a 
+        # reference and as the node element.
+        way.nodes.each do |n|
+          assert_node(n, mime_type)
+        end
       end
     end
   end
@@ -713,5 +716,45 @@ class WayControllerTest < ActionController::TestCase
 
   def content_type(t)
     @request.env["CONTENT_TYPE"] = t.to_s
+  end
+
+  ##
+  # boilerplate for checking that certain ways exist in the
+  # output.
+  def assert_way(id, version, visible, way_nodes, mime_type = "text/xml")
+    if mime_type == "text/xml"
+      assert_select "osm way[id=#{id}][version=#{version}][visible=#{visible}]", 1
+      way_nodes.each do |n|
+        count = (way_nodes - (way_nodes - [n])).length
+        assert_select "osm way nd[ref=#{n}]", count
+      end
+
+    else
+      doc = JSON.parse(@response.body)
+      assert_equal true, doc.has_key?('ways')
+      assert_equal Array, doc['ways'].class
+      ways = doc['ways'].select {|w| w['id'].to_i == id}
+      assert_equal 1, ways.length
+      way = ways[0]
+      assert_equal version, way['version'].to_i
+      assert_equal visible, way['visible']
+      assert_equal way_nodes, way['nds']
+    end
+  end
+
+  def assert_node(n, mime_type)
+    if mime_type == "text/xml"
+      assert_select "osm node[id=#{n.id}][version=#{n.version}][lat=#{n.lat}][lon=#{n.lon}]", 1
+
+    else
+      doc = JSON.parse(@response.body)
+      assert_equal true, doc.has_key?('nodes')
+      assert_equal Array, doc['nodes'].class
+      nodes = doc['nodes'].select {|node| node['id'].to_i == n.id}
+      assert_equal 1, nodes.length
+      node = nodes[0]
+      assert_equal n.version, node['version'].to_i
+      assert_equal n.visible, node['visible']
+    end
   end
 end

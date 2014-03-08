@@ -64,20 +64,16 @@ class WayController < ApplicationController
     way = Way.includes(:nodes => :node_tags).find(params[:id])
     
     if way.visible
-      visible_nodes = {}
-      changeset_cache = {}
-      user_display_name_cache = {}
-
-      doc = OSM::API.new.get_xml_doc
+      # create the results document
+      doc = OSM::Format::Document.new(request)
       way.nodes.uniq.each do |node|
         if node.visible
-          doc.root << node.to_xml_node(changeset_cache, user_display_name_cache)
-          visible_nodes[node.id] = node
+          doc << node
         end
       end
-      doc.root << way.to_xml_node(visible_nodes, changeset_cache, user_display_name_cache)
+      doc << way
       
-      render :text => doc.to_s, :content_type => "text/xml"
+      render :text => doc.render, :content_type => doc.mime
     else
       render :text => "", :status => :gone
     end
