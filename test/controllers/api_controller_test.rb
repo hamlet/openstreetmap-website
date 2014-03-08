@@ -76,6 +76,47 @@ class ApiControllerTest < ActionController::TestCase
     end
   end
   
+  def test_map_json
+    @request.headers["Accept"] = "application/json"
+    node = current_nodes(:used_node_1)
+    # Need to split the min/max lat/lon out into their own variables here
+    # so that we can test they are returned later.
+    minlon = node.lon-0.1
+    minlat = node.lat-0.1
+    maxlon = node.lon+0.1
+    maxlat = node.lat+0.1
+    bbox = "#{minlon},#{minlat},#{maxlon},#{maxlat}"
+    get :map, :bbox => bbox
+    if $VERBOSE
+      print @request.to_yaml
+      print @response.body
+    end
+    assert_response :success, "Expected scucess with the map call"
+
+    data = JSON.parse(@response.body)
+
+    assert_equal API_VERSION, data['version']
+    assert_equal GENERATOR, data['generator']
+    bounds = {"minlat"=>2.9, "minlon"=>2.9, "maxlat"=>3.1, "maxlon"=>3.1}
+    assert_equal bounds, data['bounds']
+
+    ['nodes','ways','relations'].each do |type|
+      assert data.has_key?(type), "The #{type} array should be present in response."
+    end
+    assert_equal Array, data['nodes'].class, "Nodes should be an array, but is a #{data['nodes'].class}"
+    assert_equal 1, data['nodes'].length
+    jnode = data['nodes'][0]
+
+    assert_equal node.id, jnode['id'], "Node ID is not the same"
+    assert_equal node.changeset.id, jnode['changeset'], "Node changeset ID is not the same"
+    assert_equal node.version, jnode['version'], "Node version is not the same"
+    assert_equal node.visible, jnode['visible'], "Node visible is not the same"
+    assert_equal node.timestamp.xmlschema, jnode['timestamp'], "Node timestamp is not the same"
+    assert_equal node.lat, jnode['lat'], "Node latitude is not the same"
+    assert_equal node.lon, jnode['lon'], "Node longitude is not the same"
+    assert_equal({'test' => 'yes'}, node.tags, "Node tags are not the same")
+  end
+  
   # This differs from the above test in that we are making the bbox exactly
   # the same as the node we are looking at
   def test_map_inclusive

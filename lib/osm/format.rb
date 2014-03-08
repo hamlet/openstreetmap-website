@@ -222,6 +222,7 @@ module OSM::Format
       case @format
       when Mime::JSON
         doc = get_json_doc
+        doc['bounds'] = @bounds.add_bounds_to(Hash.new, "", :to_f) unless @bounds.nil?
         doc['changesets'] = @changesets.map do |cs|
           OSM::Format.changeset(Mime::JSON, cs.id, cs, @changeset_cache, @user_display_name_cache)
         end
@@ -241,6 +242,7 @@ module OSM::Format
 
       when Mime::XML
         doc = get_xml_doc
+        doc.root << @bounds.add_bounds_to(XML::Node.new 'bounds') unless @bounds.nil?
         @changesets.each do |cs|
           doc.root << OSM::Format.changeset(Mime::XML, cs.id, cs, @changeset_cache, @user_display_name_cache)
         end

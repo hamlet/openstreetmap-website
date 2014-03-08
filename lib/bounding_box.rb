@@ -132,11 +132,11 @@ public
 
   # there are two forms used for bounds with and without an underscore,
   # cater for both forms eg minlon and min_lon
-  def add_bounds_to(hash, underscore = "")
-    hash["min#{underscore}lat"] = min_lat.to_s
-    hash["min#{underscore}lon"] = min_lon.to_s
-    hash["max#{underscore}lat"] = max_lat.to_s
-    hash["max#{underscore}lon"] = max_lon.to_s
+  def add_bounds_to(hash, underscore = "", transform = :to_s)
+    hash["min#{underscore}lat"] = min_lat.send(transform)
+    hash["min#{underscore}lon"] = min_lon.send(transform)
+    hash["max#{underscore}lat"] = max_lat.send(transform)
+    hash["max#{underscore}lon"] = max_lon.send(transform)
     hash
   end
 

@@ -139,10 +139,10 @@ class ApiController < ApplicationController
       return
     end
 
-    doc = OSM::API.new.get_xml_doc
+    doc = OSM::Format::Document.new(request)
 
     # add bounds
-    doc.root << bbox.add_bounds_to(XML::Node.new 'bounds')
+    doc.bounds(bbox)
 
     # get ways
     # find which ways are needed
@@ -169,12 +169,9 @@ class ApiController < ApplicationController
     end
 
     visible_nodes = {}
-    changeset_cache = {}
-    user_display_name_cache = {}
-
     @nodes.each do |node|
       if node.visible?
-        doc.root << node.to_xml_node(changeset_cache, user_display_name_cache)
+        doc << node
         visible_nodes[node.id] = node
       end
     end
@@ -182,7 +179,7 @@ class ApiController < ApplicationController
     way_ids = Array.new
     ways.each do |way|
       if way.visible?
-        doc.root << way.to_xml_node(visible_nodes, changeset_cache, user_display_name_cache)
+        doc << way
         way_ids << way.id
       end
     end 
@@ -200,12 +197,12 @@ class ApiController < ApplicationController
     # this "uniq" may be slightly inefficient; it may be better to first collect and output
     # all node-related relations, then find the *not yet covered* way-related ones etc.
     relations.uniq.each do |relation|
-      doc.root << relation.to_xml_node(nil, changeset_cache, user_display_name_cache)
+      doc << relation
     end
 
     response.headers["Content-Disposition"] = "attachment; filename=\"map.osm\""
 
-    render :text => doc.to_s, :content_type => "text/xml"
+    render :text => doc.render, :content_type => doc.mime
   end
 
   # Get a list of the tiles that have changed within a specified time
