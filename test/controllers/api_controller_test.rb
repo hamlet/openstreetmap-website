@@ -286,6 +286,26 @@ class ApiControllerTest < ActionController::TestCase
     Timecop.return
   end
   
+  def test_changes_simple_json
+    Timecop.freeze(Time.parse('2010-04-03 10:55:00'))
+    @request.headers["Accept"] = "application/json"
+    get :changes
+    assert_response :success
+
+    now = Time.now.getutc
+    hourago = now - 1.hour
+
+    data = JSON.parse(@response.body)
+    assert_equal API_VERSION, data['version']
+    assert_equal GENERATOR, data['generator']
+    assert_equal Hash, data['changes'].class
+    change = data['changes']
+    assert_equal hourago.xmlschema, change['starttime']
+    assert_equal now.xmlschema, change['endtime']
+
+    Timecop.return
+  end
+
   def test_changes_zoom_invalid
     zoom_to_test = %w{ p -1 0 17 one two }
     zoom_to_test.each do |zoom|

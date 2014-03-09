@@ -225,27 +225,45 @@ class ApiController < ApplicationController
 
       tiles = Node.where(:timestamp => starttime .. endtime).group("maptile_for_point(latitude, longitude, #{zoom})").count
 
-      doc = OSM::API.new.get_xml_doc
-      changes = XML::Node.new 'changes'
-      changes["starttime"] = starttime.xmlschema
-      changes["endtime"] = endtime.xmlschema
+      if request.negotiate_mime([Mime::JSON]) == Mime::JSON
+        doc = OSM::API.new.get_json_doc
+        changes = {
+          'starttime' => starttime.xmlschema,
+          'endtime' => endtime.xmlschema,
+          'tiles' => tiles.each do |tile, count|
+            x = (tile.to_i >> zoom) & mask
+            y = tile.to_i & mask
+          
+            { 'x' => x, 'y' => y, 'z' => zoom, 'changes' => count }
+          end
+        }
+        doc['changes'] = changes
 
-      tiles.each do |tile, count|
-        x = (tile.to_i >> zoom) & mask
-        y = tile.to_i & mask
+        render :text => doc.to_json, :content_type => "application/json"
 
-        t = XML::Node.new 'tile'
-        t["x"] = x.to_s
-        t["y"] = y.to_s
-        t["z"] = zoom.to_s
-        t["changes"] = count.to_s
+      else
+        doc = OSM::API.new.get_xml_doc
+        changes = XML::Node.new 'changes'
+        changes["starttime"] = starttime.xmlschema
+        changes["endtime"] = endtime.xmlschema
+        
+        tiles.each do |tile, count|
+          x = (tile.to_i >> zoom) & mask
+          y = tile.to_i & mask
+          
+          t = XML::Node.new 'tile'
+          t["x"] = x.to_s
+          t["y"] = y.to_s
+          t["z"] = zoom.to_s
+          t["changes"] = count.to_s
+          
+          changes << t
+        end
 
-        changes << t
+        doc.root << changes
+
+        render :text => doc.to_s, :content_type => "text/xml"
       end
-
-      doc.root << changes
-
-      render :text => doc.to_s, :content_type => "text/xml"
     else
       render :text => "Requested zoom is invalid, or the supplied start is after the end time, or the start duration is more than 24 hours", :status => :bad_request
     end
