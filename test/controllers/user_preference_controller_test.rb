@@ -1,3 +1,4 @@
+
 require 'test_helper'
 
 class UserPreferenceControllerTest < ActionController::TestCase
@@ -202,5 +203,38 @@ class UserPreferenceControllerTest < ActionController::TestCase
     assert_raises ActiveRecord::RecordNotFound do
       UserPreference.find(1, "key")
     end
+  end
+
+  ##
+  # test read action in JSON
+  def test_read_json_empty
+    @request.headers["Accept"] = "application/json"
+    # authenticate as a user with no preferences
+    basic_authorization("test@example.com", "test")
+
+    get :read
+    assert_response :success
+    
+    data = JSON.parse(@response.body)
+    assert_equal({}, data['preferences'])
+  end
+
+  ##
+  # test read action in JSON
+  def test_read_json_some
+    @request.headers["Accept"] = "application/json"
+    # authenticate as a user with preferences
+    basic_authorization("test@openstreetmap.org", "test")
+
+    get :read
+    assert_response :success
+    assert_equal "application/json", @response.content_type
+
+    data = JSON.parse(@response.body)
+    prefs = { 
+      user_preferences(:a).k => user_preferences(:a).v,
+      user_preferences(:two).k => user_preferences(:two).v
+    }
+    assert_equal prefs, data['preferences']
   end
 end

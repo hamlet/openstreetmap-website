@@ -9,18 +9,25 @@ class UserPreferenceController < ApplicationController
   ##
   # return all the preferences as an XML document
   def read
-    doc = OSM::API.new.get_xml_doc
+    if request.negotiate_mime([Mime::JSON]) == Mime::JSON
+      doc = OSM::API.new.get_json_doc
+      doc['preferences'] = Hash[@user.preferences.map {|p| [p.k, p.v]}]
+      render :text => doc.to_json, :content_type => "application/json"
 
-    prefs = @user.preferences
-
-    el1 = XML::Node.new 'preferences'
-
-    prefs.each do |pref|
-      el1 <<  pref.to_xml_node
+    else
+      doc = OSM::API.new.get_xml_doc
+      
+      prefs = @user.preferences
+      
+      el1 = XML::Node.new 'preferences'
+      
+      prefs.each do |pref|
+        el1 <<  pref.to_xml_node
+      end
+      
+      doc.root << el1
+      render :text => doc.to_s, :content_type => "text/xml"
     end
-
-    doc.root << el1
-    render :text => doc.to_s, :content_type => "text/xml"
   end
 
   ##
