@@ -339,6 +339,31 @@ class ApiControllerTest < ActionController::TestCase
     end
   end
 
+  def test_capabilities_json
+    @request.headers["Accept"] = "application/json"
+    get :capabilities
+    assert_response :success
+
+    expected = {
+      'version' => { 'minimum' => API_VERSION, 'maximum' => API_VERSION },
+      'area' => { 'maximum' => MAX_REQUEST_AREA },
+      'tracepoints' => { 'per_page' => TRACEPOINTS_PER_PAGE },
+      'waynodes' => { 'maximum' => MAX_NUMBER_OF_WAY_NODES },
+      'changesets' => { 'maximum_elements' => Changeset::MAX_ELEMENTS },
+      'timeout' => { 'seconds' => API_TIMEOUT },
+      'status' => {
+        'database' => 'online',
+        'api' => 'online',
+        'gpx' => 'online'
+      }
+    }
+
+    actual = JSON.parse(@response.body)
+    assert_equal true, actual.has_key?('api')
+    assert_equal Hash, actual['api'].class
+    assert_equal expected, actual['api']
+  end
+
   def test_permissions_anonymous
     get :permissions
     assert_response :success

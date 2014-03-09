@@ -257,37 +257,39 @@ class ApiController < ApplicationController
   # * maximum area that can be requested in a bbox request in square degrees
   # * number of tracepoints that are returned in each tracepoints page
   def capabilities
-    doc = OSM::API.new.get_xml_doc
+    api = {
+      'version' => { 'minimum' => API_VERSION, 'maximum' => API_VERSION },
+      'area' => { 'maximum' => MAX_REQUEST_AREA },
+      'tracepoints' => { 'per_page' => TRACEPOINTS_PER_PAGE },
+      'waynodes' => { 'maximum' => MAX_NUMBER_OF_WAY_NODES },
+      'changesets' => { 'maximum_elements' => Changeset::MAX_ELEMENTS },
+      'timeout' => { 'seconds' => API_TIMEOUT },
+      'status' => {
+        'database' => database_status,
+        'api' => api_status,
+        'gpx' => gpx_status
+      }
+    }
 
-    api = XML::Node.new 'api'
-    version = XML::Node.new 'version'
-    version['minimum'] = "#{API_VERSION}";
-    version['maximum'] = "#{API_VERSION}";
-    api << version
-    area = XML::Node.new 'area'
-    area['maximum'] = MAX_REQUEST_AREA.to_s;
-    api << area
-    tracepoints = XML::Node.new 'tracepoints'
-    tracepoints['per_page'] = TRACEPOINTS_PER_PAGE.to_s
-    api << tracepoints
-    waynodes = XML::Node.new 'waynodes'
-    waynodes['maximum'] = MAX_NUMBER_OF_WAY_NODES.to_s
-    api << waynodes
-    changesets = XML::Node.new 'changesets'
-    changesets['maximum_elements'] = Changeset::MAX_ELEMENTS.to_s
-    api << changesets
-    timeout = XML::Node.new 'timeout'
-    timeout['seconds'] = API_TIMEOUT.to_s
-    api << timeout
-    status = XML::Node.new 'status'
-    status['database'] = database_status.to_s
-    status['api'] = api_status.to_s
-    status['gpx'] = gpx_status.to_s
-    api << status
+    if request.negotiate_mime([Mime::JSON]) == Mime::JSON
+      doc = OSM::API.new.get_json_doc
+      doc['api'] = api
+      render :text => doc.to_json, :content_type => "application/json"
 
-    doc.root << api
+    else
+      doc = OSM::API.new.get_xml_doc
+      api_xml = XML::Node.new 'api'
+      api.each do |name,params|
+        xml_node = XML::Node.new name
+        params.each do |k,v|
+          xml_node[k] = v.to_s
+        end
+        api_xml << xml_node
+      end
+      doc.root << api_xml
 
-    render :text => doc.to_s, :content_type => "text/xml"
+      render :text => doc.to_s, :content_type => "text/xml"
+    end
   end
 
   # External apps that use the api are able to query which permissions
