@@ -71,4 +71,17 @@ class SearchControllerTest < ActionController::TestCase
     assert_select "osm>relation[id=2]", 1
     assert_select "osm>relation[id=3]", 1
   end
+
+  ##
+  # test JSON support
+  def test_search_controller_ways_json
+    @request.headers["Accept"] = "application/json"
+    get :search_ways, :type => 'test', :value => 'yes'
+    assert_response :success, "Search response should have been successful"
+
+    data = JSON.parse(@response.body)
+    assert_equal [3], data['nodes'].map {|n| n['id']}
+    assert_equal [1,2,3], data['ways'].map {|w| w['id']}
+    assert_equal [], data['relations']
+  end
 end

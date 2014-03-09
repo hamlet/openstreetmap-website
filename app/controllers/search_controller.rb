@@ -76,23 +76,19 @@ class SearchController < ApplicationController
     nodes += Node.find(ways.collect { |w| w.nds }.uniq)
 
     # Print
-    visible_nodes = {}
-    changeset_cache = {}
-    user_display_name_cache = {}
-    doc = OSM::API.new.get_xml_doc
+    doc = OSM::Format::Document.new(request)
     nodes.each do |node|
-      doc.root << node.to_xml_node(changeset_cache, user_display_name_cache)
-      visible_nodes[node.id] = node
+      doc << node
     end
 
     ways.each do |way|
-      doc.root << way.to_xml_node(visible_nodes, changeset_cache, user_display_name_cache)
+      doc << way
     end
 
     relations.each do |rel|
-      doc.root << rel.to_xml_node(nil, changeset_cache, user_display_name_cache)
+      doc << rel
     end
 
-    render :text => doc.to_s, :content_type => "text/xml"
+    render :text => doc.render, :content_type => doc.mime
   end
 end
