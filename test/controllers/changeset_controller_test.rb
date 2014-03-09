@@ -1276,6 +1276,57 @@ EOF
     assert_select "osmChange>modify>node", 8
   end
 
+  def test_diff_download_simple_json
+    ## Now try with the public user
+    basic_authorization(users(:public_user).email, "test")
+
+    # create a temporary changeset
+    content "<osm><changeset>" +
+      "<tag k='created_by' v='osm test suite checking changesets'/>" +
+      "</changeset></osm>"
+    put :create
+    assert_response :success
+    changeset_id = @response.body.to_i
+
+    # add a diff to it - we're uploading XML and downloading JSON
+    diff = <<EOF
+<osmChange>
+ <modify>
+  <node id='1' lon='0' lat='0' changeset='#{changeset_id}' version='1'/>
+  <node id='1' lon='1' lat='0' changeset='#{changeset_id}' version='2'/>
+  <node id='1' lon='1' lat='1' changeset='#{changeset_id}' version='3'/>
+  <node id='1' lon='1' lat='2' changeset='#{changeset_id}' version='4'/>
+  <node id='1' lon='2' lat='2' changeset='#{changeset_id}' version='5'/>
+  <node id='1' lon='3' lat='2' changeset='#{changeset_id}' version='6'/>
+  <node id='1' lon='3' lat='3' changeset='#{changeset_id}' version='7'/>
+  <node id='1' lon='9' lat='9' changeset='#{changeset_id}' version='8'/>
+ </modify>
+</osmChange>
+EOF
+
+    # upload it
+    content diff
+    post :upload, :id => changeset_id
+    assert_response :success,
+      "can't upload multiple versions of an element in a diff: #{@response.body}"
+
+    @request.headers["Accept"] = "application/json"
+    get :download, :id => changeset_id
+    assert_response :success
+
+    data = JSON.parse(@response.body)
+    assert_equal true, data.has_key?('changes')
+    assert_equal Array, data['changes'].class
+    assert_equal 8, data['changes'].length
+    data['changes'].each do |change|
+      assert_equal Hash, change.class
+      assert_equal 'modify', change['method']
+      assert_equal true, change.has_key?('nodes')
+      assert_equal Array, change['nodes'].class
+      assert_equal 1, change['nodes'].length
+    end
+  end
+
   ##
   # culled this from josm to ensure that nothing in the way that josm
   # is formatting the request is causing it to fail.

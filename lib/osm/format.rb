@@ -323,4 +323,130 @@ module OSM::Format
       root['license'] =  LICENSE_URL
     end
   end
+
+  class ChangeDocument
+    def initialize(request, changeset_cache = {}, user_display_name_cache = {})
+      if request.negotiate_mime([Mime::JSON]) == Mime::JSON
+        @format = Mime::JSON
+      else
+        @format = Mime::XML
+      end
+
+      @changeset_cache = changeset_cache
+      @user_display_name_cache = user_display_name_cache
+
+      @changes = Array.new
+    end
+
+    def mime
+      return @format
+    end
+
+    def render
+      case @format
+      when Mime::JSON
+        doc = get_json_doc
+        doc['changes'] = @changes.map do |method,element|
+          act = Hash.new
+          act['method'] = method.to_s
+          case element
+          when Node, OldNode
+            id = element.respond_to?(:node_id) ? element.node_id : element.id
+            act['nodes'] = [OSM::Format.node(Mime::JSON, id, element, @changeset_cache, @user_display_name_cache)]
+          when Way, OldWay
+            id = element.respond_to?(:way_id) ? element.way_id : element.id
+            act['ways'] = [OSM::Format.way(Mime::JSON, id, element, nil, @changeset_cache, @user_display_name_cache)]
+          when Relation, OldRelation
+            id = element.respond_to?(:relation_id) ? element.relation_id : element.id
+            act['relations'] = [OSM::Format.relation(Mime::JSON, id, element, @changeset_cache, @user_display_name_cache)]
+          end
+          act
+        end
+        doc.to_json
+
+      when Mime::XML
+        doc = get_xml_doc
+        doc.root.name = 'osmChange'
+        @changes.each do |method,element|
+          xml = XML::Node.new(method.to_s)
+          case element
+          when Node, OldNode
+            id = element.respond_to?(:node_id) ? element.node_id : element.id
+            xml << OSM::Format.node(Mime::XML, id, element, @changeset_cache, @user_display_name_cache)
+          when Way, OldWay
+            id = element.respond_to?(:way_id) ? element.way_id : element.id
+            xml << OSM::Format.way(Mime::XML, id, element, nil, @changeset_cache, @user_display_name_cache)
+          when Relation, OldRelation
+            id = element.respond_to?(:relation_id) ? element.relation_id : element.id
+            xml << OSM::Format.relation(Mime::XML, id, element, @changeset_cache, @user_display_name_cache)
+          end
+          doc.root << xml
+        end
+        return doc.to_s
+
+      else
+        raise RuntimeError.new("Unknown format #{format.inspect} in document render.")
+      end
+    end
+
+    def create(elt)
+      add_change(:create, elt)
+    end
+
+    def delete(elt)
+      add_change(:delete, elt)
+    end
+
+    def modify(elt)
+      add_change(:modify, elt)
+    end
+
+    private
+    def add_change(method, element)
+      case element
+      when Node, OldNode, Way, OldWay, Relation, OldRelation
+        @changes << [method, element]
+      else
+        if element.respond_to?(:each)
+          element.each {|e| self.add_change(method, e) }
+        else
+          raise RuntimeError.new("Unknown element type #{element.class} being added to change document.")
+        end
+      end
+    end
+
+    def get_xml_doc
+      doc = XML::Document.new
+      doc.encoding = XML::Encoding::UTF_8
+      root = XML::Node.new 'osm'
+      set_hashlike_attributes(root)
+      doc.root = root
+      return doc
+    end
+
+    def get_json_doc
+      doc = Hash.new
+      # the ruby Hash documentation says "Hashes enumerate their values
+      # in the order that the corresponding keys were inserted." this
+      # works in our favour here, as we want to ensure that JSON docs
+      # have the "header" fields before the content fields. since
+      # to_json appears to preserve enumeration order, we just have to
+      # make sure the "header" fields are inserted first, even if they
+      # get changed later.
+      set_hashlike_attributes(doc)
+      # we always want nodes, ways & relations elements, even if they
+      # are empty, so set them here and have them overridden by later
+      # methods.
+      doc['changes'] = []
+      return doc
+    end
+
+    def set_hashlike_attributes(root)
+      root['version'] = API_VERSION.to_s
+      root['generator'] = GENERATOR
+      root['copyright'] = COPYRIGHT_OWNER
+      root['attribution'] = ATTRIBUTION_URL
+      root['license'] =  LICENSE_URL
+    end
+  end
 end

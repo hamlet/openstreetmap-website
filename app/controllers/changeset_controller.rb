@@ -183,32 +183,27 @@ class ChangesetController < ApplicationController
     user_display_name_cache = {}
 
     # create an osmChange document for the output
-    result = OSM::API.new.get_xml_doc
-    result.root.name = "osmChange"
+    doc = OSM::Format::ChangeDocument.new(request)
 
     # generate an output element for each operation. note: we avoid looking
     # at the history because it is simpler - but it would be more correct to
     # check these assertions.
     elements.each do |elt|
-      result.root <<
-        if (elt.version == 1)
-          # first version, so it must be newly-created.
-          created = XML::Node.new "create"
-          created << elt.to_xml_node(changeset_cache, user_display_name_cache)
+      if (elt.version == 1)
+        # first version, so it must be newly-created.
+        doc.create(elt)
+      else
+        unless elt.visible
+          # if the element isn't visible then it must have been deleted
+          doc.delete(elt)
         else
-          unless elt.visible
-            # if the element isn't visible then it must have been deleted
-            deleted = XML::Node.new "delete"
-            deleted << elt.to_xml_node(changeset_cache, user_display_name_cache)
-          else
-            # must be a modify
-            modified = XML::Node.new "modify"
-            modified << elt.to_xml_node(changeset_cache, user_display_name_cache)
-          end
+          # must be a modify
+          doc.modify(elt)
         end
+      end
     end
 
-    render :text => result.to_s, :content_type => "text/xml"
+    render :text => doc.render, :content_type => doc.mime
   end
 
   ##
