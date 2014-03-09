@@ -1187,10 +1187,36 @@ EOF
       "failed to return error in XML format"
 
     # check the returned payload
-    assert_select "osmError[version=#{API_VERSION}][generator=\"OpenStreetMap server\"]", 1
+    assert_select "osmError[version=#{API_VERSION}][generator=#{GENERATOR.inspect}]", 1
     assert_select "osmError>status", 1
     assert_select "osmError>message", 1
+  end
 
+  ##
+  # test that the X-Error-Format header works to request JSON errors
+  def test_upload_json_errors
+    basic_authorization users(:public_user).email, "test"
+
+    # try and delete a node that is in use
+    diff = XML::Document.new
+    diff.root = XML::Node.new "osmChange"
+    delete = XML::Node.new "delete"
+    diff.root << delete
+    delete << current_nodes(:node_used_by_relationship).to_xml_node
+
+    # upload it
+    content diff
+    error_format "json"
+    post :upload, :id => 2
+    assert_response :success,
+      "failed to return error in JSON format"
+
+    # check the returned payload
+    data = JSON.parse(@response.body)
+    assert_equal ['osmError'], data.keys
+    assert_equal API_VERSION, data['osmError']['version']
+    assert_equal GENERATOR, data['osmError']['generator']
+    assert_equal true, data['osmError'].has_key?('status')
   end
 
   ##

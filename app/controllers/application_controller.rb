@@ -271,6 +271,12 @@ class ApplicationController < ActionController::Base
       result.root << (XML::Node.new("message") << message)
 
       render :text => result.to_s, :content_type => "text/xml"
+
+    elsif request.headers['X-Error-Format'] and
+        request.headers['X-Error-Format'].downcase == "json"
+      result = { 'osmError' => { 'version' => API_VERSION, 'generator' => GENERATOR, 'status' => "#{Rack::Utils.status_code(status)} #{Rack::Utils::HTTP_STATUS_CODES[status]}", 'message' => message } }
+      render :text => result.to_json, :content_type => "application/json"
+
     else
       render :text => message, :status => status, :content_type => "text/plain"
     end
