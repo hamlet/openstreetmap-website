@@ -1,8 +1,9 @@
 require 'test_helper'
 
 class UserControllerTest < ActionController::TestCase
-  fixtures :users
-  
+  api_fixtures
+  fixtures :user_blocks, :messages, :friends
+
   ##
   # test all routes which lead to this controller
   def test_routes
