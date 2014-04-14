@@ -395,11 +395,22 @@ class UserController < ApplicationController
   end
 
   def api_gpx_files
-    doc = OSM::API.new.get_xml_doc
-    @user.traces.each do |trace|
-      doc.root << trace.to_xml_node() if trace.public? or trace.user == @user
+    if request.negotiate_mime([Mime::JSON]) == Mime::JSON
+      arr = Array.new
+      @user.traces.each do |trace|
+        arr << trace.to_json_node() if trace.public? or trace.user == @user
+      end
+      doc = OSM::API.new.get_json_doc
+      doc['gpx_files'] = arr
+      render :text => doc.to_json, :content_type => "application/json"
+
+    else
+      doc = OSM::API.new.get_xml_doc
+      @user.traces.each do |trace|
+        doc.root << trace.to_xml_node() if trace.public? or trace.user == @user
+      end
+      render :text => doc.to_s, :content_type => "text/xml"
     end
-    render :text => doc.to_s, :content_type => "text/xml"
   end
 
   def view

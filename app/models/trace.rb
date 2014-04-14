@@ -174,6 +174,22 @@ class Trace < ActiveRecord::Base
     return el1
   end
 
+  def to_json_node
+    el1 = Hash.new
+    el1['id'] = self.id
+    el1['name'] = self.name.to_s
+    el1['lat'] = self.latitude if self.inserted
+    el1['lon'] = self.longitude if self.inserted
+    el1['user'] = self.user.display_name
+    el1['visibility'] = self.visibility
+    el1['pending'] = !self.inserted
+    el1['timestamp'] = self.timestamp.xmlschema
+    el1['description'] = self.description
+    el1['tags'] = self.tags
+
+    return el1
+  end
+
   # Read in xml as text and return it's Node object representation
   def self.from_xml(xml, create=false)
     begin

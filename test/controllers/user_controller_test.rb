@@ -879,4 +879,24 @@ class UserControllerTest < ActionController::TestCase
       assert_select "gpx_file[id=4]", :count => 1
     end
   end
+
+  def test_api_gpx_files_json
+    user = User.find(users(:public_user).id)
+    basic_authorization(user.email, "test")
+
+    # super hack - see comment in test_api_gpx_files
+    get :api_gpx_files
+    assert_response :success
+
+    # now do it for real...
+    @request.headers["Accept"] = "application/json"
+    get :api_gpx_files
+
+    assert_response :success
+    assert_equal "application/json", @response.content_type
+
+    data = JSON.load(@response.body)
+    assert_equal 3, data['gpx_files'].size
+    assert_equal [2,3,4], data['gpx_files'].map {|g| g['id'].to_i}.sort
+  end
 end
