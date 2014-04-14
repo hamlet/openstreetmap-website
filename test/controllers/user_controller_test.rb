@@ -2,7 +2,7 @@ require 'test_helper'
 
 class UserControllerTest < ActionController::TestCase
   api_fixtures
-  fixtures :user_blocks, :messages, :friends
+  fixtures :user_blocks, :messages, :friends, :gpx_files
 
   ##
   # test all routes which lead to this controller
@@ -852,5 +852,31 @@ class UserControllerTest < ActionController::TestCase
     assert_nil user.new_email
     assert_nil user.openid_url
     assert_equal "deleted", user.status
+  end
+
+  def test_api_gpx_files
+    user = User.find(users(:public_user).id)
+    basic_authorization(user.email, "test")
+
+    # super hack - this test doesn't work for me without the following lines
+    # which allow the password salt update to work, but seem to leave the
+    # User.traces collection cached incorrectly as []. running the query
+    # through and discarding the response seems to allow it to work properly
+    # the second time.
+    get :api_gpx_files
+    assert_response :success
+
+    # now do it for real...
+    get :api_gpx_files
+
+    assert_response :success
+    assert_equal "text/xml", @response.content_type
+
+    assert_select "osm", :count => 1 do
+      assert_select "gpx_file", :count => 3
+      assert_select "gpx_file[id=2]", :count => 1
+      assert_select "gpx_file[id=3]", :count => 1
+      assert_select "gpx_file[id=4]", :count => 1
+    end
   end
 end
