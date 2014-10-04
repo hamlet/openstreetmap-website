@@ -904,9 +904,8 @@ sr:
     intro_text: ОпенСтритМапа је карта света, створена од стране људи попут тебе и
       слободна је за коришћење под отвореном лиценцом.
     intro_2_create_account: Отвори налог
-    partners_html: Хостинг подржали %{ucl}, %{ic} и %{bytemark}, као и други %{partners}.
+    partners_html: Хостинг подржали %{ucl} и %{bytemark}, као и други %{partners}.
     partners_ucl: VR центар UCL-а
-    partners_ic: Лондонски краљевски колеџ
     partners_bytemark: Хостинг „Бајтмарк“
     partners_partners: партнери
     osm_offline: База података ОпенСтритМапа је тренутно недоступна док се не заврше

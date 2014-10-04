@@ -948,10 +948,9 @@ ru:
     intro_text: OpenStreetMap является картой мира, созданной такими же людьми, как
       и вы, и может свободно использоваться под открытой лицензией.
     intro_2_create_account: Создайте учётную запись
-    partners_html: Хостинг поддерживается %{ucl}, %{ic} и %{bytemark}, а также другими
+    partners_html: Хостинг поддерживается %{ucl} и %{bytemark}, а также другими
       %{partners}.
     partners_ucl: UCL VR Centre
-    partners_ic: Имперским колледжем Лондона
     partners_bytemark: Bytemark Hosting
     partners_partners: партнёрами
     osm_offline: База данных OpenStreetMap в данный момент не доступна, так как проводится

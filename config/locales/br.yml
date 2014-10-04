@@ -916,10 +916,9 @@ br:
     intro_text: Ur gartenn eus ar bed eo OprenStreetMap, krouet gant tud eveldoc'h
       ha frank hec'h implij dindan un aotre-implij digor.
     intro_2_create_account: Krouiñ ur gont implijer
-    partners_html: '%{ucl}, %{ic}, %{bytemark}, ha %{partners} all a ra war-dro an
+    partners_html: '%{ucl}, %{bytemark}, ha %{partners} all a ra war-dro an
       herberc''hiañ.'
     partners_ucl: ↓Kreizenn VR an UCL
-    partners_ic: Skolaj impalaerel Londrez
     partners_bytemark: ↓Herberc'hiañ Bytemark
     partners_partners: Kevelourien
     osm_offline: Ezlinenn eo diaz roadennoù OpenStreetMap evit bremañ e-pad ma pleder

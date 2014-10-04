@@ -782,9 +782,8 @@ sr-Latn:
     edit_with: Uredi uređivačem %{editor}
     tag_line: Slobodna viki mapa sveta
     intro_2_create_account: Otvorite nalog
-    partners_html: Hosting podržava %{ucl}, %{ic} i %{bytemark}, kao i drugi %{partners}.
+    partners_html: Hosting podržava %{ucl} i %{bytemark}, kao i drugi %{partners}.
     partners_ucl: VR centar UCL-a
-    partners_ic: Londonski kraljevski koledž
     partners_bytemark: Hosting „Bajtmark“
     partners_partners: partneri
     osm_offline: Baza podataka Openstritmapa je trenutno nedostupna dok se ne završe

@@ -922,10 +922,9 @@ he:
     intro_text: OpenStreetMap הוא מפה של העולם, נוצר על־ידי אנשים כמוך, וחופשי לשימוש
       תחת רשיון פתוח.
     intro_2_create_account: נא ליצור חשבון משתמש
-    partners_html: האירוח נתמך על־ידי מרכז %{ucl}‏, %{ic} ו%{bytemark}, ועל־ידי %{partners}
+    partners_html: האירוח נתמך על־ידי מרכז %{ucl}‏ ו%{bytemark}, ועל־ידי %{partners}
       אחרים.
     partners_ucl: מרכז UCL VR
-    partners_ic: המכללה המלכותית של לונדון
     partners_bytemark: בייטמארק
     partners_partners: שותפים
     partners_url: http://wiki.openstreetmap.org/wiki/Partners

@@ -915,9 +915,8 @@ be:
     intro_text: OpenStreetMap - гэта карта свету, створаная людзьмі, як вы, і бясплатная
       для выкарыстання на ўмовах адкрытай ліцэнзіі.
     intro_2_create_account: Стварыць рахунак удзельніка
-    partners_html: Хостынг падтрымліваецца %{ucl}, %{ic} і %{bytemark}, і іншымі %{partners}.
+    partners_html: Хостынг падтрымліваецца %{ucl} і %{bytemark}, і іншымі %{partners}.
     partners_ucl: UCL VR-цэнтр
-    partners_ic: Imperial College London
     partners_bytemark: Bytemark Hosting
     partners_partners: партнёрамi
     osm_offline: База дадзеных OpenStreetMap зараз па-за сецівам, таму што праходзіць

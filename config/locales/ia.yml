@@ -913,10 +913,9 @@ ia:
     intro_text: OpenStreetMap es un carta del mundo, create per gente como tu e libere
       de usar sub un licentia aperte.
     intro_2_create_account: Crea un conto de usator
-    partners_html: Le allogiamento web es supportate per %{ucl}, %{ic} e %{bytemark},
+    partners_html: Le allogiamento web es supportate per %{ucl} e %{bytemark},
       e altere %{partners}.
     partners_ucl: le Centro de Realitate Virtual del UCL
-    partners_ic: Imperial College London
     partners_bytemark: Bytemark Hosting
     partners_partners: partners
     partners_url: http://wiki.openstreetmap.org/wiki/Partners

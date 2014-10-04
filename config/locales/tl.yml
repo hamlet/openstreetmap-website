@@ -817,10 +817,9 @@ tl:
     tag_line: Ang Malayang Mapa sa Daigdig ng Wiki
     intro_header: Maligayang pagdating sa OpenStreetMap!
     intro_2_create_account: Lumikha ng isang akawnt ng tagagamit
-    partners_html: Ang pagpapasinaya ay sinusuportahan ng %{ucl}, %{ic} at %{bytemark},
+    partners_html: Ang pagpapasinaya ay sinusuportahan ng %{ucl} at %{bytemark},
       at iba pang %{partners}.
     partners_ucl: Ang Sentro ng UCL VR
-    partners_ic: Dalubhasaang Pang-imperyo Londres
     partners_bytemark: Pagpapasinaya ng Bytemark
     partners_partners: mga kawaksi
     partners_url: http://wiki.openstreetmap.org/wiki/Partners

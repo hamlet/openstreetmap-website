@@ -860,10 +860,9 @@ tr:
     intro_text: OpenStreetMap senin gibi insanlar tarafından oluşturulan, kullanımı
       serbest ve açık lisans altında olan bir dünya haritasıdır.
     intro_2_create_account: hesap oluşturunuz
-    partners_html: Barındırma hizmeti, %{ucl}, %{ic}, %{bytemark} ve diğer %{partners}
+    partners_html: Barındırma hizmeti, %{ucl}, %{bytemark} ve diğer %{partners}
       tarafından desteklenmektedir.
     partners_ucl: UCL VR Centre
-    partners_ic: Imperial College London
     partners_bytemark: Bytemark Hosting
     partners_partners: ortaklar
     osm_offline: OpenStreetMap veritabanı bakım çalışmaları yürütüldüğü için veritabanı

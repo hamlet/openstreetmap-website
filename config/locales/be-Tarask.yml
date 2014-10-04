@@ -751,9 +751,8 @@ be-Tarask:
     edit_with: Рэдагаваць праз %{editor}
     tag_line: Вольная Wiki-мапа сьвету
     intro_2_create_account: Стварыце рахунак
-    partners_html: Гостынг падтрымліваецца %{ucl}, %{ic} і %{bytemark}, і іншымі %{partners}.
+    partners_html: Гостынг падтрымліваецца %{ucl} і %{bytemark}, і іншымі %{partners}.
     partners_ucl: UCL VR Centre
-    partners_ic: Лёнданскім імпэрскім каледжам
     osm_offline: База зьвестак OpenStreetMap у цяперашні момант недаступная, таму
       што праводзяцца неабходныя тэхнічныя работы.
     osm_read_only: База зьвестак OpenStreetMap у цяперашні момант даступная толькі

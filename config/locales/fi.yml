@@ -930,9 +930,8 @@ fi:
     intro_text: OpenStreetMap on tavallisten ihmisten luoma maailmankartta. Palvelun
       käyttäminen on ilmaista avoimen lisenssin ansiosta.
     intro_2_create_account: luomalla ensin käyttäjätunnuksen
-    partners_html: Palvelinta ylläpitää %{ucl}, %{ic} ja %{bytemark} sekä muut %{partners}.
+    partners_html: Palvelinta ylläpitää %{ucl} ja %{bytemark} sekä muut %{partners}.
     partners_ucl: UCL VR Centre
-    partners_ic: Imperial College London
     partners_bytemark: Bytemark Hosting
     partners_partners: kumppanimme
     osm_offline: OpenStreetMapin tietokanta ei toistaiseksi ole käytettävissä välttämättömien

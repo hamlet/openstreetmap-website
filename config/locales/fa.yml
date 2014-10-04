@@ -926,10 +926,9 @@ fa:
     intro_text: OpenStreetMap یک نقشه از جهان است، که توسط افرادی مثل شما ایجاد شده
       و برای استفاده رایگان است تحت یک مجوز باز.
     intro_2_create_account: ایجاد حساب کاربری
-    partners_html: میزبانی وب پشتیبانی شده توسط %{ucl}، %{ic} و %{bytemark}، و سایر
+    partners_html: میزبانی وب پشتیبانی شده توسط %{ucl} و %{bytemark}، و سایر
       %{partners}.
     partners_ucl: مرکز VR UCL
-    partners_ic: کالج سلطنتی لندن
     partners_bytemark: میزبانی Bytemark
     partners_partners: شرکای تجاری
     osm_offline: دیتابیس OpenStreetMap در حال حاضر آفلاین است در حالی که کار تعمیر

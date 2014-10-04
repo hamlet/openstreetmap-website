@@ -922,9 +922,8 @@ nb:
     intro_text: OpenStreetMap er et kart over verden, skapt av mennesker som deg,
       og gratis å bruke under en åpen lisens.
     intro_2_create_account: Opprett en brukerkonto
-    partners_html: Hosting er støttet av %{ucl}, %{ic}, %{bytemark} og andre %{partners}.
+    partners_html: Hosting er støttet av %{ucl}, %{bytemark} og andre %{partners}.
     partners_ucl: UCL VR-senteret
-    partners_ic: Imperial College London
     partners_bytemark: Bytemark Hosting
     partners_partners: partnere
     osm_offline: OpenStreetMap databasen er for øyeblikket utilgjengelig mens essensielt

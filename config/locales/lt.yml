@@ -800,9 +800,8 @@ lt:
     edit_with: Redaguoti per %{editor}
     tag_line: Atviras wiki žemėlapis
     intro_2_create_account: sukurti naudotojo paskyrą
-    partners_html: Serveris palaikomas %{ucl}, %{ic} ir %{bytemark}, ir kiti %{partners}.
+    partners_html: Serveris palaikomas %{ucl} ir %{bytemark}, ir kiti %{partners}.
     partners_ucl: UCL VR centras
-    partners_ic: Imperial College London
     partners_bytemark: Bytemark serveris
     partners_partners: partneriai
     osm_offline: Šiuo metu OpenStreetMap duomenų bazė išjungta, nes vykdomi svarbūs

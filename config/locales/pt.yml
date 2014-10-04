@@ -932,10 +932,9 @@ pt:
     intro_text: O OpenStreetMap é um mapa do mundo, criado por pessoas como você e
       de uso livre sob uma licença aberta.
     intro_2_create_account: Crie uma conta de utilizador
-    partners_html: O alojamento é suportado por %{ucl}, %{ic}, %{bytemark} e outros
+    partners_html: O alojamento é suportado por %{ucl}, %{bytemark} e outros
       %{partners}.
     partners_ucl: UCL VR Centre
-    partners_ic: Imperial College London
     partners_bytemark: Bytemark Hosting
     partners_partners: parceiros
     osm_offline: A base de dados do OpenStreetMap não está disponível neste momento

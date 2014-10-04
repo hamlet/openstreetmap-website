@@ -908,10 +908,9 @@ vi:
     intro_text: OpenStreetMap là bản đồ thế giới do những người như bạn xây dựng và
       cho phép sử dụng thoải mái theo một giấy phép nguồn mở.
     intro_2_create_account: Mở tài khoản mới
-    partners_html: Dịch vụ nhờ sự hỗ trợ hosting của %{ucl}, %{ic}, và %{bytemark},
+    partners_html: Dịch vụ nhờ sự hỗ trợ hosting của %{ucl}, và %{bytemark},
       cũng như %{partners} khác.
     partners_ucl: Trung tâm VR tại UCL
-    partners_ic: Đại học Hoàng gia Luân Đôn
     partners_bytemark: Bytemark Hosting
     partners_partners: các công ty bảo trợ
     partners_url: http://wiki.openstreetmap.org/wiki/Partners?uselang=vi

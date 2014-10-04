@@ -928,9 +928,8 @@ cs:
     intro_text: OpenStreetMap je mapa světa, vytvořená lidmi jako vy a volně využitelná
       pod otevřenou licencí.
     intro_2_create_account: Vytvořit uživatelský účet
-    partners_html: Hosting podporují %{ucl}, %{ic} a %{bytemark} a další %{partners}.
+    partners_html: Hosting podporují %{ucl} a %{bytemark} a další %{partners}.
     partners_ucl: středisko VR UCL
-    partners_ic: Imperial College London
     partners_bytemark: Bytemark Hosting
     partners_partners: partneři
     partners_url: http://wiki.openstreetmap.org/wiki/Partners?uselang=cs

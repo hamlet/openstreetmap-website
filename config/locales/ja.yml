@@ -911,9 +911,8 @@ ja:
     intro_header: OpenStreetMap へようこそ!
     intro_text: OpenStreetMap は、あなたのような人々が作成した世界地図であり、オープン ライセンスの下で自由に利用できます。
     intro_2_create_account: ユーザー アカウントを作成
-    partners_html: 'ホスティング支援者: %{ucl}、%{ic}、%{bytemark}、その他の%{partners}'
+    partners_html: 'ホスティング支援者: %{ucl}、%{bytemark}、その他の%{partners}'
     partners_ucl: UCL VR センター
-    partners_ic: インペリアル カレッジ ロンドン
     partners_bytemark: バイトマーク ホスティング
     partners_partners: パートナー
     osm_offline: OpenStreetMap のデータベースはメンテナンスのため一時的に停止しています。

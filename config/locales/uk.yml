@@ -935,9 +935,8 @@ uk:
     intro_text: OpenStreetMap — мапа світу, створена такими ж людьми, як і ви, для
       вільного використання під відкритою ліцензією.
     intro_2_create_account: Створіть обліковий запис
-    partners_html: Хостинг підтримується %{ucl}, %{ic} та %{bytemark}, та іншими %{partners}.
+    partners_html: Хостинг підтримується %{ucl} та %{bytemark}, та іншими %{partners}.
     partners_ucl: UCL VR Centre
-    partners_ic: Імперський коледж Лондона
     partners_bytemark: Bytemark Hosting
     partners_partners: партнерами
     osm_offline: База даних OpenStreetMap в даний момент не доступна, так як проводиться

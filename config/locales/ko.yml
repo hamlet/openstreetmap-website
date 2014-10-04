@@ -909,9 +909,8 @@ ko:
     intro_header: OpenStreetMap에 오신 것을 환영합니다!
     intro_text: OpenStreetMap은 여러분과 같은 사람들이 만들고 자유롭게 오픈 라이선스에 따라 사용할 수 있는, 세계 지도입니다.
     intro_2_create_account: 사용자 계정을 만드세요
-    partners_html: 호스팅은 %{ucl}, %{ic}와 %{bytemark}, 그리고 다른 %{partners}에 의해 지원합니다.
+    partners_html: 호스팅은 %{ucl}와 %{bytemark}, 그리고 다른 %{partners}에 의해 지원합니다.
     partners_ucl: UCL VR 센터
-    partners_ic: 임페리얼 칼리지 런던 대학
     partners_bytemark: 바이트마크 호스팅
     partners_partners: 파트너
     osm_offline: 데이터베이스 점검을 위해 OpenStreetMap의 데이터가 현재 오프라인입니다.

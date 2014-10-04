@@ -951,10 +951,9 @@ de:
     intro_text: OpenStreetMap ist eine Karte der Welt, erstellt von Menschen wie dir
       und frei verwendbar unter einer offenen Lizenz.
     intro_2_create_account: Erstelle ein Benutzerkonto
-    partners_html: Das Hosting wird %{ucl}, %{ic}, %{bytemark} sowie von anderen %{partners}
+    partners_html: Das Hosting wird %{ucl}, %{bytemark} sowie von anderen %{partners}
       unterstützt.
     partners_ucl: vom UCL VR Centre
-    partners_ic: dem Imperial College London
     partners_bytemark: Bytemark Hosting
     partners_partners: Partnern
     partners_url: http://wiki.openstreetmap.org/wiki/Partners

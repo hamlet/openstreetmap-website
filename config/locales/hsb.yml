@@ -913,10 +913,9 @@ hsb:
     intro_text: OpenStreetMap je karta swěta, wutworjena wot ludźi kaž ty a hodźi
       so swobodnje pod wotewrjenej licencu wužiwać.
     intro_2_create_account: Załož wužiwarske konto
-    partners_html: Hostowanje so wot %{ucl}, %{ic}, %{bytemark} a druhich %{partners}
+    partners_html: Hostowanje so wot %{ucl}, %{bytemark} a druhich %{partners}
       podpěruje.
     partners_ucl: z UCL VR Centre
-    partners_ic: Imperial College London
     partners_bytemark: Bytemark Hosting
     partners_partners: partnerow
     partners_url: http://wiki.openstreetmap.org/wiki/Partners

@@ -908,10 +908,9 @@ ast:
     intro_text: OpenStreetMap ye un mapa del mundu, creáu por persones como tu y d'usu
       llibre baxo una llicencia abierta.
     intro_2_create_account: Crear una cuenta d'usuariu
-    partners_html: L'agospiamientu tien l'encontu de %{ucl}, %{ic} y %{bytemark},
+    partners_html: L'agospiamientu tien l'encontu de %{ucl} y %{bytemark},
       y otros %{partners}.
     partners_ucl: el Centru de RV de la UCL
-    partners_ic: Imperial College de Londres
     partners_bytemark: Bytemark Hosting
     partners_partners: asociaos
     osm_offline: La base de datos d'OpenStreetMap anguaño ta desconectada mentanto
