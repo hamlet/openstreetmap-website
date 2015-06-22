@@ -344,6 +344,9 @@ class OldNodeControllerTest < ActionController::TestCase
   def check_current_version(node_id)
     # get the current version of the node
     current_node = with_controller(NodeController.new) do
+      # see https://github.com/rails/rails/issues/13851
+      request.env.delete 'PATH_INFO'
+
       get :read, :id => node_id
       assert_response :success, "cant get current node #{node_id}"
       Node.from_xml(@response.body)

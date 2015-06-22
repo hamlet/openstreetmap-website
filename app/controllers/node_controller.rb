@@ -2,6 +2,8 @@
 
 class NodeController < ApplicationController
   require "xml/libxml"
+  require "cgimap_ext"
+  include CgimapExt
 
   skip_before_action :verify_authenticity_token
   before_action :authorize, :only => [:create, :update, :delete]
@@ -24,15 +26,7 @@ class NodeController < ApplicationController
 
   # Dump the details on a node given in params[:id]
   def read
-    node = Node.find(params[:id])
-
-    response.last_modified = node.timestamp
-
-    if node.visible
-      render :text => node.to_xml.to_s, :content_type => "text/xml"
-    else
-      render :text => "", :status => :gone
-    end
+    cgimap_handle_response(request)
   end
 
   # Update a node from given XML

@@ -85,6 +85,9 @@ gem "soap4r-ruby1.9"
 gem "dalli"
 gem "kgio"
 
+# Load cgimap ruby extension for handling (some) API calls
+gem "cgimap-ruby", :git => "https://github.com/zerebubuth/cgimap-ruby.git", :ref => "cc571af"
+
 # Gems useful for development
 group :development do
   gem "vendorer"
@@ -95,6 +98,8 @@ group :test do
   gem "rubocop"
   gem "timecop"
   gem "minitest", "~> 5.1", :platforms => [:ruby_19, :ruby_20]
+  gem "minitest-around"
+  gem "database_cleaner"
 end
 
 # Needed in development as well so rake can see konacha tasks

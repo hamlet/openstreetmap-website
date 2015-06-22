@@ -8,6 +8,13 @@ load "composite_primary_keys/fixtures.rb"
 
 module ActiveSupport
   class TestCase
+    # don't use transactional fixtures, as cgimap has its own database
+    # connection which can't share that transaction and therefore can't
+    # see any data modified by the test case. instead, transactional
+    # fixtures are disabled here and the tests wrapped with
+    # DatabaseCleaner to ensure a uniform database state.
+    self.use_transactional_fixtures = false
+
     # Load standard fixtures needed to test API methods
     def self.api_fixtures
       # print "setting up the api_fixtures"

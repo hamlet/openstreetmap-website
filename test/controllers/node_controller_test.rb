@@ -1,4 +1,5 @@
 require "test_helper"
+require "support/database_cleaner"
 
 class NodeControllerTest < ActionController::TestCase
   api_fixtures
@@ -146,9 +147,15 @@ class NodeControllerTest < ActionController::TestCase
     get :read, :id => current_nodes(:visible_node).id
     assert_response :success
 
+    # see https://github.com/rails/rails/issues/13851
+    request.env.delete 'PATH_INFO'
+
     # check that an invisible node is not returned
     get :read, :id => current_nodes(:invisible_node).id
     assert_response :gone
+
+    # see https://github.com/rails/rails/issues/13851
+    request.env.delete 'PATH_INFO'
 
     # check chat a non-existent node is not returned
     get :read, :id => 0
@@ -487,6 +494,9 @@ class NodeControllerTest < ActionController::TestCase
     # find the node in the database
     checknode = Node.find(nodeid)
     assert_not_nil checknode, "node not found in data base after upload"
+
+    # see https://github.com/rails/rails/issues/13851
+    request.env.delete 'PATH_INFO'
 
     # and grab it using the api
     get :read, :id => nodeid
